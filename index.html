@@ -177,6 +177,7 @@
         <button class="tab-btn active" data-tab="general">📐 General</button>
         <button class="tab-btn" data-tab="pressure">⚡ Pressure</button>
         <button class="tab-btn" data-tab="temperature">🌡️ Temperature</button>
+       <button class="tab-btn" data-tab="flow">💧 Flow Rate</button> 
     </div>
     <div id="subTabs" class="sub-tabs">
         <button class="sub-btn active" data-sub="length">📏 Length</button>
@@ -222,6 +223,16 @@
     const volumeUnits = {
         'cubic meter': 1, 'liter': 0.001, 'gallon (US)': 0.00378541, 'gallon (UK)': 0.00454609, 'barrel (oil)': 0.158987, 'cubic foot': 0.0283168
     };
+ const flowUnits = {
+    'm³/h': 1,
+    'm³/s': 3600,
+    'L/min': 0.06,
+    'GPM (US)': 0.227124,
+    'GPM (UK)': 0.272765,
+    'bbl/d (oil)': 0.00662447,
+    'ft³/min': 1.69901,
+    'SCFM': 1.69901      
+};
     let currentTab = 'general';
     let currentSub = 'length';
     function convertLength(value, fromUnit, toUnit) { return value * lengthUnits[fromUnit] / lengthUnits[toUnit]; }
@@ -239,6 +250,10 @@
         if (toUnit === '°R') return (celsius + 273.15) * 9/5;
         return celsius;
     }
+    function convertFlow(value, fromUnit, toUnit) {
+    let m3h = value * flowUnits[fromUnit];
+    return m3h / flowUnits[toUnit];
+}
     function convertArea(value, fromUnit, toUnit) { return value * areaUnits[fromUnit] / areaUnits[toUnit]; }
     function convertVolume(value, fromUnit, toUnit) { return value * volumeUnits[fromUnit] / volumeUnits[toUnit]; }
     function updateUI() {
@@ -251,6 +266,7 @@
             else if (currentSub === 'area') { units = Object.keys(areaUnits); conversionFunc = convertArea; title = '📐 Area Converter'; }
             else { units = Object.keys(volumeUnits); conversionFunc = convertVolume; title = '🧴 Volume Converter'; }
         } else if (currentTab === 'pressure') { units = Object.keys(pressureUnits); conversionFunc = convertPressure; title = '⚡ Pressure Converter'; }
+            else if (currentTab === 'flow') { units = Object.keys(flowUnits);  conversionFunc = convertFlow;  title = '💧 Flow Rate Converter';}
         else { units = tempUnits; conversionFunc = convertTemperature; title = '🌡️ Temperature Converter'; }
         cardTitle.innerText = title;
         const oldFrom = fromSelect.value, oldTo = toSelect.value;
@@ -291,7 +307,7 @@
         document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
         currentTab = btn.getAttribute('data-tab');
-        document.getElementById('subTabs').style.display = currentTab === 'general' ? 'flex' : 'none';
+        document.getElementById('subTabs').style.display = (currentTab === 'general') ? 'flex' : 'none';
         updateUI();
     }));
     document.querySelectorAll('.sub-btn').forEach(btn => btn.addEventListener('click', () => {
