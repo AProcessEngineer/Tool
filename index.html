@@ -231,9 +231,10 @@
         }
 
         .result-card .value {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #0a2e5c;
+            word-break: break-word;
         }
 
         .result-card .unit {
@@ -269,6 +270,7 @@
             .results-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
             .input-section { grid-template-columns: 1fr; }
             .swap-icon { transform: rotate(90deg); padding: 10px 0; }
+            .result-card .value { font-size: 1rem; }
         }
     </style>
 </head>
@@ -278,7 +280,33 @@
 </div>
 
 <script>
-    // Unit definitions for ALL categories with complete unit lists
+    // ==================== FORMAT NUMBER FUNCTION ====================
+    function formatNumber(num) {
+        if (isNaN(num) || num === null) return "0";
+        if (num === 0) return "0";
+        
+        // For very small numbers (less than 0.0001), show scientific with 4 decimal places in coefficient
+        if (Math.abs(num) < 0.0001 && Math.abs(num) > 0) {
+            return num.toExponential(4);
+        }
+        
+        // For large numbers (more than 1 million), show with commas
+        if (Math.abs(num) >= 1000000) {
+            return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        }
+        
+        // For numbers between 0.0001 and 1, show up to 10 decimal places without scientific
+        if (Math.abs(num) < 1 && Math.abs(num) >= 0.0001) {
+            let formatted = num.toFixed(10).replace(/\.?0+$/, '');
+            return formatted;
+        }
+        
+        // For normal numbers, show up to 6 decimal places, remove trailing zeros
+        let formatted = num.toFixed(6).replace(/\.?0+$/, '');
+        return formatted;
+    }
+
+    // Unit definitions for ALL categories
     const unitCategories = {
         length: {
             name: "📏 Length",
@@ -417,7 +445,7 @@
     let currentFromUnit = "meter";
     let currentToUnit = "kilometer";
 
-    // Tools list from your Excel
+    // Tools list
     const tools = [
         { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "40+ engineering unit categories" },
         { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry, circle, cylinder" },
@@ -473,7 +501,7 @@
         return conversions;
     }
 
-    // Render Unit Converter with selectable input/output units
+    // Render Unit Converter with formatted numbers
     function renderUnitConverter() {
         const category = unitCategories[currentCategory];
         const unitsList = category.displayOrder || Object.keys(category.units);
@@ -516,7 +544,7 @@
                     </div>
                     <div class="input-group">
                         <label class="input-label">✨ Preview Result</label>
-                        <input type="text" id="previewResult" class="value-input" value="${conversions[currentToUnit].toFixed(6)}" readonly style="background: #f5f5f5;">
+                        <input type="text" id="previewResult" class="value-input" value="${formatNumber(conversions[currentToUnit])}" readonly style="background: #f5f5f5;">
                     </div>
                 </div>
 
@@ -524,7 +552,7 @@
                 <div class="results-grid">
                     ${unitsList.map(unit => `
                         <div class="result-card">
-                            <div class="value">${conversions[unit].toExponential(6)}</div>
+                            <div class="value">${formatNumber(conversions[unit])}</div>
                             <div class="unit">${unit}</div>
                         </div>
                     `).join('')}
@@ -575,7 +603,6 @@
     window.selectTool = function(toolId) {
         currentView = toolId;
         if (toolId === "unit_converter") {
-            // Reset to defaults when opening converter
             currentCategory = "length";
             currentFromUnit = "meter";
             currentToUnit = "kilometer";
@@ -611,7 +638,6 @@
             app.innerHTML = renderComingSoon(tool ? tool.name : "Engineering Tool");
         }
         
-        // Re-attach any dynamic elements if needed
         if (currentView === "unit_converter") {
             const fromValueInput = document.getElementById("fromValue");
             if (fromValueInput) fromValueInput.value = currentInputValue;
