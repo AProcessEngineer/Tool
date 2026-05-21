@@ -30,6 +30,7 @@
         .gas-input-row label { width: 140px; font-size: 0.85rem; font-weight: 500; color: #555; }
         .gas-input-row input, .gas-input-row select { flex: 1; min-width: 120px; padding: 8px 12px; border: 2px solid #ddd; border-radius: 8px; }
         .gas-input-row .blue-input { background: #e3f2fd !important; border-color: #2196f3 !important; }
+        .gas-input-row .black-output { background: #e8f0fe; padding: 8px 12px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; color: #0a2e5c; }
         .gas-result { font-weight: bold; color: #0a2e5c; background: #e8f0fe; padding: 8px 12px; border-radius: 8px; flex: 1; text-align: center; }
         .gas-grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-top: 15px; }
         hr { margin: 15px 0; border: none; border-top: 1px solid #ddd; }
@@ -79,17 +80,17 @@
             <div class="gas-grid-2col">
                 <div>
                     <h3>Actual → Normal Conditions</h3>
-                    <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_act_p" class="blue-input" value="800" oninput="calcActualToNorm()"><select id="gp_act_p_unit" onchange="calcActualToNorm()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option></select></div>
-                    <div class="gas-input-row"><label>Operating Temperature</label><input id="gp_act_t" class="blue-input" value="308" oninput="calcActualToNorm()"><select id="gp_act_t_unit" onchange="calcActualToNorm()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+                    <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_act_p" class="blue-input" value="888" oninput="calcActualToNorm()"><select id="gp_act_p_unit" onchange="calcActualToNorm()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option></select></div>
+                    <div class="gas-input-row"><label>Operating Temperature</label><input id="gp_act_t" class="blue-input" value="40" oninput="calcActualToNorm()"><select id="gp_act_t_unit" onchange="calcActualToNorm()"><option>°C</option><option>K</option><option>°F</option><option>°R</option></select></div>
                     <div class="gas-input-row"><label>Compression Ratio</label><input id="gp_act_ratio" class="blue-input" value="1" oninput="calcActualToNorm()"></div>
-                    <div class="gas-input-row"><label>Actual Flow</label><input id="gp_act_flow" class="blue-input" value="100" oninput="calcActualToNorm()"><select id="gp_act_flow_unit" onchange="calcActualToNorm()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option></select></div>
+                    <div class="gas-input-row"><label>Actual Flow</label><input id="gp_act_flow" class="blue-input" value="489" oninput="calcActualToNorm()"><select id="gp_act_flow_unit" onchange="calcActualToNorm()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option></select></div>
                     <div class="gas-input-row"><label>→ Normal Flow</label><div class="gas-result" id="gp_norm_out"><strong>--</strong></div><select id="gp_norm_out_unit" onchange="calcActualToNorm()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option></select></div>
                     <div class="gas-input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="gp_molar_act_out"><strong>--</strong></div><select id="gp_molar_act_out_unit" onchange="calcActualToNorm()"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option></select></div>
                 </div>
                 <div>
                     <h3>Normal → Actual Conditions</h3>
-                    <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_norm_p" class="blue-input" value="800" oninput="calcNormToActual()"><select id="gp_norm_p_unit" onchange="calcNormToActual()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option></select></div>
-                    <div class="gas-input-row"><label>Operating Temperature</label><input id="gp_norm_t" class="blue-input" value="308" oninput="calcNormToActual()"><select id="gp_norm_t_unit" onchange="calcNormToActual()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+                    <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_norm_p" class="blue-input" value="888" oninput="calcNormToActual()"><select id="gp_norm_p_unit" onchange="calcNormToActual()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option></select></div>
+                    <div class="gas-input-row"><label>Operating Temperature</label><input id="gp_norm_t" class="blue-input" value="40" oninput="calcNormToActual()"><select id="gp_norm_t_unit" onchange="calcNormToActual()"><option>°C</option><option>K</option><option>°F</option><option>°R</option></select></div>
                     <div class="gas-input-row"><label>Compression Ratio</label><input id="gp_norm_ratio" class="blue-input" value="1" oninput="calcNormToActual()"></div>
                     <div class="gas-input-row"><label>Normal Flow</label><input id="gp_norm_flow" class="blue-input" value="16007" oninput="calcNormToActual()"><select id="gp_norm_flow_unit" onchange="calcNormToActual()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option></select></div>
                     <div class="gas-input-row"><label>→ Actual Flow</label><div class="gas-result" id="gp_actual_out"><strong>--</strong></div><select id="gp_actual_out_unit" onchange="calcNormToActual()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option></select></div>
@@ -101,14 +102,35 @@
         <!-- Section 3: Ideal Gas Law -->
         <div class="gas-phase-section">
             <h2>⚙️ Ideal Gas Law</h2>
+            
+            <!-- Solve for dropdown -->
             <div class="gas-input-row"><label>Solve for</label><select id="gp_ideal_solve" onchange="calcIdealGas()"><option value="pressure">Pressure</option><option value="temperature">Temperature</option><option value="mass_flow">Mass Flowrate</option><option value="vol_flow">Volumetric Flowrate</option></select></div>
-            <div class="gas-input-row"><label>Pressure</label><input id="gp_ideal_p" class="blue-input" value="101.325" oninput="calcIdealGas()"><select id="gp_ideal_p_unit" onchange="calcIdealGas()"><option>kPa a</option><option>bar a</option><option>psi a</option></select></div>
+            
+            <!-- Gauge Pressure (Blue Input) -->
+            <div class="gas-input-row"><label>Gauge Pressure</label><input id="gp_ideal_p_gauge" class="blue-input" value="101.325" oninput="updateGaugePressure()"><select id="gp_ideal_p_gauge_unit" onchange="updateGaugePressure()"><option>bar g</option><option>kPa g</option><option>psi g</option><option>kg/cm² g</option></select></div>
+            
+            <!-- Absolute Pressure (Black Output - auto calculates) -->
+            <div class="gas-input-row"><label>Absolute Pressure</label><div class="black-output" id="gp_ideal_p_abs">--</div><select id="gp_ideal_p_abs_unit" onchange="updateAbsolutePressure()"><option>kPa a</option><option>bar a</option><option>psi a</option></select></div>
+            
+            <!-- Temperature -->
             <div class="gas-input-row"><label>Temperature</label><input id="gp_ideal_t" class="blue-input" value="273" oninput="calcIdealGas()"><select id="gp_ideal_t_unit" onchange="calcIdealGas()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+            
+            <!-- Molecular Weight -->
             <div class="gas-input-row"><label>Molecular Weight</label><input id="gp_ideal_mw" class="blue-input" value="28" oninput="calcIdealGas()"><select id="gp_ideal_mw_unit" onchange="calcIdealGas()"><option>kg/kmol</option><option>g/mol</option><option>lb/lbmol</option></select></div>
+            
+            <!-- Z Factor -->
             <div class="gas-input-row"><label>Z Factor</label><input id="gp_ideal_z" class="blue-input" value="0.997" oninput="calcIdealGas()"></div>
+            
+            <!-- Mass Flowrate -->
             <div class="gas-input-row"><label>Mass Flowrate</label><input id="gp_ideal_mass" class="blue-input" value="1000" oninput="calcIdealGas()"><select id="gp_ideal_mass_unit" onchange="calcIdealGas()"><option>kg/hr</option><option>lb/hr</option></select></div>
+            
+            <!-- Volumetric Flowrate -->
             <div class="gas-input-row"><label>Volumetric Flowrate</label><input id="gp_ideal_vol" class="blue-input" value="800" oninput="calcIdealGas()"><select id="gp_ideal_vol_unit" onchange="calcIdealGas()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option></select></div>
-            <div class="gas-input-row"><label>→ Result</label><div class="gas-result" id="gp_ideal_result"><strong>--</strong></div></div>
+            
+            <!-- Result (based on solve for) -->
+            <div class="gas-input-row"><label>→ Result</label><div class="gas-result" id="gp_ideal_result"><strong>--</strong></div><select id="gp_ideal_result_unit" onchange="calcIdealGas()"><option>kPa a</option><option>bar a</option><option>psi a</option><option>K</option><option>°C</option><option>°F</option><option>°R</option><option>kg/hr</option><option>lb/hr</option><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option></select></div>
+            
+            <!-- Gas Constant Display -->
             <div class="gas-input-row"><label>Gas Constant</label><div class="gas-result"><strong>8.31447 J/mol·K</strong></div></div>
         </div>
     </div>
@@ -150,11 +172,16 @@
             "atm a": { toKpaA: (v) => v * 101.325 },
             "mm Hg a": { toKpaA: (v) => v * 0.133322 }
         },
+        pressureFromAbs: {
+            "kPa a": { toGauge: (v) => v - 101.325, fromGauge: (v) => v + 101.325 },
+            "bar a": { toGauge: (v) => v - 1.01325, fromGauge: (v) => v + 1.01325 },
+            "psi a": { toGauge: (v) => v - 14.6959, fromGauge: (v) => v + 14.6959 }
+        },
         temperature: {
-            "K": { toK: (v) => v },
-            "°C": { toK: (v) => v + 273.15 },
-            "°F": { toK: (v) => (v + 459.67) / 1.8 },
-            "°R": { toK: (v) => v / 1.8 }
+            "K": { toK: (v) => v, fromK: (v) => v },
+            "°C": { toK: (v) => v + 273.15, fromK: (v) => v - 273.15 },
+            "°F": { toK: (v) => (v + 459.67) / 1.8, fromK: (v) => v * 1.8 - 459.67 },
+            "°R": { toK: (v) => v / 1.8, fromK: (v) => v * 1.8 }
         },
         volumetric_flow: {
             "Nm³/hr": { toBase: 1, fromBase: 1 },
@@ -190,7 +217,7 @@
         }
     };
 
-    // ==================== CALCULATION FUNCTIONS ====================
+    // ==================== FLOWRATE PATH A ====================
     function calcPathA() {
         let mw = parseFloat(document.getElementById('gp_mw_a')?.value) || 0;
         let mwUnit = document.getElementById('gp_mw_a_unit')?.value || "kg/kmol";
@@ -215,6 +242,7 @@
         }
     }
     
+    // ==================== FLOWRATE PATH B ====================
     function calcPathB() {
         let mw = parseFloat(document.getElementById('gp_mw_b')?.value) || 0;
         let mwUnit = document.getElementById('gp_mw_b_unit')?.value || "kg/kmol";
@@ -239,6 +267,7 @@
         }
     }
     
+    // ==================== ACTUAL → NORMAL ====================
     function calcActualToNorm() {
         let p = parseFloat(document.getElementById('gp_act_p')?.value) || 0;
         let pUnit = document.getElementById('gp_act_p_unit')?.value || "kPa g";
@@ -267,6 +296,7 @@
         }
     }
     
+    // ==================== NORMAL → ACTUAL ====================
     function calcNormToActual() {
         let p = parseFloat(document.getElementById('gp_norm_p')?.value) || 0;
         let pUnit = document.getElementById('gp_norm_p_unit')?.value || "kPa g";
@@ -295,59 +325,133 @@
         }
     }
     
+    // ==================== IDEAL GAS LAW - UPDATE GAUGE PRESSURE ====================
+    function updateGaugePressure() {
+        let p_gauge = parseFloat(document.getElementById('gp_ideal_p_gauge')?.value) || 0;
+        let p_gauge_unit = document.getElementById('gp_ideal_p_gauge_unit')?.value || "bar g";
+        
+        // Convert gauge to kPa a
+        let p_abs_kpa = REF.pressure[p_gauge_unit]?.toKpaA(p_gauge) || 0;
+        
+        // Display absolute pressure
+        let p_abs_unit = document.getElementById('gp_ideal_p_abs_unit')?.value || "kPa a";
+        
+        if (p_abs_unit === "kPa a") {
+            document.getElementById('gp_ideal_p_abs').innerHTML = formatNumber(p_abs_kpa);
+        } else if (p_abs_unit === "bar a") {
+            document.getElementById('gp_ideal_p_abs').innerHTML = formatNumber(p_abs_kpa / 100);
+        } else if (p_abs_unit === "psi a") {
+            document.getElementById('gp_ideal_p_abs').innerHTML = formatNumber(p_abs_kpa / 6.89476);
+        }
+        
+        calcIdealGas();
+    }
+    
+    function updateAbsolutePressure() {
+        let p_abs_val = parseFloat(document.getElementById('gp_ideal_p_abs')?.innerHTML) || 0;
+        let p_abs_unit = document.getElementById('gp_ideal_p_abs_unit')?.value || "kPa a";
+        
+        // Convert to kPa a
+        let p_abs_kpa = p_abs_val;
+        if (p_abs_unit === "bar a") p_abs_kpa = p_abs_val * 100;
+        if (p_abs_unit === "psi a") p_abs_kpa = p_abs_val * 6.89476;
+        
+        // Calculate gauge pressure
+        let p_gauge_kpa = p_abs_kpa - 101.325;
+        let p_gauge_unit = document.getElementById('gp_ideal_p_gauge_unit')?.value || "bar g";
+        
+        if (p_gauge_unit === "kPa g") {
+            document.getElementById('gp_ideal_p_gauge').value = formatNumber(p_gauge_kpa);
+        } else if (p_gauge_unit === "bar g") {
+            document.getElementById('gp_ideal_p_gauge').value = formatNumber(p_gauge_kpa / 100);
+        } else if (p_gauge_unit === "psi g") {
+            document.getElementById('gp_ideal_p_gauge').value = formatNumber(p_gauge_kpa / 6.89476);
+        } else if (p_gauge_unit === "kg/cm² g") {
+            document.getElementById('gp_ideal_p_gauge').value = formatNumber(p_gauge_kpa / 98.0665);
+        }
+        
+        calcIdealGas();
+    }
+    
+    // ==================== IDEAL GAS LAW MAIN ====================
     function calcIdealGas() {
         let solve = document.getElementById('gp_ideal_solve')?.value;
-        let p = parseFloat(document.getElementById('gp_ideal_p')?.value) || 0;
-        let pUnit = document.getElementById('gp_ideal_p_unit')?.value || "kPa a";
+        
+        // Get pressure (absolute) in kPa a
+        let p_abs_kpa = 0;
+        let p_gauge = parseFloat(document.getElementById('gp_ideal_p_gauge')?.value) || 0;
+        let p_gauge_unit = document.getElementById('gp_ideal_p_gauge_unit')?.value || "bar g";
+        p_abs_kpa = REF.pressure[p_gauge_unit]?.toKpaA(p_gauge) || 0;
+        
+        // Get temperature in K
         let t = parseFloat(document.getElementById('gp_ideal_t')?.value) || 0;
         let tUnit = document.getElementById('gp_ideal_t_unit')?.value || "K";
+        let t_k = REF.temperature[tUnit]?.toK(t) || 0;
+        
+        // Get MW in kg/kmol
         let mw = parseFloat(document.getElementById('gp_ideal_mw')?.value) || 0;
         let mwUnit = document.getElementById('gp_ideal_mw_unit')?.value || "kg/kmol";
+        let mw_base = REF.molecular_weight[mwUnit].toBase(mw);
+        
+        // Get Z factor
+        let z = parseFloat(document.getElementById('gp_ideal_z')?.value) || 1;
+        
+        // Get mass flow in kg/hr
         let mass = parseFloat(document.getElementById('gp_ideal_mass')?.value) || 0;
         let massUnit = document.getElementById('gp_ideal_mass_unit')?.value || "kg/hr";
+        let mass_base = REF.mass_flow[massUnit].toBase(mass);
+        
+        // Get volumetric flow in m³/hr
         let vol = parseFloat(document.getElementById('gp_ideal_vol')?.value) || 0;
         let volUnit = document.getElementById('gp_ideal_vol_unit')?.value || "m³/hr";
-        let z = parseFloat(document.getElementById('gp_ideal_z')?.value) || 1;
-        let R = REF.constants.gasConstant;
-        
-        let p_abs = REF.pressure[pUnit]?.toKpaA(p) || 0;
-        let t_k = REF.temperature[tUnit]?.toK(t) || 0;
-        let mw_base = REF.molecular_weight[mwUnit].toBase(mw);
-        let mass_base = REF.mass_flow[massUnit].toBase(mass);
         let vol_base = vol * (REF.volumetric_flow[volUnit]?.toBase || 1);
         
+        let R = REF.constants.gasConstant;
         let result = "--";
+        let resultUnit = document.getElementById('gp_ideal_result_unit')?.value || "kPa a";
         
         if (solve === "pressure" && t_k > 0 && mw_base > 0 && vol_base > 0 && z > 0) {
             let n = (mass_base / mw_base) / 3600;
-            let p_calc = (n * R * t_k * z) / (vol_base / 3600);
-            result = formatNumber(p_calc) + " kPa a";
+            let p_calc_kpa = (n * R * t_k * z) / (vol_base / 3600);
+            
+            if (resultUnit === "kPa a") result = formatNumber(p_calc_kpa);
+            else if (resultUnit === "bar a") result = formatNumber(p_calc_kpa / 100);
+            else if (resultUnit === "psi a") result = formatNumber(p_calc_kpa / 6.89476);
         }
-        if (solve === "temperature" && p_abs > 0 && mw_base > 0 && vol_base > 0 && z > 0) {
+        else if (solve === "temperature" && p_abs_kpa > 0 && mw_base > 0 && vol_base > 0 && z > 0) {
             let n = (mass_base / mw_base) / 3600;
-            let t_calc = (p_abs * (vol_base / 3600)) / (n * R * z);
-            result = formatNumber(t_calc) + " K";
+            let t_calc_k = (p_abs_kpa * (vol_base / 3600)) / (n * R * z);
+            
+            if (resultUnit === "K") result = formatNumber(t_calc_k);
+            else if (resultUnit === "°C") result = formatNumber(REF.temperature["K"].fromK(t_calc_k));
+            else if (resultUnit === "°F") result = formatNumber(REF.temperature["°F"].fromK(t_calc_k));
+            else if (resultUnit === "°R") result = formatNumber(REF.temperature["°R"].fromK(t_calc_k));
         }
-        if (solve === "mass_flow" && p_abs > 0 && t_k > 0 && mw_base > 0 && vol_base > 0 && z > 0) {
-            let n = (p_abs * (vol_base / 3600)) / (R * t_k * z);
-            let mass_calc = n * mw_base * 3600;
-            result = formatNumber(mass_calc) + " kg/hr";
+        else if (solve === "mass_flow" && p_abs_kpa > 0 && t_k > 0 && mw_base > 0 && vol_base > 0 && z > 0) {
+            let n = (p_abs_kpa * (vol_base / 3600)) / (R * t_k * z);
+            let mass_calc_kghr = n * mw_base * 3600;
+            
+            if (resultUnit === "kg/hr") result = formatNumber(mass_calc_kghr);
+            else if (resultUnit === "lb/hr") result = formatNumber(mass_calc_kghr / 0.453592);
         }
-        if (solve === "vol_flow" && p_abs > 0 && t_k > 0 && mw_base > 0 && mass_base > 0 && z > 0) {
+        else if (solve === "vol_flow" && p_abs_kpa > 0 && t_k > 0 && mw_base > 0 && mass_base > 0 && z > 0) {
             let n = (mass_base / mw_base) / 3600;
-            let vol_calc = (n * R * t_k * z) / p_abs * 3600;
-            result = formatNumber(vol_calc) + " m³/hr";
+            let vol_calc_m3hr = (n * R * t_k * z) / p_abs_kpa * 3600;
+            
+            if (resultUnit === "m³/hr") result = formatNumber(vol_calc_m3hr);
+            else if (resultUnit === "Nm³/hr") result = formatNumber(vol_calc_m3hr);
+            else if (resultUnit === "ft³/hr") result = formatNumber(vol_calc_m3hr * 35.3147);
         }
         
         if (document.getElementById('gp_ideal_result')) document.getElementById('gp_ideal_result').innerHTML = `<strong>${result}</strong>`;
     }
 
-    // Initialize all calculations
+    // ==================== INITIALIZE ALL ====================
     calcPathA();
     calcPathB();
     calcActualToNorm();
     calcNormToActual();
-    calcIdealGas();
+    updateGaugePressure();
 </script>
 </body>
 </html>
