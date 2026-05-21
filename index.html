@@ -4,457 +4,501 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="google-site-verification" content="pLzoZiJTZLKHLwS9LkGWCiKIUB98ZtE8PqpDrAy6ASA" />
-    <meta name="description" content="Professional unit converter for process engineers in oil & gas, offshore/onshore, piping, and hydraulics. Convert 40+ categories including pressure, temperature, flow, viscosity, energy, and power." />
-    <title>Process Engineer's Complete Unit Converter</title>
+    <meta name="description" content="Professional process engineering toolkit for oil & gas industry including unit conversion, line sizing, PSV sizing, pump sizing, heat exchanger design and more." />
+    <title>Process Engineer's Tool - Oil & Gas Engineering Toolkit</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #0a2e5c 0%, #0a4c6e 100%);
+            background: url('https://img.freepik.com/free-photo/aerial-view-oil-refinery-plant_335224-104.jpg') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
         }
+
+        /* Overlay for readability */
+        .overlay {
+            background: linear-gradient(135deg, rgba(10, 46, 92, 0.92) 0%, rgba(10, 76, 110, 0.92) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
         .container {
-            max-width: 650px;
+            max-width: 1300px;
             margin: 0 auto;
         }
-        h1 {
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
             color: white;
-            text-align: center;
-            font-size: 1.8rem;
-            margin: 0 0 5px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
         }
-        .subtitle {
-            text-align: center;
+
+        .header h1 span {
+            color: #ff9800;
+        }
+
+        .header p {
             color: #b8d4f0;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            margin-top: 10px;
         }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            background: white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #ff9800;
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .tool-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0a2e5c;
+            margin-bottom: 10px;
+        }
+
+        .tool-desc {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: #ff9800;
+            color: #1a2a3a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #e68900;
+            transform: translateX(-5px);
+        }
+
+        /* Unit Converter Page */
+        .converter-page, .tool-page {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
         .category-tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        .cat-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            padding: 8px 14px;
-            border-radius: 25px;
-            color: white;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        .cat-btn.active {
-            background: #ff9800;
-            color: #1a2a3a;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .converter-card {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .category-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0a2e5c;
-            margin: 0 0 5px 0;
-        }
-        .category-sub {
-            color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            gap: 10px;
+            margin-bottom: 30px;
             border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
         }
-        .input-group {
-            margin-bottom: 20px;
+
+        .cat-tab {
+            background: #f0f4f8;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
         }
-        label {
-            display: block;
+
+        .cat-tab.active {
+            background: #0a2e5c;
+            color: white;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            font-size: 0.9rem;
             font-weight: 600;
             color: #333;
             margin-bottom: 8px;
-            font-size: 0.85rem;
+            display: block;
         }
+
         .value-input {
             width: 100%;
-            padding: 14px;
-            font-size: 1.2rem;
+            padding: 15px;
+            font-size: 1.3rem;
             border: 2px solid #ddd;
             border-radius: 12px;
             font-family: monospace;
-            transition: border 0.2s;
         }
+
         .value-input:focus {
             outline: none;
             border-color: #ff9800;
         }
-        .unit-select {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 2px solid #ddd;
+
+        /* All Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
             border-radius: 12px;
-            background: white;
-            cursor: pointer;
-        }
-        .swap-btn {
-            background: #0a2e5c;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin: 10px 0;
-            width: 100%;
-            font-weight: 600;
-        }
-        .result {
-            background: #f0f4f8;
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 15px;
             text-align: center;
+            border-left: 4px solid #ff9800;
         }
-        .result-label {
-            font-size: 0.75rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .result-value {
-            font-size: 2rem;
+
+        .result-card .value {
+            font-size: 1.4rem;
             font-weight: 700;
             color: #0a2e5c;
-            word-break: break-word;
         }
-        .result-unit {
-            font-size: 1rem;
-            color: #ff9800;
+
+        .result-card .unit {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 5px;
         }
-        .footer {
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0a2e5c;
+            margin: 20px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff9800;
+        }
+
+        /* Placeholder for other tools */
+        .coming-soon {
             text-align: center;
-            color: #b8d4f0;
-            font-size: 0.7rem;
-            margin-top: 20px;
+            padding: 60px 20px;
+            color: #666;
         }
-        @media (max-width: 550px) {
-            body { padding: 12px; }
-            .cat-btn { padding: 6px 10px; font-size: 0.65rem; }
-            .converter-card { padding: 18px; }
-            .result-value { font-size: 1.5rem; }
+
+        .coming-soon h2 {
+            color: #0a2e5c;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+            .results-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🛠️ Process Engineer's Tool</h1>
-    <div class="subtitle">Oil & Gas | Offshore/Onshore | Piping & Hydraulics</div>
-
-    <div class="category-tabs" id="categoryTabs"></div>
-
-    <div class="converter-card">
-        <div class="category-title" id="catTitle">Length</div>
-        <div class="category-sub" id="catSub">Convert between different units of measurement</div>
-
-        <div class="input-group">
-            <label>📥 From</label>
-            <input type="number" id="fromValue" class="value-input" value="1" step="any" placeholder="Enter value">
-        </div>
-
-        <div class="input-group">
-            <label>📤 From Unit</label>
-            <select id="fromUnit" class="unit-select"></select>
-        </div>
-
-        <button class="swap-btn" id="swapBtn">⇅ Swap Units</button>
-
-        <div class="input-group">
-            <label>🎯 To Unit</label>
-            <select id="toUnit" class="unit-select"></select>
-        </div>
-
-        <div class="result">
-            <div class="result-label">Converted Value</div>
-            <div class="result-value" id="resultValue">1.0000</div>
-            <div class="result-unit" id="resultUnit">meter</div>
-        </div>
+<div class="overlay">
+    <div class="container" id="app">
+        <!-- Dashboard will be rendered here -->
     </div>
-    <div class="footer">⚙️ 40+ Engineering Categories | Real-time Conversion | High Precision</div>
 </div>
 
 <script>
-    // ==================== COMPLETE CONVERSION DATABASE FROM YOUR EXCEL ====================
-    const conversionData = {
+    // Unit definitions for ALL categories
+    const unitCategories = {
         length: {
             name: "📏 Length",
             units: {
-                "meter": 1, "kilometer": 0.001, "centimeter": 100, "millimeter": 1000,
-                "mile": 0.000621371, "yard": 1.09361, "foot": 3.28084, "inch": 39.3701,
-                "nautical mile": 0.000539957
-            }
+                "meter": 1,
+                "kilometer": 0.001,
+                "centimeter": 100,
+                "millimeter": 1000,
+                "mile": 0.000621371,
+                "yard": 1.09361,
+                "foot": 3.28084,
+                "inch": 39.3701
+            },
+            displayOrder: ["meter", "kilometer", "centimeter", "millimeter", "mile", "yard", "foot", "inch"]
         },
-        pressure_gauge: {
-            name: "⚡ Pressure (Gauge)",
+        pressure: {
+            name: "⚡ Pressure",
             units: {
-                "bar g": 1, "atm g": 0.986923, "Pa g": 100000, "kPa g": 100,
-                "kg/cm² g": 1.01972, "psi g": 14.5038, "mmHg g": 750.062, "mmH₂O g": 10197.2
-            }
-        },
-        pressure_absolute: {
-            name: "⚡ Pressure (Absolute)",
-            units: {
-                "bar a": 1, "atm a": 0.986923, "Pa a": 100000, "kPa a": 100,
-                "kg/cm² a": 1.01972, "psi a": 14.5038, "mmHg a": 750.062, "mmH₂O a": 10197.2
-            }
+                "bar": 1,
+                "psi": 14.5038,
+                "kPa": 100,
+                "MPa": 0.1,
+                "atm": 0.986923,
+                "kg/cm²": 1.01972,
+                "Pa": 100000,
+                "mmHg": 750.062
+            },
+            displayOrder: ["bar", "psi", "kPa", "MPa", "atm", "kg/cm²", "Pa", "mmHg"]
         },
         temperature: {
             name: "🌡️ Temperature",
             isSpecial: true,
             convert: (val, from, to) => {
                 let c;
-                if (from === "Celsius") c = val;
-                else if (from === "Fahrenheit") c = (val - 32) * 5/9;
-                else if (from === "Kelvin") c = val - 273.15;
-                else if (from === "Rankine") c = (val - 491.67) * 5/9;
+                if (from === "°C") c = val;
+                else if (from === "°F") c = (val - 32) * 5/9;
+                else if (from === "K") c = val - 273.15;
+                else if (from === "°R") c = (val - 491.67) * 5/9;
                 else c = val;
-                
-                if (to === "Celsius") return c;
-                if (to === "Fahrenheit") return c * 9/5 + 32;
-                if (to === "Kelvin") return c + 273.15;
-                if (to === "Rankine") return (c + 273.15) * 9/5;
+                if (to === "°C") return c;
+                if (to === "°F") return c * 9/5 + 32;
+                if (to === "K") return c + 273.15;
+                if (to === "°R") return (c + 273.15) * 9/5;
                 return c;
             },
-            units: ["Celsius", "Fahrenheit", "Kelvin", "Rankine"]
+            units: ["°C", "°F", "K", "°R"],
+            displayOrder: ["°C", "°F", "K", "°R"]
         },
         volumetric_flow: {
             name: "💧 Volumetric Flow",
             units: {
-                "m³/hr": 1, "m³/day": 24, "ft³/hr": 35.3147, "ft³/day": 847.552,
-                "L/min": 16.6667, "US GPM": 4.4029, "BLPD": 150.955, "kLPD": 24,
-                "Nm³/hr": 1, "Sm³/hr": 1.057, "MMSCFD": 0.0008958
-            }
+                "m³/hr": 1,
+                "m³/day": 24,
+                "L/min": 16.6667,
+                "US GPM": 4.4029,
+                "BLPD": 150.955,
+                "ft³/hr": 35.3147,
+                "MMSCFD": 0.0008958
+            },
+            displayOrder: ["m³/hr", "m³/day", "L/min", "US GPM", "BLPD", "ft³/hr", "MMSCFD"]
         },
         mass_flow: {
             name: "⚖️ Mass Flow",
             units: {
-                "kg/hr": 1, "kg/s": 0.00027778, "lb/hr": 2.20462, "lb/s": 0.0006124,
-                "ton/hr": 0.001, "g/s": 0.27778
-            }
-        },
-        volume: {
-            name: "🧴 Volume",
-            units: {
-                "m³": 1, "liter": 1000, "cm³": 1000000, "ft³": 35.3147,
-                "in³": 61023.7, "gallon (US)": 264.172, "barrel": 6.2898
-            }
-        },
-        mass: {
-            name: "⚖️ Mass",
-            units: {
-                "kg": 1, "g": 1000, "mg": 1000000, "lb": 2.20462,
-                "ton (metric)": 0.001, "ton (US)": 0.0011023, "ton (UK)": 0.0009842,
-                "Newton": 9.80665
-            }
+                "kg/hr": 1,
+                "kg/s": 0.00027778,
+                "lb/hr": 2.20462,
+                "lb/s": 0.0006124
+            },
+            displayOrder: ["kg/hr", "kg/s", "lb/hr", "lb/s"]
         },
         density: {
             name: "🎯 Density",
             units: {
-                "kg/m³": 1, "g/cm³": 0.001, "kg/L": 0.001, "g/L": 1,
-                "lb/ft³": 0.06243, "lb/gal (US)": 0.008345, "SG (60°F)": 0.001,
-                "ppm": 1000
-            }
+                "kg/m³": 1,
+                "g/cm³": 0.001,
+                "lb/ft³": 0.06243,
+                "SG": 0.001
+            },
+            displayOrder: ["kg/m³", "g/cm³", "lb/ft³", "SG"]
         },
-        dynamic_viscosity: {
-            name: "🔄 Dynamic Viscosity",
+        viscosity: {
+            name: "🔄 Viscosity",
             units: {
-                "Pa·s": 1, "cP": 1000, "N·s/m²": 1, "kg/m·s": 1,
-                "g/cm·s": 10, "lb/ft·s": 0.672, "lbf·s/ft²": 0.020885
-            }
-        },
-        kinematic_viscosity: {
-            name: "🌊 Kinematic Viscosity",
-            units: {
-                "m²/s": 1, "cSt": 1000000, "Stokes": 10000, "cm²/s": 10000,
-                "ft²/s": 10.7639, "in²/s": 1550
-            }
-        },
-        energy: {
-            name: "⚡ Energy",
-            units: {
-                "Joule": 1, "kJ": 0.001, "Calorie": 0.239006, "kCal": 0.000239,
-                "BTU": 0.0009478, "Wh": 0.00027778, "kWh": 2.7778e-7
-            }
+                "cP": 1000,
+                "Pa·s": 1,
+                "lb/ft·s": 0.672
+            },
+            displayOrder: ["cP", "Pa·s", "lb/ft·s"]
         },
         power: {
             name: "💪 Power",
             units: {
-                "Watt": 1, "kW": 0.001, "MW": 1e-6, "hp": 0.001341,
-                "BTU/hr": 3.41214, "J/hr": 3600, "kJ/hr": 3.6, "kCal/hr": 0.8598
-            }
+                "kW": 1,
+                "MW": 0.001,
+                "hp": 1.34102,
+                "W": 1000
+            },
+            displayOrder: ["kW", "MW", "hp", "W"]
         },
         area: {
             name: "📐 Area",
             units: {
-                "m²": 1, "cm²": 10000, "mm²": 1e6, "ft²": 10.7639,
-                "in²": 1550, "acre": 0.0002471, "hectare": 0.0001
-            }
-        },
-        velocity: {
-            name: "🏃 Velocity",
-            units: {
-                "m/s": 1, "ft/s": 3.28084, "km/h": 3.6, "mph": 2.23694,
-                "knot": 1.94384, "mach": 0.0029386
-            }
-        },
-        acceleration: {
-            name: "📈 Acceleration",
-            units: {
-                "m/s²": 1, "cm/s²": 100, "ft/s²": 3.28084, "in/s²": 39.3701,
-                "G force": 0.101972
-            }
-        },
-        specific_heat: {
-            name: "🔥 Specific Heat",
-            units: {
-                "J/kg·K": 1, "kJ/kg·K": 0.001, "kcal/kg·°C": 0.0002388,
-                "Btu/lb·°F": 0.0002388, "J/kg·°C": 1
-            }
-        },
-        thermal_conductivity: {
-            name: "🌡️ Thermal Conductivity",
-            units: {
-                "W/m·K": 1, "W/m·°C": 1, "kcal/hr·m·°C": 0.859845,
-                "Btu/hr·ft·°F": 0.577789, "kJ/hr·m·°C": 3.6
-            }
+                "m²": 1,
+                "ft²": 10.7639,
+                "in²": 1550
+            },
+            displayOrder: ["m²", "ft²", "in²"]
         }
     };
 
+    let currentView = "dashboard";
     let currentCategory = "length";
-    let currentUnits = {};
+    let currentInputValue = 1;
 
-    // Build category list from conversionData
-    const categoryList = Object.keys(conversionData).map(key => ({
-        id: key,
-        name: conversionData[key].name
-    }));
+    // Tools list from your Excel
+    const tools = [
+        { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "40+ engineering unit categories" },
+        { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry, circle, cylinder" },
+        { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow" },
+        { id: "equivalent_length", icon: "🔧", name: "Equivalent Length & Tables", desc: "Valves, fittings & API standards" },
+        { id: "alarm_setting", icon: "⚠️", name: "Instrument Alarm Setting", desc: "Level settings, HH, H, L, LL" },
+        { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge" },
+        { id: "vessel_sizing", icon: "🏭", name: "Vessel Sizing", desc: "Vertical & horizontal vessels" },
+        { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH calculation" },
+        { id: "heat_exchanger", icon: "🌡️", name: "Heat Exchanger Sizing", desc: "LMTD, heat duty" },
+        { id: "compressor", icon: "⚙️", name: "Compressor Settle-out", desc: "Settle-out pressure & temperature" },
+        { id: "reference", icon: "📚", name: "Reference", desc: "Pipe thickness, orifice areas, correction factors" }
+    ];
 
-    // Render category tabs
-    function renderTabs() {
-        const container = document.getElementById("categoryTabs");
-        container.innerHTML = categoryList.map(cat => `
-            <button class="cat-btn ${cat.id === currentCategory ? 'active' : ''}" data-cat="${cat.id}">
-                ${cat.name}
-            </button>
-        `).join("");
+    // Render main dashboard
+    function renderDashboard() {
+        return `
+            <div class="header">
+                <h1><span>🛠️</span> Process Engineer's Tool</h1>
+                <p>Oil & Gas | Engineering Calculations Made Simple</p>
+            </div>
+            <div class="dashboard-grid">
+                ${tools.map(tool => `
+                    <div class="tool-card" onclick="selectTool('${tool.id}')">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <div class="tool-title">${tool.name}</div>
+                        <div class="tool-desc">${tool.desc}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // Render Unit Converter with ALL outputs
+    function renderUnitConverter() {
+        const category = unitCategories[currentCategory];
+        const isSpecial = category.isSpecial;
+        const unitsList = category.displayOrder || Object.keys(category.units);
         
-        document.querySelectorAll(".cat-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                currentCategory = btn.dataset.cat;
-                renderTabs();
-                updateConverterForCategory();
-                convert();
+        // Calculate all conversions
+        let conversions = {};
+        if (isSpecial) {
+            unitsList.forEach(toUnit => {
+                conversions[toUnit] = category.convert(currentInputValue, currentCategory === "temperature" ? "°C" : unitsList[0], toUnit);
             });
-        });
+        } else {
+            const baseValue = currentInputValue / category.units[unitsList[0]];
+            unitsList.forEach(unit => {
+                conversions[unit] = baseValue * category.units[unit];
+            });
+        }
+
+        return `
+            <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+            <div class="converter-page">
+                <h2 style="color: #0a2e5c; margin-bottom: 10px;">${category.name} Converter</h2>
+                
+                <div class="category-tabs">
+                    ${Object.keys(unitCategories).map(catId => `
+                        <button class="cat-tab ${catId === currentCategory ? 'active' : ''}" onclick="switchCategory('${catId}')">
+                            ${unitCategories[catId].name}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="input-section">
+                    <label class="input-label">Enter value in ${unitsList[0]}</label>
+                    <input type="number" id="mainInput" class="value-input" value="${currentInputValue}" step="any" oninput="updateAllConversions(this.value)">
+                </div>
+
+                <div class="section-title">📊 All Conversion Results</div>
+                <div class="results-grid">
+                    ${unitsList.map(unit => `
+                        <div class="result-card">
+                            <div class="value">${conversions[unit].toFixed(6)}</div>
+                            <div class="unit">${unit}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
     }
 
-    // Update UI for selected category
-    function updateConverterForCategory() {
-        const cat = conversionData[currentCategory];
-        document.getElementById("catTitle").innerHTML = cat.name;
-        document.getElementById("catSub").innerHTML = `Convert between ${cat.name.toLowerCase()} units`;
+    // Placeholder for other tools (coming soon)
+    function renderComingSoon(toolName) {
+        return `
+            <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+            <div class="tool-page coming-soon">
+                <h2>🛠️ ${toolName}</h2>
+                <p>This tool is under development. Coming soon!</p>
+                <p style="margin-top: 20px; font-size: 0.9rem;">Based on your Excel data, this will include full calculations.</p>
+            </div>
+        `;
+    }
+
+    // Navigation functions
+    window.selectTool = function(toolId) {
+        currentView = toolId;
+        renderApp();
+    };
+
+    window.goBack = function() {
+        currentView = "dashboard";
+        renderApp();
+    };
+
+    window.switchCategory = function(catId) {
+        currentCategory = catId;
+        renderApp();
+    };
+
+    window.updateAllConversions = function(value) {
+        currentInputValue = parseFloat(value) || 0;
+        renderApp();
+    };
+
+    // Main render function
+    function renderApp() {
+        const app = document.getElementById("app");
         
-        let unitList = [];
-        if (cat.isSpecial) {
-            unitList = cat.units;
-        } else {
-            unitList = Object.keys(cat.units);
-        }
-        
-        const fromSelect = document.getElementById("fromUnit");
-        const toSelect = document.getElementById("toUnit");
-        
-        fromSelect.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join("");
-        toSelect.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join("");
-        
-        // Set defaults
-        if (unitList[0]) {
-            if (!currentUnits[currentCategory]) {
-                currentUnits[currentCategory] = { from: unitList[0], to: unitList[Math.min(1, unitList.length-1)] };
+        if (currentView === "dashboard") {
+            app.innerHTML = renderDashboard();
+        } else if (currentView === "unit_converter") {
+            app.innerHTML = renderUnitConverter();
+            // Re-attach input listener after render
+            const input = document.getElementById("mainInput");
+            if (input) {
+                input.value = currentInputValue;
             }
-            fromSelect.value = currentUnits[currentCategory].from || unitList[0];
-            toSelect.value = currentUnits[currentCategory].to || unitList[Math.min(1, unitList.length-1)];
-        }
-    }
-
-    // Perform conversion
-    function convert() {
-        const fromVal = parseFloat(document.getElementById("fromValue").value);
-        if (isNaN(fromVal)) {
-            document.getElementById("resultValue").innerText = "Invalid";
-            return;
-        }
-        
-        const fromUnit = document.getElementById("fromUnit").value;
-        const toUnit = document.getElementById("toUnit").value;
-        
-        // Save current selection
-        currentUnits[currentCategory] = { from: fromUnit, to: toUnit };
-        
-        const cat = conversionData[currentCategory];
-        let result;
-        
-        if (cat.isSpecial) {
-            result = cat.convert(fromVal, fromUnit, toUnit);
         } else {
-            const baseValue = fromVal / cat.units[fromUnit];
-            result = baseValue * cat.units[toUnit];
+            const tool = tools.find(t => t.id === currentView);
+            app.innerHTML = renderComingSoon(tool ? tool.name : "Engineering Tool");
         }
-        
-        document.getElementById("resultValue").innerText = result.toFixed(6);
-        document.getElementById("resultUnit").innerHTML = toUnit;
     }
-
-    // Swap units
-    function swapUnits() {
-        const fromSelect = document.getElementById("fromUnit");
-        const toSelect = document.getElementById("toUnit");
-        const fromVal = fromSelect.value;
-        const toVal = toSelect.value;
-        fromSelect.value = toVal;
-        toSelect.value = fromVal;
-        currentUnits[currentCategory] = { from: toVal, to: fromVal };
-        convert();
-    }
-
-    // Event listeners
-    document.getElementById("fromValue").addEventListener("input", convert);
-    document.getElementById("fromUnit").addEventListener("change", () => {
-        currentUnits[currentCategory].from = document.getElementById("fromUnit").value;
-        convert();
-    });
-    document.getElementById("toUnit").addEventListener("change", () => {
-        currentUnits[currentCategory].to = document.getElementById("toUnit").value;
-        convert();
-    });
-    document.getElementById("swapBtn").addEventListener("click", swapUnits);
 
     // Initialize
-    renderTabs();
-    updateConverterForCategory();
-    convert();
+    renderApp();
 </script>
 </body>
 </html>
