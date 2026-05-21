@@ -11,32 +11,31 @@
             background: linear-gradient(135deg, #0a2e5c 0%, #0a4c6e 100%);
             min-height: 100vh;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 40px; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
         .header h1 { font-size: 2rem; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
         .header h1 span { color: #ff9800; }
-        .header p { color: #b8d4f0; font-size: 1.2rem; font-weight: bold; margin-top: 10px; }
+        .header p { color: #b8d4f0; font-size: 1.2rem; font-weight: bold; }
         .back-btn {
-            background: #ff9800; color: #1a2a3a; border: none; padding: 12px 24px;
-            border-radius: 40px; font-size: 1rem; font-weight: bold; cursor: pointer;
-            margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;
+            background: #ff9800; color: #1a2a3a; border: none; padding: 10px 20px;
+            border-radius: 40px; font-size: 0.9rem; font-weight: bold; cursor: pointer;
+            margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px;
         }
-        .back-btn:hover { background: #e68900; transform: translateX(-5px); }
-        .calc-page { background: white; border-radius: 24px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .section { background: #f0f4f8; border-radius: 16px; padding: 20px; margin-bottom: 30px; }
-        .section h2 { color: #0a2e5c; margin-bottom: 15px; border-bottom: 2px solid #ff9800; padding-bottom: 8px; }
-        .section h3 { color: #0a2e5c; margin-bottom: 15px; font-size: 1.1rem; }
-        .input-row { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-        .input-row label { width: 140px; font-size: 0.85rem; font-weight: 500; color: #555; }
-        .input-row input, .input-row select { flex: 1; min-width: 120px; padding: 8px 12px; border: 2px solid #ddd; border-radius: 8px; }
-        .input-row .blue-input { background: #e3f2fd !important; border-color: #2196f3 !important; }
-        .result { font-weight: bold; color: #0a2e5c; background: #e8f0fe; padding: 8px 12px; border-radius: 8px; flex: 1; text-align: center; }
-        .grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
-        hr { margin: 15px 0; border: none; border-top: 1px solid #ddd; }
-        .footer-quote { text-align: center; margin-top: 30px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.2); color: #ff9800; font-style: italic; font-size: 1.2rem; }
-        .copyright { text-align: center; font-size: 0.8rem; color: #888; margin-top: 10px; }
+        .back-btn:hover { background: #e68900; }
+        .calc-page { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .section { background: #f8f9fa; border-radius: 16px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #ff9800; }
+        .section h2 { color: #0a2e5c; margin-bottom: 15px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        .input-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .input-row label { width: 120px; font-size: 0.85rem; font-weight: 600; color: #333; }
+        .input-row input { width: 150px; padding: 8px 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+        .input-row input:focus { outline: none; border-color: #ff9800; }
+        .input-row .blue-input { background: #e3f2fd; border-color: #2196f3; }
+        .input-row .result-value { background: #e8f0fe; padding: 8px 12px; border-radius: 8px; min-width: 150px; text-align: center; font-weight: bold; color: #0a2e5c; }
+        .inline-group { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .separator { margin: 15px 0; border-top: 1px dashed #ccc; }
+        .footer-quote { text-align: center; margin-top: 30px; padding: 15px; color: #ff9800; font-style: italic; font-size: 1.1rem; }
+        .copyright { text-align: center; font-size: 0.7rem; color: #888; margin-top: 10px; }
         @media (max-width: 768px) {
-            .grid-2col { grid-template-columns: 1fr; }
             .input-row { flex-direction: column; align-items: flex-start; }
             .input-row label { width: 100%; }
         }
@@ -52,100 +51,95 @@
             <p>Interpolation | Circle | Cylinder | Square | Rectangle</p>
         </div>
 
-        <!-- Section 1: Interpolation/Extrapolation -->
+        <!-- ==================== SECTION 1: INTERPOLATION ==================== -->
         <div class="section">
             <h2>📈 Interpolation / Extrapolation</h2>
-            <div class="grid-2col">
-                <div>
-                    <h3>Point 1</h3>
-                    <div class="input-row"><label>X₁ Value</label><input id="int_x1" class="blue-input" value="50" oninput="calcInterpolation()"><select id="int_x1_unit" onchange="calcInterpolation()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Y₁ Value</label><input id="int_y1" class="blue-input" value="55" oninput="calcInterpolation()"><select id="int_y1_unit" onchange="calcInterpolation()"><option>-</option><option>m</option><option>cm</option><option>mm</option></select></div>
-                </div>
-                <div>
-                    <h3>Point 2</h3>
-                    <div class="input-row"><label>X₂ Value</label><input id="int_x2" class="blue-input" value="30" oninput="calcInterpolation()"><select id="int_x2_unit" onchange="calcInterpolation()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Y₂ Value</label><input id="int_y2" class="blue-input" value="60" oninput="calcInterpolation()"><select id="int_y2_unit" onchange="calcInterpolation()"><option>-</option><option>m</option><option>cm</option><option>mm</option></select></div>
-                </div>
+            
+            <div class="inline-group">
+                <span style="font-weight: bold;">Point 1:</span>
+                <div class="input-row" style="display: inline-flex;"><label>X₁</label><input id="int_x1" class="blue-input" value="10" oninput="calcInterpolation()" style="width:100px;"></div>
+                <div class="input-row" style="display: inline-flex;"><label>Y₁</label><input id="int_y1" class="blue-input" value="20" oninput="calcInterpolation()" style="width:100px;"></div>
             </div>
-            <hr>
-            <div class="grid-2col">
-                <div>
-                    <h3>Find Y₃ from X₃</h3>
-                    <div class="input-row"><label>X₃ Value</label><input id="int_x3" class="blue-input" value="25" oninput="calcInterpolation()"><select id="int_x3_unit" onchange="calcInterpolation()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>→ Y₃ Result</label><div class="result" id="int_y3_result">--</div></div>
-                </div>
-                <div>
-                    <h3>Find X₄ from Y₄</h3>
-                    <div class="input-row"><label>Y₄ Value</label><input id="int_y4" class="blue-input" value="65" oninput="calcInterpolation()"><select id="int_y4_unit" onchange="calcInterpolation()"><option>-</option><option>m</option><option>cm</option><option>mm</option></select></div>
-                    <div class="input-row"><label>→ X₄ Result</label><div class="result" id="int_x4_result">--</div></div>
-                </div>
+            
+            <div class="inline-group">
+                <span style="font-weight: bold;">Point 2:</span>
+                <div class="input-row" style="display: inline-flex;"><label>X₂</label><input id="int_x2" class="blue-input" value="30" oninput="calcInterpolation()" style="width:100px;"></div>
+                <div class="input-row" style="display: inline-flex;"><label>Y₂</label><input id="int_y2" class="blue-input" value="40" oninput="calcInterpolation()" style="width:100px;"></div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <div class="inline-group">
+                <span style="font-weight: bold;">Find Y₃ from X₃:</span>
+                <div class="input-row" style="display: inline-flex;"><label>X₃</label><input id="int_x3" class="blue-input" value="25" oninput="calcInterpolation()" style="width:100px;"></div>
+                <div class="input-row" style="display: inline-flex;"><label>→ Y₃ =</label><span class="result-value" id="int_y3_result">--</span></div>
+            </div>
+            
+            <div class="inline-group">
+                <span style="font-weight: bold;">Find X₄ from Y₄:</span>
+                <div class="input-row" style="display: inline-flex;"><label>Y₄</label><input id="int_y4" class="blue-input" value="35" oninput="calcInterpolation()" style="width:100px;"></div>
+                <div class="input-row" style="display: inline-flex;"><label>→ X₄ =</label><span class="result-value" id="int_x4_result">--</span></div>
             </div>
         </div>
 
-        <!-- Section 2: Circle Calculator -->
+        <!-- ==================== SECTION 2: CIRCLE ==================== -->
         <div class="section">
             <h2>⚪ Circle Calculator</h2>
-            <div class="grid-2col">
-                <div>
-                    <div class="input-row"><label>Diameter</label><input id="circle_dia" class="blue-input" value="2" oninput="calcCircle()"><select id="circle_dia_unit" onchange="calcCircle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Angle</label><input id="circle_angle" class="blue-input" value="360" oninput="calcCircle()"><select id="circle_angle_unit" onchange="calcCircle()"><option>Degree</option><option>Radian</option></select></div>
-                </div>
-                <div>
-                    <div class="input-row"><label>Radius</label><div class="result" id="circle_radius">--</div><select id="circle_radius_unit" onchange="calcCircle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Circumference</label><div class="result" id="circle_circum">--</div><select id="circle_circum_unit" onchange="calcCircle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Area</label><div class="result" id="circle_area">--</div><select id="circle_area_unit" onchange="calcCircle()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Area of Sector</label><div class="result" id="circle_sector">--</div><select id="circle_sector_unit" onchange="calcCircle()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Area of Segment</label><div class="result" id="circle_segment">--</div><select id="circle_segment_unit" onchange="calcCircle()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Arc Length</label><div class="result" id="circle_arc">--</div><select id="circle_arc_unit" onchange="calcCircle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Diameter</label><input id="circle_dia" class="blue-input" value="2" oninput="calcCircle()" style="width:120px;"><select id="circle_dia_unit" onchange="calcCircle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Radius</label><span class="result-value" id="circle_radius">--</span><select id="circle_radius_unit" onchange="calcCircle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Circumference</label><span class="result-value" id="circle_circum">--</span><select id="circle_circum_unit" onchange="calcCircle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Area</label><span class="result-value" id="circle_area">--</span><select id="circle_area_unit" onchange="calcCircle()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+            </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Angle</label><input id="circle_angle" class="blue-input" value="360" oninput="calcCircle()" style="width:120px;"><select id="circle_angle_unit" onchange="calcCircle()"><option selected>Degree</option><option>Radian</option></select></div>
+                <div class="input-row"><label>Area of Sector</label><span class="result-value" id="circle_sector">--</span><select id="circle_sector_unit" onchange="calcCircle()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Area of Segment</label><span class="result-value" id="circle_segment">--</span><select id="circle_segment_unit" onchange="calcCircle()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Arc Length</label><span class="result-value" id="circle_arc">--</span><select id="circle_arc_unit" onchange="calcCircle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
             </div>
         </div>
 
-        <!-- Section 3: Cylinder Calculator -->
+        <!-- ==================== SECTION 3: CYLINDER ==================== -->
         <div class="section">
             <h2>🧴 Cylinder Calculator</h2>
-            <div class="grid-2col">
-                <div>
-                    <div class="input-row"><label>Diameter</label><input id="cyl_dia" class="blue-input" value="3" oninput="calcCylinder()"><select id="cyl_dia_unit" onchange="calcCylinder()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Length / Height</label><input id="cyl_height" class="blue-input" value="4" oninput="calcCylinder()"><select id="cyl_height_unit" onchange="calcCylinder()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
-                <div>
-                    <div class="input-row"><label>Radius</label><div class="result" id="cyl_radius">--</div><select id="cyl_radius_unit" onchange="calcCylinder()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Total Surface Area</label><div class="result" id="cyl_surface">--</div><select id="cyl_surface_unit" onchange="calcCylinder()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Curved Surface Area</label><div class="result" id="cyl_curved">--</div><select id="cyl_curved_unit" onchange="calcCylinder()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Volume</label><div class="result" id="cyl_volume">--</div><select id="cyl_volume_unit" onchange="calcCylinder()"><option>m³</option><option>cm³</option><option>mm³</option><option>ft³</option><option>in³</option></select></div>
-                </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Diameter</label><input id="cyl_dia" class="blue-input" value="3" oninput="calcCylinder()" style="width:120px;"><select id="cyl_dia_unit" onchange="calcCylinder()"><option>mm</option><option selected>m</option><option>cm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Length/Height</label><input id="cyl_height" class="blue-input" value="4" oninput="calcCylinder()" style="width:120px;"><select id="cyl_height_unit" onchange="calcCylinder()"><option selected>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Radius</label><span class="result-value" id="cyl_radius">--</span><select id="cyl_radius_unit" onchange="calcCylinder()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+            </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Total Surface Area</label><span class="result-value" id="cyl_surface">--</span><select id="cyl_surface_unit" onchange="calcCylinder()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Curved Surface Area</label><span class="result-value" id="cyl_curved">--</span><select id="cyl_curved_unit" onchange="calcCylinder()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Volume</label><span class="result-value" id="cyl_volume">--</span><select id="cyl_volume_unit" onchange="calcCylinder()"><option>cm³</option><option selected>m³</option><option>mm³</option><option>ft³</option><option>in³</option></select></div>
             </div>
         </div>
 
-        <!-- Section 4: Square Calculator -->
+        <!-- ==================== SECTION 4: SQUARE ==================== -->
         <div class="section">
             <h2>⬛ Square Calculator</h2>
-            <div class="grid-2col">
-                <div>
-                    <div class="input-row"><label>Side Length</label><input id="sq_side" class="blue-input" value="2" oninput="calcSquare()"><select id="sq_side_unit" onchange="calcSquare()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
-                <div>
-                    <div class="input-row"><label>Perimeter</label><div class="result" id="sq_perimeter">--</div><select id="sq_perimeter_unit" onchange="calcSquare()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Area</label><div class="result" id="sq_area">--</div><select id="sq_area_unit" onchange="calcSquare()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Diagonal</label><div class="result" id="sq_diagonal">--</div><select id="sq_diagonal_unit" onchange="calcSquare()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Side Length</label><input id="sq_side" class="blue-input" value="2" oninput="calcSquare()" style="width:120px;"><select id="sq_side_unit" onchange="calcSquare()"><option selected>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Perimeter</label><span class="result-value" id="sq_perimeter">--</span><select id="sq_perimeter_unit" onchange="calcSquare()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Area</label><span class="result-value" id="sq_area">--</span><select id="sq_area_unit" onchange="calcSquare()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Diagonal</label><span class="result-value" id="sq_diagonal">--</span><select id="sq_diagonal_unit" onchange="calcSquare()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
             </div>
         </div>
 
-        <!-- Section 5: Rectangle Calculator -->
+        <!-- ==================== SECTION 5: RECTANGLE ==================== -->
         <div class="section">
             <h2>📏 Rectangle Calculator</h2>
-            <div class="grid-2col">
-                <div>
-                    <div class="input-row"><label>Length</label><input id="rect_length" class="blue-input" value="5" oninput="calcRectangle()"><select id="rect_length_unit" onchange="calcRectangle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Width</label><input id="rect_width" class="blue-input" value="3" oninput="calcRectangle()"><select id="rect_width_unit" onchange="calcRectangle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
-                <div>
-                    <div class="input-row"><label>Perimeter</label><div class="result" id="rect_perimeter">--</div><select id="rect_perimeter_unit" onchange="calcRectangle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                    <div class="input-row"><label>Area</label><div class="result" id="rect_area">--</div><select id="rect_area_unit" onchange="calcRectangle()"><option>m²</option><option>cm²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
-                    <div class="input-row"><label>Diagonal</label><div class="result" id="rect_diagonal">--</div><select id="rect_diagonal_unit" onchange="calcRectangle()"><option>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
-                </div>
+            
+            <div class="inline-group">
+                <div class="input-row"><label>Length</label><input id="rect_length" class="blue-input" value="5" oninput="calcRectangle()" style="width:120px;"><select id="rect_length_unit" onchange="calcRectangle()"><option selected>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Width</label><input id="rect_width" class="blue-input" value="3" oninput="calcRectangle()" style="width:120px;"><select id="rect_width_unit" onchange="calcRectangle()"><option selected>m</option><option>cm</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Perimeter</label><span class="result-value" id="rect_perimeter">--</span><select id="rect_perimeter_unit" onchange="calcRectangle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
+                <div class="input-row"><label>Area</label><span class="result-value" id="rect_area">--</span><select id="rect_area_unit" onchange="calcRectangle()"><option>cm²</option><option selected>m²</option><option>mm²</option><option>ft²</option><option>in²</option></select></div>
+                <div class="input-row"><label>Diagonal</label><span class="result-value" id="rect_diagonal">--</span><select id="rect_diagonal_unit" onchange="calcRectangle()"><option>cm</option><option selected>m</option><option>mm</option><option>ft</option><option>in</option></select></div>
             </div>
         </div>
     </div>
@@ -161,21 +155,24 @@
     const volumeToM3 = { "m³": 1, "cm³": 0.000001, "mm³": 1e-9, "ft³": 0.0283168, "in³": 1.6387e-5 };
     
     function convertLength(val, fromUnit, toUnit) {
+        if (fromUnit === toUnit) return val;
         let inM = val * lengthToM[fromUnit];
         return inM / lengthToM[toUnit];
     }
     
     function convertArea(val, fromUnit, toUnit) {
+        if (fromUnit === toUnit) return val;
         let inM2 = val * areaToM2[fromUnit];
         return inM2 / areaToM2[toUnit];
     }
     
     function convertVolume(val, fromUnit, toUnit) {
+        if (fromUnit === toUnit) return val;
         let inM3 = val * volumeToM3[fromUnit];
         return inM3 / volumeToM3[toUnit];
     }
     
-    // Interpolation/Extrapolation
+    // ==================== INTERPOLATION ====================
     function calcInterpolation() {
         let x1 = parseFloat(document.getElementById('int_x1').value) || 0;
         let y1 = parseFloat(document.getElementById('int_y1').value) || 0;
@@ -184,33 +181,24 @@
         let x3 = parseFloat(document.getElementById('int_x3').value) || 0;
         let y4 = parseFloat(document.getElementById('int_y4').value) || 0;
         
-        let x1u = document.getElementById('int_x1_unit').value;
-        let x2u = document.getElementById('int_x2_unit').value;
-        let x3u = document.getElementById('int_x3_unit').value;
-        
-        // Convert all X to meters for calculation
-        let x1_m = x1 * lengthToM[x1u];
-        let x2_m = x2 * lengthToM[x2u];
-        let x3_m = x3 * lengthToM[x3u];
-        
-        if (x2_m !== x1_m) {
-            let slope = (y2 - y1) / (x2_m - x1_m);
-            
-            // Calculate Y3 from X3
-            let y3 = y1 + slope * (x3_m - x1_m);
+        if (x2 !== x1) {
+            let slope = (y2 - y1) / (x2 - x1);
+            let y3 = y1 + slope * (x3 - x1);
             document.getElementById('int_y3_result').innerHTML = y3.toFixed(6);
             
-            // Calculate X4 from Y4
             if (slope !== 0) {
-                let x4_m = x1_m + (y4 - y1) / slope;
-                let x4u = document.getElementById('int_x4_result').parentElement.querySelector('select').value;
-                let x4 = x4_m / lengthToM[x4u];
+                let x4 = x1 + (y4 - y1) / slope;
                 document.getElementById('int_x4_result').innerHTML = x4.toFixed(6);
+            } else {
+                document.getElementById('int_x4_result').innerHTML = '--';
             }
+        } else {
+            document.getElementById('int_y3_result').innerHTML = '--';
+            document.getElementById('int_x4_result').innerHTML = '--';
         }
     }
     
-    // Circle Calculator
+    // ==================== CIRCLE ====================
     function calcCircle() {
         let dia = parseFloat(document.getElementById('circle_dia').value) || 0;
         let diaUnit = document.getElementById('circle_dia_unit').value;
@@ -222,18 +210,15 @@
         let circum_m = Math.PI * dia_m;
         let area_m2 = Math.PI * radius_m * radius_m;
         
-        // Convert angle to degrees
         let angleDeg = angleUnit === "Radian" ? angle * 180 / Math.PI : angle;
         let fraction = angleDeg / 360;
         
         let sector_m2 = area_m2 * fraction;
         let arc_m = circum_m * fraction;
-        
-        // Segment area = (θ - sinθ) * r² / 2
         let angleRad = angleUnit === "Degree" ? angle * Math.PI / 180 : angle;
         let segment_m2 = (angleRad - Math.sin(angleRad)) * radius_m * radius_m / 2;
         
-        // Display results with selected units
+        // Get output units
         let radiusUnit = document.getElementById('circle_radius_unit').value;
         let circumUnit = document.getElementById('circle_circum_unit').value;
         let areaUnit = document.getElementById('circle_area_unit').value;
@@ -249,7 +234,7 @@
         document.getElementById('circle_arc').innerHTML = convertLength(arc_m, 'm', arcUnit).toFixed(6);
     }
     
-    // Cylinder Calculator
+    // ==================== CYLINDER ====================
     function calcCylinder() {
         let dia = parseFloat(document.getElementById('cyl_dia').value) || 0;
         let diaUnit = document.getElementById('cyl_dia_unit').value;
@@ -275,7 +260,7 @@
         document.getElementById('cyl_volume').innerHTML = convertVolume(volume_m3, 'm³', volumeUnit).toFixed(6);
     }
     
-    // Square Calculator
+    // ==================== SQUARE ====================
     function calcSquare() {
         let side = parseFloat(document.getElementById('sq_side').value) || 0;
         let sideUnit = document.getElementById('sq_side_unit').value;
@@ -294,7 +279,7 @@
         document.getElementById('sq_diagonal').innerHTML = convertLength(diagonal_m, 'm', diagUnit).toFixed(6);
     }
     
-    // Rectangle Calculator
+    // ==================== RECTANGLE ====================
     function calcRectangle() {
         let length = parseFloat(document.getElementById('rect_length').value) || 0;
         let lengthUnit = document.getElementById('rect_length_unit').value;
@@ -316,7 +301,7 @@
         document.getElementById('rect_diagonal').innerHTML = convertLength(diagonal_m, 'm', diagUnit).toFixed(6);
     }
     
-    // Initialize all calculations
+    // Initialize all
     calcInterpolation();
     calcCircle();
     calcCylinder();
