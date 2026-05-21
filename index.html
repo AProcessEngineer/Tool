@@ -54,11 +54,11 @@
         .gas-calc-section { background: #f0f4f8; border-radius: 16px; padding: 20px; margin-top: 30px; }
         .gas-calc-section h3 { color: #0a2e5c; margin-bottom: 15px; }
         .gas-input-row { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-        .gas-input-row label { width: 160px; font-size: 0.85rem; font-weight: 500; color: #555; }
+        .gas-input-row label { width: 140px; font-size: 0.85rem; font-weight: 500; color: #555; }
         .gas-input-row input, .gas-input-row select { flex: 1; min-width: 120px; padding: 8px 12px; border: 2px solid #ddd; border-radius: 8px; }
         .gas-input-row .blue-input { background: #e3f2fd !important; border-color: #2196f3 !important; }
         .gas-result { font-weight: bold; color: #0a2e5c; background: #e8f0fe; padding: 8px 12px; border-radius: 8px; flex: 1; text-align: center; }
-        .gas-grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; margin-top: 15px; }
+        .gas-grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-top: 15px; }
         hr { margin: 15px 0; border: none; border-top: 1px solid #ddd; }
         @media (max-width: 768px) {
             .header h1 { font-size: 1.6rem; }
@@ -89,10 +89,10 @@
         if (n === 0) return "0";
         if (Math.abs(n) < 0.0001 && Math.abs(n) > 0) return n.toExponential(4);
         if (Math.abs(n) >= 1000000) return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
-        return n.toFixed(6).replace(/\.?0+$/, '');
+        return parseFloat(n.toFixed(6)).toString();
     }
 
-    // ==================== ALL 60+ UNIT CATEGORIES ====================
+    // ==================== ALL UNIT CATEGORIES ====================
     const unitCategories = {
         length: { name: "📏 Length", units: { "meter":1, "kilometer":0.001, "centimeter":100, "millimeter":1000, "mile":0.000621371, "yard":1.09361, "foot":3.28084, "inch":39.3701 }, order: ["meter","kilometer","centimeter","millimeter","mile","yard","foot","inch"] },
         pressure_gauge: { name: "⚡ Pressure (Gauge)", units: { "bar g":1, "psi g":14.5038, "kPa g":100, "kg/cm² g":1.01972, "mmHg g":750.062, "mmH₂O g":10197.2 }, order: ["bar g","psi g","kPa g","kg/cm² g","mmHg g","mmH₂O g"] },
@@ -136,6 +136,9 @@
     let fromUnit = "meter";
     let toUnit = "kilometer";
 
+    // Store DOM elements to avoid re-rendering issues
+    let isRendering = false;
+
     const tools = [
         { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "60+ engineering unit categories" },
         { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry" },
@@ -174,8 +177,11 @@
         if (mw > 0 && mass > 0) {
             let molar = mass / mw;
             let vol = molar * 22.414;
+            let mmd = vol * 0.000001;
+            let scfm = vol * 0.000622;
             if (document.getElementById('gp_molar_out')) document.getElementById('gp_molar_out').innerHTML = `<strong>${formatNumber(molar)}</strong> <span style="font-size:0.7rem;">kmol/hr</span>`;
             if (document.getElementById('gp_vol_out')) document.getElementById('gp_vol_out').innerHTML = `<strong>${formatNumber(vol)}</strong> <span style="font-size:0.7rem;">Nm³/hr</span>`;
+            if (document.getElementById('gp_scfm_out')) document.getElementById('gp_scfm_out').innerHTML = `<strong>${formatNumber(scfm)}</strong> <span style="font-size:0.7rem;">MMSCFD</span>`;
         }
     }
     function gpFlowFromVol() {
@@ -184,8 +190,10 @@
         if (mw > 0 && vol > 0) {
             let molar = vol / 22.414;
             let mass = molar * mw;
+            let massLB = mass * 2.20462;
             if (document.getElementById('gp_molar_out2')) document.getElementById('gp_molar_out2').innerHTML = `<strong>${formatNumber(molar)}</strong> <span style="font-size:0.7rem;">kmol/hr</span>`;
             if (document.getElementById('gp_mass_out2')) document.getElementById('gp_mass_out2').innerHTML = `<strong>${formatNumber(mass)}</strong> <span style="font-size:0.7rem;">kg/hr</span>`;
+            if (document.getElementById('gp_mass_lb_out')) document.getElementById('gp_mass_lb_out').innerHTML = `<strong>${formatNumber(massLB)}</strong> <span style="font-size:0.7rem;">lb/hr</span>`;
         }
     }
     function gpActualToNorm() {
@@ -196,8 +204,10 @@
         if (p > 0 && t > 0 && actual > 0) {
             let norm = actual * (p / 101.325) * (273.15 / t) * r;
             let molar = norm / 22.414;
+            let mmcfd = norm * 0.0000008958;
             if (document.getElementById('gp_norm_out')) document.getElementById('gp_norm_out').innerHTML = `<strong>${formatNumber(norm)}</strong> <span style="font-size:0.7rem;">Nm³/hr</span>`;
             if (document.getElementById('gp_molar_act_out')) document.getElementById('gp_molar_act_out').innerHTML = `<strong>${formatNumber(molar)}</strong> <span style="font-size:0.7rem;">kmol/hr</span>`;
+            if (document.getElementById('gp_mmcfd_out')) document.getElementById('gp_mmcfd_out').innerHTML = `<strong>${formatNumber(mmcfd)}</strong> <span style="font-size:0.7rem;">MMSCFD</span>`;
         }
     }
     function gpNormToActual() {
@@ -237,6 +247,37 @@
         if (document.getElementById('gp_ideal_result')) document.getElementById('gp_ideal_result').innerHTML = `<strong>${result}</strong>`;
     }
 
+    // Update functions without re-rendering
+    function updateFromValue(val) {
+        inputVal = parseFloat(val) || 0;
+        updateDisplay();
+    }
+    
+    function updateDisplay() {
+        const cat = unitCategories[currentCat];
+        const list = cat.order;
+        const conv = getConversions();
+        
+        // Update preview
+        const preview = document.getElementById('previewResult');
+        if (preview) preview.value = formatNumber(conv[toUnit]);
+        
+        // Update all result cards
+        list.forEach(unit => {
+            const card = document.getElementById(`result_${unit.replace(/[^a-zA-Z0-9]/g, '_')}`);
+            if (card) card.innerHTML = formatNumber(conv[unit]);
+        });
+        
+        // Update gas phase calculations if on gas flow
+        if (currentCat === "gas_flow") {
+            if (typeof gpFlowFromMass === 'function') gpFlowFromMass();
+            if (typeof gpFlowFromVol === 'function') gpFlowFromVol();
+            if (typeof gpActualToNorm === 'function') gpActualToNorm();
+            if (typeof gpNormToActual === 'function') gpNormToActual();
+            if (typeof gpIdealGas === 'function') gpIdealGas();
+        }
+    }
+
     function renderUnitConverter() {
         const cat = unitCategories[currentCat];
         const list = cat.order;
@@ -251,14 +292,16 @@
                     ${Object.keys(unitCategories).map(c => `<button class="cat-tab ${c===currentCat?'active':''}" onclick="switchCat('${c}')">${unitCategories[c].name}</button>`).join('')}
                 </div>
                 <div class="input-section">
-                    <div class="input-group"><label class="input-label">📥 From Value</label><input type="number" id="fromVal" class="value-input" value="${inputVal}" step="any" oninput="updateVal(this.value)"></div>
-                    <div class="input-group"><label class="input-label">📤 From Unit</label><select id="fromUnitSelect" class="unit-select-input" onchange="updateFrom(this.value)">${list.map(u => `<option ${u===fromUnit?'selected':''}>${u}</option>`).join('')}</select></div>
+                    <div class="input-group"><label class="input-label">📥 From Value</label><input type="number" id="fromValueInput" class="value-input" value="${inputVal}" step="any" oninput="updateFromValue(this.value)"></div>
+                    <div class="input-group"><label class="input-label">📤 From Unit</label><select id="fromUnitSelect" class="unit-select-input" onchange="updateFromUnit(this.value)">${list.map(u => `<option value="${u}" ${u===fromUnit?'selected':''}>${u}</option>`).join('')}</select></div>
                     <div class="swap-icon" onclick="swapUnits()">⇅</div>
-                    <div class="input-group"><label class="input-label">🎯 To Unit</label><select id="toUnitSelect" class="unit-select-input" onchange="updateTo(this.value)">${list.map(u => `<option ${u===toUnit?'selected':''}>${u}</option>`).join('')}</select></div>
-                    <div class="input-group"><label class="input-label">✨ Preview</label><input type="text" class="value-input" value="${formatNumber(conv[toUnit])}" readonly style="background:#f5f5f5;"></div>
+                    <div class="input-group"><label class="input-label">🎯 To Unit</label><select id="toUnitSelect" class="unit-select-input" onchange="updateToUnit(this.value)">${list.map(u => `<option value="${u}" ${u===toUnit?'selected':''}>${u}</option>`).join('')}</select></div>
+                    <div class="input-group"><label class="input-label">✨ Preview</label><input type="text" id="previewResult" class="value-input" value="${formatNumber(conv[toUnit])}" readonly style="background:#f5f5f5;"></div>
                 </div>
                 <div class="section-title">📊 All Results (from ${fromUnit})</div>
-                <div class="results-grid">${list.map(u => `<div class="result-card"><div class="value">${formatNumber(conv[u])}</div><div class="unit">${u}</div></div>`).join('')}</div>
+                <div class="results-grid" id="resultsGrid">
+                    ${list.map(u => `<div class="result-card"><div class="value" id="result_${u.replace(/[^a-zA-Z0-9]/g, '_')}">${formatNumber(conv[u])}</div><div class="unit">${u}</div></div>`).join('')}
+                </div>
                 ${showGasCalc ? `
                 <div class="gas-calc-section">
                     <h3>🔥 Gas Phase Calculator</h3>
@@ -268,16 +311,19 @@
                             <div class="gas-input-row"><label>Molecular Weight</label><input id="gp_mw_mass" class="blue-input" value="28" oninput="gpFlowFromMass()"><span>kg/kmol</span><input id="gp_mass_flow" class="blue-input" value="20000" oninput="gpFlowFromMass()"><span>kg/hr</span></div>
                             <div class="gas-input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="gp_molar_out"><strong>714.2857</strong> kmol/hr</div></div>
                             <div class="gas-input-row"><label>→ Volumetric Flowrate</label><div class="gas-result" id="gp_vol_out"><strong>16007.14</strong> Nm³/hr</div></div>
+                            <div class="gas-input-row"><label>→ MMSCFD</label><div class="gas-result" id="gp_scfm_out"><strong>14.34</strong> MMSCFD</div></div>
                             <hr>
                             <div class="gas-input-row"><label>Molecular Weight</label><input id="gp_mw_vol" class="blue-input" value="28" oninput="gpFlowFromVol()"><span>kg/kmol</span><input id="gp_vol_flow" class="blue-input" value="16007" oninput="gpFlowFromVol()"><span>Nm³/hr</span></div>
                             <div class="gas-input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="gp_molar_out2"><strong>714.2857</strong> kmol/hr</div></div>
                             <div class="gas-input-row"><label>→ Mass Flowrate</label><div class="gas-result" id="gp_mass_out2"><strong>20000.00</strong> kg/hr</div></div>
+                            <div class="gas-input-row"><label>→ Mass Flowrate (lb/hr)</label><div class="gas-result" id="gp_mass_lb_out"><strong>44092.45</strong> lb/hr</div></div>
                         </div>
                         <div>
                             <h4>📏 Actual Volumetric Flowrate</h4>
                             <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_act_p" class="blue-input" value="800" oninput="gpActualToNorm()"><span>kPa g</span><input id="gp_act_t" class="blue-input" value="308" oninput="gpActualToNorm()"><span>K</span><input id="gp_act_r" class="blue-input" value="1" oninput="gpActualToNorm()"><span>Ratio</span><input id="gp_act_vol" class="blue-input" value="100" oninput="gpActualToNorm()"><span>m³/hr</span></div>
                             <div class="gas-input-row"><label>→ Normal Vol Flow</label><div class="gas-result" id="gp_norm_out"><strong>--</strong> Nm³/hr</div></div>
                             <div class="gas-input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="gp_molar_act_out"><strong>--</strong> kmol/hr</div></div>
+                            <div class="gas-input-row"><label>→ MMSCFD</label><div class="gas-result" id="gp_mmcfd_out"><strong>--</strong> MMSCFD</div></div>
                             <hr>
                             <div class="gas-input-row"><label>Operating Pressure</label><input id="gp_norm_p" class="blue-input" value="800" oninput="gpNormToActual()"><span>kPa g</span><input id="gp_norm_t" class="blue-input" value="308" oninput="gpNormToActual()"><span>K</span><input id="gp_norm_r" class="blue-input" value="1" oninput="gpNormToActual()"><span>Ratio</span><input id="gp_norm_vol" class="blue-input" value="16007" oninput="gpNormToActual()"><span>Nm³/hr</span></div>
                             <div class="gas-input-row"><label>→ Actual Vol Flow</label><div class="gas-result" id="gp_actual_out"><strong>--</strong> m³/hr</div></div>
@@ -313,10 +359,42 @@
         `;
     }
 
-    window.updateVal = function(v) { inputVal = parseFloat(v) || 0; renderApp(); };
-    window.updateFrom = function(u) { fromUnit = u; renderApp(); };
-    window.updateTo = function(u) { toUnit = u; renderApp(); };
-    window.swapUnits = function() { let t = fromUnit; fromUnit = toUnit; toUnit = t; renderApp(); };
+    window.updateFromValue = function(v) { 
+        inputVal = parseFloat(v) || 0; 
+        updateDisplay();
+    };
+    window.updateFromUnit = function(u) { 
+        fromUnit = u; 
+        const cat = unitCategories[currentCat];
+        const conv = getConversions();
+        const preview = document.getElementById('previewResult');
+        if (preview) preview.value = formatNumber(conv[toUnit]);
+        // Update all result cards
+        const list = cat.order;
+        list.forEach(unit => {
+            const card = document.getElementById(`result_${unit.replace(/[^a-zA-Z0-9]/g, '_')}`);
+            if (card) card.innerHTML = formatNumber(conv[unit]);
+        });
+        if (currentCat === "gas_flow") {
+            gpFlowFromMass(); gpFlowFromVol(); gpActualToNorm(); gpNormToActual(); gpIdealGas();
+        }
+    };
+    window.updateToUnit = function(u) { 
+        toUnit = u; 
+        const conv = getConversions();
+        const preview = document.getElementById('previewResult');
+        if (preview) preview.value = formatNumber(conv[toUnit]);
+    };
+    window.swapUnits = function() { 
+        let t = fromUnit; 
+        fromUnit = toUnit; 
+        toUnit = t; 
+        const fromSelect = document.getElementById('fromUnitSelect');
+        const toSelect = document.getElementById('toUnitSelect');
+        if (fromSelect) fromSelect.value = fromUnit;
+        if (toSelect) toSelect.value = toUnit;
+        updateFromValue(document.getElementById('fromValueInput')?.value || 1);
+    };
     window.selectTool = function(id) { 
         currentView = id; 
         if (id === "unit_converter") { 
@@ -326,15 +404,6 @@
             inputVal = 1; 
         } 
         renderApp(); 
-        if (id === "unit_converter") {
-            setTimeout(() => {
-                if (document.getElementById('gp_mw_mass')) gpFlowFromMass();
-                if (document.getElementById('gp_mw_vol')) gpFlowFromVol();
-                if (document.getElementById('gp_act_p')) gpActualToNorm();
-                if (document.getElementById('gp_norm_p')) gpNormToActual();
-                if (document.getElementById('gp_ideal_solve')) gpIdealGas();
-            }, 100);
-        }
     };
     window.goBack = function() { currentView = "dashboard"; renderApp(); };
     window.switchCat = function(cat) { 
@@ -347,15 +416,23 @@
     };
 
     function renderApp() {
+        if (isRendering) return;
+        isRendering = true;
         const app = document.getElementById("app");
         if (currentView === "dashboard") app.innerHTML = renderDashboard();
         else if (currentView === "unit_converter") app.innerHTML = renderUnitConverter();
         else app.innerHTML = renderComingSoon(tools.find(t => t.id === currentView)?.name || "Engineering Tool");
         
         if (currentView === "unit_converter") {
-            let inp = document.getElementById("fromVal");
-            if (inp) inp.value = inputVal;
+            setTimeout(() => {
+                const inp = document.getElementById("fromValueInput");
+                if (inp) inp.value = inputVal;
+                if (currentCat === "gas_flow") {
+                    gpFlowFromMass(); gpFlowFromVol(); gpActualToNorm(); gpNormToActual(); gpIdealGas();
+                }
+            }, 50);
         }
+        isRendering = false;
     }
     renderApp();
 </script>
