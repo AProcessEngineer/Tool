@@ -202,18 +202,18 @@
     let toUnit = "kilometer";
 
     const tools = [
-        { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories" },
-        { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law" },
-        { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry" },
-        { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow" },
-        { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge" },
-        { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH" }
-    ];
+    { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories", link: "index.html" },
+    { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law", link: "index.html" },
+    { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry", link: "#" },
+    { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow", link: "line-sizing.html" },
+    { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge", link: "psv-sizing.html" },
+    { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH", link: "pump-sizing.html" }
+];
 
     function renderDashboard() {
         return `
             <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
-            <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="selectTool('${t.id}')"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
+            <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="window.location.href='${t.link}'"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
             <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
             <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
         `;
