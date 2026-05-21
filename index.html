@@ -202,8 +202,8 @@
     let toUnit = "kilometer";
 
     const tools = [
-    { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories", link: "index.html" },
-    { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law", link: "index.html" },
+    { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories", link: null },
+    { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law", link: null },
     { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry, circle, cylinder, square, rectangle", link: "mathematical-calc.html" },
     { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow", link: "#" },
     { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge", link: "#" },
@@ -211,13 +211,13 @@
 ];
 
     function renderDashboard() {
-        return `
-            <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
-            <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="window.location.href='${t.link}'"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
-            <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
-            <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
-        `;
-    }
+    return `
+        <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
+        <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="${t.link ? `window.location.href='${t.link}'` : `selectTool('${t.id}')`}"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
+        <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
+        <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
+    `;
+}
 
     function getConversions() {
         const cat = unitCategories[currentCat];
