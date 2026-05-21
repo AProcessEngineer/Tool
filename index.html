@@ -16,9 +16,9 @@
         .header { text-align: center; margin-bottom: 40px; padding: 20px; }
         .header h1 { font-size: 2.5rem; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
         .header h1 span { color: #ff9800; }
-        .header p { color: #b8d4f0; font-size: 1.2rem; margin-top: 10px; }
-        .footer-quote { text-align: center; margin-top: 50px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.2); color: #ff9800; font-style: italic; }
-        .copyright { text-align: center; font-size: 1.2rem; color: #888; margin-top: 10px; padding: 10px; }
+        .header p { color: #b8d4f0; font-size: 1.5rem; font-weight: bold; margin-top: 10px; letter-spacing: 2px; }
+        .footer-quote { text-align: center; margin-top: 50px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.2); color: #ff9800; font-style: italic; font-size: 1.5rem; font-weight: 500; letter-spacing: 1px; }
+        .copyright { text-align: center; font-size: 0.8rem; color: #888; margin-top: 10px; padding: 10px; }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .tool-card {
             background: rgba(255,255,255,0.95); border-radius: 20px; padding: 28px 20px; text-align: center;
@@ -62,6 +62,8 @@
         hr { margin: 15px 0; border: none; border-top: 1px solid #ddd; }
         @media (max-width: 768px) {
             .header h1 { font-size: 1.6rem; }
+            .header p { font-size: 1.2rem; }
+            .footer-quote { font-size: 1.2rem; }
             .input-section { grid-template-columns: 1fr; }
             .swap-icon { transform: rotate(90deg); padding: 10px 0; }
             .gas-grid-2col { grid-template-columns: 1fr; }
@@ -82,7 +84,7 @@
         if (e.key === 'F12') { e.preventDefault(); return false; }
     });
     document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
-    console.log("%c🔒 Process Engineer's Tool - Content Protected", "color: #ff9800; font-size: 16px; font-weight: bold;");
+    console.log("%c🔒 A Process Engineer's Tool - Content Protected", "color: #ff9800; font-size: 16px; font-weight: bold;");
 
     function formatNumber(n) {
         if (isNaN(n) || n === null) return "0";
@@ -210,10 +212,10 @@
 
     function renderDashboard() {
         return `
-            <div class="header"><h1><span>🛠️</span> Process Engineer's Tool</h1><p>Oil & Gas</p></div>
+            <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
             <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="selectTool('${t.id}')"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
             <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
-            <div class="copyright">© 2024 Process Engineer's Tool. All rights reserved.</div>
+            <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
         `;
     }
 
@@ -487,7 +489,7 @@
                 </div>
             </div>
             <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
-            <div class="copyright">© 2026 Process Engineer's Tool. All rights reserved.</div>
+            <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
         `;
     }
 
@@ -496,7 +498,7 @@
             <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
             <div class="tool-page"><h2>🛠️ ${toolName}</h2><p>Coming soon from your Excel data!</p></div>
             <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
-            <div class="copyright">© 2026 Process Engineer's Tool. All rights reserved.</div>
+            <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
         `;
     }
 
