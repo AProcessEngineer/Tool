@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receiver Sizing Calculation</title>
+  <meta name="description" content="Calculate receiver volume based on hold up time or compressor switching frequency.">
+  <link rel="stylesheet" type="text/css" href="https://www.codecalculation.com/static/css/bulma.min.css">
+  <style>
+    .inp { width: 120px; padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
+    .result { font-weight: bold; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+    .datasheet { padding: 20px; max-width: 800px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { padding: 10px; border: 1px solid #ddd; vertical-align: middle; }
+    .section_title td { background: #e8f0fe; font-weight: bold; }
+    .button { background: #3273dc; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+    .has-text-info { color: #2980b9; font-size: 0.9rem; }
+    .navbar.is-primary { background: #003366; padding: 10px; color: white; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <nav class="navbar is-primary"><div class="navbar-brand"><a class="navbar-item" style="color:white;">codecalculation</a></div></nav>
+  
+  <div class="datasheet">
+    <h1 style="text-align:center;">Sizing of Air/Nitrogen Receiver</h1>
+    <hr/>
+    
+    <h2>Inputs</h2>
+    <table>
+      <tr><td>Sizing Basis:</td><td><select v-model="sizing_basis" @change="clearResults"><option value="buffer_time">Hold Up/Buffer time</option><option value="switching_frequency">Switching Frequency of Compressor</option></select></td></tr>
+      <tr><td>Standard Pressure (Pstd):</td><td><input type="number" v-model="Pstd" class="inp"> bar(a)</td></tr>
+      <tr><td>Standard Temperature (Tstd):</td><td><input type="number" v-model="Tstd" class="inp"> °C</td></tr>
+      
+      <template v-if="sizing_basis == 'buffer_time'">
+        <tr><td>Hold up time (t):</td><td><input type="number" v-model="t" class="inp"> min</td></tr>
+        <tr><td>Demand Flow Rate (Qout):</td><td><input type="number" v-model="Qout" class="inp"> Nm³/hr</td></tr>
+      </template>
+      
+      <template v-else>
+        <tr><td>Switching Frequency (fs):</td><td><input type="number" v-model="fs" class="inp"> cycles/hr</td></tr>
+        <tr><td>Supply Flow (Qin):</td><td><input type="number" v-model="Qin" class="inp"> Nm³/hr</td></tr>
+        <tr><td>Demand Flow (Qout):</td><td><input type="number" v-model="Qout" class="inp"> Nm³/hr</td></tr>
+      </template>
+      
+      <tr><td>Unload/Cut-out Pressure (Pu):</td><td><input type="number" v-model="Pu" class="inp"> bar(a)</td></tr>
+      <tr><td>Load/Cut-in Pressure (Pl):</td><td><input type="number" v-model="Pl" class="inp"> bar(a)</td></tr>
+      <tr><td>Max Temperature (Tmax):</td><td><input type="number" v-model="Tmax" class="inp"> °C</td></tr>
+      <tr><td>Design Margin:</td><td><input type="number" v-model="margin" class="inp"> %</td></tr>
+    </table>
+    
+    <button @click="calculate" style="margin:20px 0;">Calculate</button>
+    
+    <h2>Results</h2>
+    <table>
+      <tr><td>Receiver Volume (with margin):</td><td><span class="result">{{ volume.toFixed(1) }}</span> m³</td></tr>
+      <template v-if="sizing_basis == 'switching_frequency'">
+        <tr><td>Load Factor (χ = Qout/Qin):</td><td>{{ chi }}</td></tr>
+        <tr><td>Recommended Volume (χ=0.5 worst case):</td><td><span class="result">{{ volumeRec.toFixed(1) }}</span> m³</td></tr>
+      </template>
+    </table>
+    <p class="has-text-info" style="margin-top:15px;">* Volume based on isothermal compression/expansion at Tmax</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      sizing_basis: 'buffer_time',
+      Pstd: 1.01325, Tstd: 15, t: 5, fs: 60, Qin: 200, Qout: 100, Pu: 8, Pl: 5, Tmax: 55, margin: 20,
+      volume: 0, volumeRec: 0, chi: 0
+    },
+    methods: {
+      clearResults() { this.volume = 0; this.volumeRec = 0; this.chi = 0; },
+      calculate() {
+        let Pstd_a = this.Pstd, Tstd_K = this.Tstd + 273.15, Tmax_K = this.Tmax + 273.15;
+        let Pu_abs = this.Pu, Pl_abs = this.Pl;
+        let deltaP = Pu_abs - Pl_abs;
+        if (deltaP <= 0) { alert("Pu must be greater than Pl"); return; }
+        
+        let factor = (Pstd_a / Tstd_K) * (Tmax_K / deltaP);
+        let margin_factor = 1 + this.margin / 100;
+        
+        if (this.sizing_basis == 'buffer_time') {
+          let t_hr = this.t / 60;
+          let Q_demand = parseFloat(this.Qout);
+          if (isNaN(Q_demand) || Q_demand <= 0) { alert("Valid demand flow required"); return; }
+          this.volume = Q_demand * t_hr * factor * margin_factor;
+          this.volumeRec = 0;
+          this.chi = 0;
+        } 
+        else {
+          let fs_hr = this.fs;
+          let Qin_val = parseFloat(this.Qin);
+          let Qout_val = parseFloat(this.Qout);
+          if (isNaN(Qin_val) || Qin_val <= 0) { alert("Valid supply flow required"); return; }
+          let chi_calc = (isNaN(Qout_val) || Qout_val <= 0) ? 0.5 : Qout_val / Qin_val;
+          this.chi = chi_calc.toFixed(3);
+          let V_actual = (Qin_val * (1 - chi_calc)) / (2 * fs_hr) * factor;
+          let V_worst = (Qin_val) / (4 * fs_hr) * factor;
+          this.volume = V_actual * margin_factor;
+          this.volumeRec = V_worst * margin_factor;
+        }
+      }
+    },
+    mounted() { this.calculate(); }
+  });
+</script>
+</body>
+</html>
