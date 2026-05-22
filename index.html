@@ -135,9 +135,12 @@
         { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge", link: "#", external: true },
         { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH", link: "#", external: true },
         // NEW CARD: Fluid Flow & Pump Suite (CheCalc tools)
-        { id: "fluid_flow", icon: "💧", name: "Fluid Flow & Pump Suite", desc: "Single phase, compressible, non-Newtonian, Bingham, packed bed, pump curves, affinity laws", link: "fluid-flow-suite.html", external: true }
-    ];
-
+         { id: "fluid_flow", icon: "💧", name: "Fluid Flow Suite", desc: "Single phase, compressible, non-Newtonian, pump sizing, affinity laws", link: "fluid-flow-suite.html", external: true },
+    { id: "rotating_equipment", icon: "🔧", name: "Rotating Equipment", desc: "Compressors, blowers, gas turbines, steam turbines", link: "rotating-equipment-suite.html", external: true },
+    { id: "static_equipment", icon: "🏭", name: "Static Equipment", desc: "Pressure vessels, storage tanks, heat exchangers, reboilers", link: "static-equipment-suite.html", external: true },
+    { id: "thermo_properties", icon: "🌡️", name: "Thermo Properties", desc: "Steam tables, gas properties, psychrometrics, fluid properties", link: "thermo-properties-suite.html", external: true },
+    { id: "safety_relief", icon: "🛡️", name: "Safety & Relief", desc: "PSV sizing, fire case, flare, rupture disc", link: "safety-relief-suite.html", external: true }
+];
     function renderDashboard() {
         return `
             <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
