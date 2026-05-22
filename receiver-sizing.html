@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receiver Sizing Calculation - Hold-up Time / Switching Frequency</title>
+  <meta name="author" content="Sandeep Raheja">
+  <meta name="description" content="Calculation to obtain the volume of receiver vessels based on hold up time consideration or maximum permissible switching (load/unload) frequency of the associated compressor.">
+  <meta name="keywords" content="Air Nitrogen Receivers hold up time switching frequency load unload compressor receiver sizing">
+  <meta property='og:title' content='Receiver Sizing Calculation' />
+  <meta property='og:description' content='Calculate receiver volume based on buffer time or compressor switching frequency.' />
+  <link rel="stylesheet" type="text/css" href="https://www.codecalculation.com/static/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://www.codecalculation.com/static/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="https://www.codecalculation.com/static/css/codecalculation.css">
+  <link rel="icon" type="image/x-icon" href="https://www.codecalculation.com/static/images/favicon.png"/>
+  <style>
+    /* additional fine-tuning for inline inputs and result readability */
+    .w2 { width: 2%; display: inline-block; }
+    .w4 { width: 4%; display: inline-block; }
+    .w6 { width: 6%; display: inline-block; }
+    .w8 { width: 8%; display: inline-block; }
+    .w12 { width: 12%; display: inline-block; }
+    .w14 { width: 14%; display: inline-block; }
+    .w16 { width: 16%; display: inline-block; }
+    .w18 { width: 18%; display: inline-block; }
+    .w20 { width: 20%; display: inline-block; }
+    .w24 { width: 24%; display: inline-block; }
+    .w36 { width: 36%; display: inline-block; }
+    .inp { width: 95%; padding: 4px; border-radius: 4px; border: 1px solid #ccc; }
+    .result { font-weight: bold; background-color: #f5f5f5; padding: 2px 6px; border-radius: 4px; display: inline-block; text-align: center; }
+    .datasheet table { width: 100%; border-collapse: collapse; }
+    .datasheet td, .datasheet th { padding: 6px 4px; vertical-align: middle; border: 1px solid #ddd; }
+    .section_title td { background-color: #e8f0fe; font-weight: bold; }
+    .has-text-centered { text-align: center; }
+    .help.is-danger { color: #e74c3c; font-size: 0.8rem; margin-top: 2px; }
+    .has-text-info { color: #2980b9; }
+    .button.is-primary { background-color: #3273dc; border-color: transparent; color: #fff; }
+    .modal-content { background-color: white; border-radius: 6px; }
+    .overflowme { overflow-x: auto; margin: 1rem; }
+    [v-cloak] { display: none; }
+    .navbar.is-primary { background-color: #003366; }
+    .result-value { font-weight: 700; color: #0a5e2e; }
+  </style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <!-- navbar -->
+  <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">codecalculation</a>
+      <button class="button navbar-burger is-primary" data-target="navMenu" id='burgerMain'>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+      <div class="navbar-start">
+        <a href="/index" class="navbar-item">Home</a>
+        <a href="/calculations/" class="navbar-item">Calculations</a>
+      </div>
+      <div class="navbar-end">
+        <a class="navbar-item is-right" @click="launchHelp()">Help</a>
+        <a href="/login/" class="navbar-item is-right" v-if="!userAuthenticated">Login</a>
+        <div class="navbar-item is-right has-dropdown is-hoverable" v-if="userAuthenticated">
+          <a class="navbar-link"><i class="fa fa-user"></i> [[username]]</a>
+          <div class="navbar-dropdown"><a class="navbar-item" href="/htm/user/account/">Profile</a><a class="navbar-item" @click="logout()">Logout</a></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- message banner -->
+  <div class="section hideprint" v-cloak>
+    <div class="container">
+      <article class="hideprint message" v-bind:class="messageClass" v-show="messageIsActive">
+        <div class="message-header"><p>[[messageType]]</p><button class="delete" @click="hide_message"></button></div>
+        <div class="message-body"><p v-bind:class="messageClass">[[message]]</p></div>
+      </article>
+    </div>
+  </div>
+
+  <!-- modals: units, upload, loading -->
+  <div class="modal hideprint" v-bind:class="{'is-active': unitsModalisActive}">
+    <div class="modal-background"></div>
+    <div class="modal-content" style="background-color:white; height:360px; overflow:auto; padding:20px;">
+      <h4 class="title is-4">Units</h4>
+      <div style="height:180px; overflow:auto;">
+        <table class="table" style="width:100%;">
+          <tr v-for="dimension in dimensions_used">
+            <td style="width:50%">[[ dimension ]]</td>
+            <td style="width:50%"><div class="select" style="width:100%"><select v-model="doc.units[dimension]" style="width:100%;"><option v-for="unit in getUnits(dimension)" :value="unit['unit']" v-text="unit['label']"></option></select></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="field is-grouped is-grouped-centered"><p class="control"><button class="button is-primary" @click="closeModal('unitsModalisActive')">Done</button></p></div>
+    </div>
+  </div>
+  <div class="modal hideprint" v-bind:class="{'is-active': uploadModalisActive}">
+    <div class="modal-background"></div>
+    <div class="modal-content" style="background-color:white; max-height:480px; width:600px; overflow:auto;">
+      <form action="" method="post" enctype="multipart/form-data" style="margin:20px;">
+        <h4 class="title is-4">Open Document</h4>
+        <div class="field"><div class="control"><input class="input" type="file" name="doc" required></div></div>
+        <div class="field is-grouped is-grouped-centered"><p class="control"><input class="button is-primary" type="submit" value="Submit"></p><p class="control"><a class="button is-light" @click="closeModal('uploadModalisActive')">Cancel</a></p></div>
+      </form>
+    </div>
+  </div>
+  <div class="modal hideprint" v-bind:class="{'is-active': loadingModalisActive}">
+    <div class="modal-background"></div>
+    <div class="modal-content" style="background-color:white; width:200px; text-align:center"><h3 class="title is-3">Please Wait</h3></div>
+  </div>
+  <div style="display:none;"><a href="" ref="save_anchor">Save Anchor</a></div>
+
+  <!-- main calculation sheet -->
+  <div class="overflowme">
+    <div class="datasheet">
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul><li><a href="/">Home</a></li><li><a href="/calculations/">Calculations</a></li><li><a href="/calculations/process/">Process</a></li><li class="is-active"><a href="#">Receiver Sizing</a></li></ul>
+      </nav>
+      <table class="main">
+        <thead><tr style='border-top:0px;'><th style="border:0px;">&nbsp;</th><th colspan="8">&nbsp;</th><th style="border:0px;">&nbsp;</th></tr></thead>
+        <tfoot><tr><td colspan="10" style="text-align:right;"><i>Calculation Performed at www.codecalculation.com</i></td></tr></tfoot>
+        <tbody>
+          <tr class="section_title"><td>&nbsp;</td><td colspan="8" class="has-text-centered"><h1 class="title is-5">[[ doc['meta']['docClass_title'] ]]</h1></td><td>&nbsp;</td></tr>
+          <tr><td style='border-left:0px;'>&nbsp;</td><td colspan="8">&nbsp;</td><td style='border-right:0px;'>&nbsp;</td></tr>
+          <tr class="section_title"><td>&nbsp;</td><td colspan="8"><h2 class="title is-6">Project</h2></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="4"><span class="w8">Project No:</span><span class="w8"><input class="inp" v-model="doc['meta']['project_no']"/></span></td><td colspan="4"></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="6"><span class="w8">Project Title:</span><span class="w36"><input class="inp" v-model="doc['meta']['project_title']"/></span></td><td colspan="2"></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="4"><span class="w8">Document No:</span><span class="w16"><input class="inp" v-model="doc['meta']['doc_no']"/></span></td><td colspan="4"></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="4"><span class="w8">Revision No:</span><span class="w4"><input class="inp" v-model="doc['meta']['rev']"/></span></td><td colspan="4"></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="4"><span class="w8">Date :</span><span class="w8"><input class="inp" v-model="doc['meta']['date']"/></span></td><td colspan="4"></td><td>&nbsp;</td></tr>
+          <tr><td style='border-left:0px;'>&nbsp;</td><td colspan="8">&nbsp;</td><td style='border-right:0px;'>&nbsp;</td></tr>
+          <tr class="section_title"><td>&nbsp;</td><td colspan="8"><h2 class="title is-6">Inputs</h2></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w6">Sizing Basis</span><span class="w20"><select class="inp" v-model="doc['input']['sizing_basis']['_val']"><option value="buffer_time">Hold Up/Buffer time</option><option value="switching_frequency">Switching Frequency of Compressor</option></select></span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['sizing_basis'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Pressure Standard Conditions</span><span class="w4"><i>P<sub>std</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Pstd']['_val']"/></span><span class="w6">[[gUL('pressure')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Pstd'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Temperature Standard Conditions</span><span class="w4"><i>T<sub>std</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Tstd']['_val']"/></span><span class="w6">[[gUL('temperature')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Tstd'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='buffer_time'"><td>&nbsp;</td><td colspan="5"><span class="w16">Hold up time</span><span class="w4"><i>t</i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['t']['_val']"/></span><span class="w6">[[gUL('time')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['t'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="5"><span class="w16">Load/Unload Frequency</span><span class="w4"><i>f<sub>s</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['fs']['_val']"/></span><span class="w6">cycles/hr</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['fs'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16" v-show="sizing_basis=='switching_frequency'">Unload/Cut out pressure</span><span class="w16" v-show="sizing_basis=='buffer_time'">Initial Pressure</span><span class="w4"><i>P<sub>u</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Pu']['_val']"/></span><span class="w6">[[gUL('pressure')]],a</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Pu'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16" v-show="sizing_basis=='switching_frequency'">Load/Cut in pressure</span><span class="w16" v-show="sizing_basis=='buffer_time'">Final Pressure</span><span class="w4"><i>P<sub>l</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Pl']['_val']"/></span><span class="w6">[[gUL('pressure')]],a</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Pl'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="5"><span class="w16">Supply Flow Rate to receiver</span><span class="w4"><i>Q<sub>in</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Qin']['_val']"/></span><span class="w6">S[[gUL('flow')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Qin'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="8"><span class="w2"></span><span><p class="has-text-info">For above, use delivery flow rate of compressor for receiver charging</p></span></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Demand Flow Rate from receiver</span><span class="w4"><i>Q<sub>out</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Qout']['_val']"/></span><span class="w6">S[[gUL('flow')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Qout'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="8"><span class="w2"></span><span><p class="has-text-info">For above, if unknown, use 50% of the supply flow rate as a worst case scenario for receiver sizing</p></span></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Receiver Max. Temperature</span><span class="w4"><i>T<sub>max</sub></i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['Tmax']['_val']"/></span><span class="w6">[[gUL('temperature')]]</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['Tmax'])">[[err]]</p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="8"><span class="w2"></span><span><p class="has-text-info">For above, if fed from an air cooler, use maximum ambient plus air cooler approach (~10°C)</p></span></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Design Margin</span><span class="w4"><i>ζ</i></span><span class="w6"><input class="inp" type="number" v-model="doc['input']['margin']['_val']"/></span><span class="w6">%</span></td><td colspan="3"><p class="help is-danger" v-for="err in getErrs(['margin'])">[[err]]</p></td><td>&nbsp;</td></tr>
+        </tbody>
+
+        <tbody>
+          <tr><td style='border-left:0px;'>&nbsp;</td><td colspan="8">&nbsp;</td><td style='border-right:0px;'>&nbsp;</td></tr>
+          <tr class="hideprint" style='border-top:0px;'><td style='border-left:0px;'></td>
+            <td colspan="8" style="text-align:center">
+              <span class="w8"><button class="button is-primary" @click="calculate" style="width:100%">Calculate</button></span>
+              <span class="w8"><button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">Units</button></span>
+              <span class="w8"><button class="button is-primary" @click="saveDoc()" style="width:100%">Save</button></span>
+              <span class="w8"><button class="button is-primary" @click="openModal('uploadModalisActive')" style="width:100%">Load</button></span>
+              <span class="w8"><button class="button is-primary" @click="pdf_download()" style="width:100%">PDF</button></span>
+              <span class="w8"><button class="button is-primary" @click="launch_help" style="width:100%">Help</button></span>
+            </td><td style='border-right:0px;'></td>
+          </tr>
+          <tr style='border-top:0px;' class="hideprint"><td style='border-left:0px;'>&nbsp;</td><td style='border-top:0px;' colspan="8">&nbsp;</td><td style='border-right:0px;'>&nbsp;</td></tr>
+        </tbody>
+        <tbody v-if="doc['errors'].length > 0">
+          <tr><td>&nbsp;</td><td colspan="8"><p class="help is-danger"><b>Errors</b></p></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="8"><p class="help is-danger" v-for="err in doc['errors']">[[ err ]]</p></td><td>&nbsp;</td></tr>
+        </tbody>
+        <tbody>
+          <tr class="section_title"><td>&nbsp;</td><td colspan="8"><h2 class="title is-6">Results</h2></td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td colspan="5"><span class="w16">Volume (with margin)</span><span class="w4"><i>V</i></span><span class="w6 result">[[ formatResult(doc['result']['V']['_val']) ]]</span><span class="w4">[[gUL('volume')]]</span></td><td colspan="3"></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="5"><span class="w16">Specified Load Factor (χ = Qout/Qin)</span><span class="w6 result">[[ formatResult(doc['result']['chi']['_val']) ]]</span></td><td colspan="3"></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='switching_frequency'"><td>&nbsp;</td><td colspan="5"><span class="w16">Volume Recommended (worst case χ=0.5)</span><span class="w6 result">[[ formatResult(doc['result']['Vrec']['_val']) ]]</span><span class="w4">[[gUL('volume')]]</span></td><td colspan="3"><p class="has-text-info">for worst case load factor of 0.5</p></td><td>&nbsp;</td></tr>
+          <tr v-show="sizing_basis=='buffer_time'"><td>&nbsp;</td><td colspan="8"><span class="w2"></span><span><p class="has-text-info">Volume based on hold-up time and differential pressure (isothermal expansion).</p></span></td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="container"><footer class="hideprint"><br/><hr/><div class="columns"><div class="column is-4"></div><div class="column is-4"><div class="hideprint"><div class="has-text-centered sharethis-inline-share-buttons"></div></div></div><div class="column is-4"></div></div></footer></div>
+</div>
+
+<script type="text/javascript" src="https://www.codecalculation.com/static/js/bulma.js"></script>
+<script type="text/javascript" src="https://www.codecalculation.com/static/js/vue.js"></script>
+<script type="text/javascript" src="https://www.codecalculation.com/static/js/units.js"></script>
+<script type="text/javascript" src="https://www.codecalculation.com/static/js/codecalculation.js"></script>
+<script type="text/javascript" src="https://www.codecalculation.com/static/js/document.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    delimiters: ['[[', ']]'],
+    mixins: [app_common, app_doc],
+    data: {
+      doc: {
+        "sub_url": "process/storage/receiver-sizing",
+        "meta": {
+          "project_no": "", "project_title": "", "docClass_code": "", "docClass_title": "Sizing of Air/Nitrogen Receiver",
+          "docInstance_title": "Sizing of Air/Nitrogen Receiver", "doc_no": "", "rev": "", "date": ""
+        },
+        "units": { "time": "min", "flow": "m3/hr", "volume": "m3", "temperature": "C", "pressure": "bar" },
+        "input": {
+          "sizing_basis": { "_val": "buffer_time" },
+          "Pstd": { "_val": "1.01325", "_dim": "pressure" },
+          "Tstd": { "_val": "15", "_dim": "temperature" },
+          "t": { "_val": "5", "_dim": "time" },
+          "fs": { "_val": "60" },
+          "Qin": { "_val": "200", "_dim": "flow" },
+          "Qout": { "_val": "100", "_dim": "flow" },
+          "Pu": { "_val": "8", "_dim": "pressure" },
+          "Pl": { "_val": "5", "_dim": "pressure" },
+          "margin": { "_val": "20" },
+          "Tmax": { "_val": "55", "_dim": "temperature" }
+        },
+        "result": { "V": { "_val": "", "_dim": "volume" }, "chi": { "_val": "" }, "Vrec": { "_val": "", "_dim": "volume" } },
+        "errors": []
+      },
+      fixed: {},
+      help_url: "http://docs.codecalculation.com/process/storage/receiver-sizing.html"
+    },
+    computed: {
+      sizing_basis: function() { return this.doc['input']['sizing_basis']['_val']; }
+    },
+    methods: {
+      // core calculation logic following receiver sizing formulas
+      calculate: function() {
+        this.doc['errors'] = [];
+        try {
+          // retrieve inputs
+          let basis = this.sizing_basis;
+          let Pstd = parseFloat(this.getUnitConvertedValue(this.doc['input']['Pstd']));
+          let Tstd = parseFloat(this.getUnitConvertedValue(this.doc['input']['Tstd'], 'temperature'));
+          let Pu_abs = parseFloat(this.getUnitConvertedValue(this.doc['input']['Pu'], 'pressure'));
+          let Pl_abs = parseFloat(this.getUnitConvertedValue(this.doc['input']['Pl'], 'pressure'));
+          let margin_percent = parseFloat(this.doc['input']['margin']['_val']) || 0;
+          let Tmax_abs = parseFloat(this.getUnitConvertedValue(this.doc['input']['Tmax'], 'temperature')) + 273.15; // Kelvin
+          let Tstd_K = Tstd + 273.15;
+
+          // validation
+          if (isNaN(Pstd) || Pstd<=0) throw new Error("Invalid Standard Pressure");
+          if (isNaN(Tstd)) throw new Error("Invalid Standard Temperature");
+          if (isNaN(Pu_abs) || Pu_abs<=0) throw new Error("Invalid initial/unload pressure");
+          if (isNaN(Pl_abs) || Pl_abs<=0) throw new Error("Invalid final/load pressure");
+          if (Pl_abs >= Pu_abs) throw new Error("Load pressure must be less than unload pressure (Pl < Pu)");
+          
+          let volume_m3 = 0;
+          let volume_rec_m3 = 0;
+          let chi_val = null;
+
+          if (basis === 'buffer_time') {
+            // Hold-up time method: V = Q * t * (Pstd / Tstd) * (Tmax / (Pu - Pl))  [isothermal storage]
+            let t_min = parseFloat(this.getUnitConvertedValue(this.doc['input']['t'], 'time')); // minutes -> convert to hours for flow consistency? Flow in m3/hr -> t in hours
+            let t_hr = t_min / 60.0;
+            let Q_flow = parseFloat(this.getUnitConvertedValue(this.doc['input']['Qout'], 'flow')); // demand flow rate m3/hr (standard conditions)
+            if (isNaN(Q_flow)) throw new Error("Valid flow rate required for buffer time (demand flow)");
+            // formula: V (m3) = Q (Sm3/h) * t (h) * (Pstd / Tstd) * (Tmax / (Pu - Pl))  
+            let deltaP_bar = Pu_abs - Pl_abs;
+            if (deltaP_bar <= 0) throw new Error("Pressure difference (Pu-Pl) must be positive");
+            let factor = (Pstd / Tstd_K) * (Tmax_abs / deltaP_bar);
+            volume_m3 = Q_flow * t_hr * factor;
+          } 
+          else if (basis === 'switching_frequency') {
+            // switching frequency method: based on compressor cycling limitation (fs cycles per hour)
+            let fs_cycles = parseFloat(this.doc['input']['fs']['_val']); // cycles/hour
+            let Qin = parseFloat(this.getUnitConvertedValue(this.doc['input']['Qin'], 'flow')); // Sm3/h supply
+            let Qout = parseFloat(this.getUnitConvertedValue(this.doc['input']['Qout'], 'flow')); // Sm3/h demand
+            if (isNaN(fs_cycles) || fs_cycles <= 0) throw new Error("Valid switching frequency required (>0 cycles/hr)");
+            if (isNaN(Qin) || Qin <= 0) throw new Error("Valid supply flow (Qin) required");
+            if (isNaN(Qout)) Qout = 0;
+            let chi_val_calc = (Qout / Qin);
+            chi_val = parseFloat(chi_val_calc.toFixed(4));
+            // typical formula: V = (Qin / (2 * fs)) * (Tmax / Tstd) * (Pstd / (Pu - Pl))   (for χ=0.5 worst case)
+            // more general from reference: V = (Qin * (1 - χ)) / (2 * fs) * (Tmax/Tstd)*(Pstd/(Pu-Pl)) but often use max(0.5, χ). We'll compute recommended for χ=0.5 and actual.
+            let deltaP = Pu_abs - Pl_abs;
+            if (deltaP <= 0) throw new Error("Pressure difference Pu-Pl must be positive");
+            let factor = (Tmax_abs / Tstd_K) * (Pstd / deltaP);
+            // worst-case load factor = 0.5 (most conservative)   V_rec = (Qin * (1-0.5)) / (2*fs) * factor = (Qin*0.5)/(2*fs)*factor = (Qin)/(4*fs)*factor
+            let V_worst = (Qin / (4 * fs_cycles)) * factor;
+            volume_rec_m3 = V_worst;
+            // actual volume based on current load factor χ (if Qout known and χ<1)
+            if (!isNaN(Qout) && Qout >= 0 && chi_val_calc < 1 && chi_val_calc >= 0) {
+              let V_actual = (Qin * (1 - chi_val_calc)) / (2 * fs_cycles) * factor;
+              volume_m3 = V_actual;
+            } else {
+              // if no reliable Qout or chi >=1, recommend worst case
+              volume_m3 = V_worst;
+              if (chi_val_calc >= 1) this.doc['errors'].push("Warning: Demand flow >= Supply flow, using worst case load factor 0.5");
+            }
+          }
+          
+          // apply design margin (percentage)
+          let margin_decimal = margin_percent / 100.0;
+          let final_volume = volume_m3 * (1 + margin_decimal);
+          let final_rec_volume = (basis === 'switching_frequency' && volume_rec_m3>0) ? volume_rec_m3 * (1 + margin_decimal) : null;
+          
+          // store results with proper dimension
+          this.$set(this.doc['result'], 'V', { "_val": final_volume.toFixed(2), "_dim": "volume" });
+          if (basis === 'switching_frequency') {
+            if (chi_val !== null) this.$set(this.doc['result'], 'chi', { "_val": chi_val.toFixed(3), "_dim": "" });
+            if (final_rec_volume) this.$set(this.doc['result'], 'Vrec', { "_val": final_rec_volume.toFixed(2), "_dim": "volume" });
+            else this.$set(this.doc['result'], 'Vrec', { "_val": "—", "_dim": "volume" });
+          } else {
+            // clear switching-related results if not needed
+            this.$set(this.doc['result'], 'chi', { "_val": "" });
+            this.$set(this.doc['result'], 'Vrec', { "_val": "" });
+          }
+          this.display_message("Calculation completed successfully.", "success");
+        } catch (err) {
+          this.doc['errors'].push(err.message);
+          this.display_message("Error in calculation: " + err.message, "danger");
+        }
+      },
+      formatResult: function(val) {
+        if (val === undefined || val === null || val === "") return "—";
+        let num = parseFloat(val);
+        if (isNaN(num)) return val;
+        return num.toFixed(2);
+      },
+      getUnitConvertedValue: function(inputObj, dimOverride = null) {
+        // inputObj: {_val, _dim}; returns numeric value in base SI (as per units definition)
+        let raw = parseFloat(inputObj['_val']);
+        if (isNaN(raw)) return NaN;
+        let dimension = dimOverride ? dimOverride : inputObj['_dim'];
+        if (!dimension) return raw;
+        let unit_key = this.doc['units'][dimension];
+        let unitDef = this.getUnits(dimension).find(u => u.unit === unit_key);
+        if (unitDef && unitDef.convertToBase) {
+          return unitDef.convertToBase(raw);
+        }
+        return raw;
+      },
+      // Override to make sure dimensions_used reflects needed units
+      dimensions_used: function() {
+        let dims = new Set();
+        for (let key in this.doc.units) dims.add(key);
+        return Array.from(dims);
+      },
+      // dummy implementations for modal requirements (already inherited via mixins, but define for safety)
+      openModal: function(modalName) { if(this[modalName] !== undefined) this[modalName] = true; else this.$set(this, modalName, true); },
+      closeModal: function(modalName) { this[modalName] = false; },
+      saveDoc: function() { alert("Save functionality would be integrated with backend."); },
+      pdf_download: function() { window.print(); },
+      launch_help: function() { window.open(this.help_url, '_blank'); },
+      launchHelp: function() { this.launch_help(); },
+      getErrs: function(path) { return this.doc.errors; },
+      retSilent: function(obj, pathArray, defaultVal = "—") { 
+        let cur = obj; for(let p of pathArray) { if(cur[p] === undefined) return defaultVal; cur = cur[p]; } 
+        if(cur && cur._val !== undefined) return this.formatResult(cur._val);
+        return defaultVal;
+      },
+      gUL: function(dim) { return this.doc.units[dim] || ""; }
+    },
+    mounted() {
+      // ensure initial unit system consistency
+      if(!this.doc.units.time) this.doc.units.time = "min";
+      if(!this.doc.units.flow) this.doc.units.flow = "m3/hr";
+      this.calculate(); // run initial default calculation
+    }
+  });
+  
+  // helper: getUnits is provided by units.js mixin typically, but we patch for robust
+  if (!app.getUnits) {
+    app.getUnits = function(dimension) {
+      const unitLib = {
+        time: [{unit:"min", label:"minutes", convertToBase: (v)=>v/60},{unit:"sec", label:"seconds", convertToBase: (v)=>v/3600},{unit:"hr", label:"hours", convertToBase: (v)=>v}],
+        flow: [{unit:"m3/hr", label:"m³/h", convertToBase: (v)=>v},{unit:"Nm3/hr", label:"Nm³/h", convertToBase: (v)=>v},{unit:"l/min", label:"L/min", convertToBase: (v)=>v*0.06}],
+        volume: [{unit:"m3", label:"m³", convertToBase: (v)=>v},{unit:"liter", label:"liter", convertToBase: (v)=>v/1000}],
+        temperature: [{unit:"C", label:"°C", convertToBase: (v)=>v},{unit:"K", label:"K", convertToBase: (v)=>v-273.15}],
+        pressure: [{unit:"bar", label:"bar", convertToBase: (v)=>v},{unit:"kPa", label:"kPa", convertToBase: (v)=>v/100},{unit:"psi", label:"psi", convertToBase: (v)=>v*0.0689476}]
+      };
+      return unitLib[dimension] || [{unit:"-", label:"-" }];
+    };
+  }
+</script>
+</body>
+</html>
