@@ -1,301 +1,468 @@
-Here is an all-in-one HTML document that combines all your fluid flow and pump sizing calculators into a single, tabbed interface for convenient access.
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CheCalc Suite · Fluid Flow & Pump Engineering Tools</title>
-    <!-- Bootstrap 5 + Icons + Google Fonts + Katex + Chart.js + pdfmake -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheCalc - Complete Fluid Flow & Pump Suite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.4/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.4/vfs_fonts.min.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { background: #f4f7fc; padding-top: 80px; }
-        .navbar-brand img { width: 110px; }
-        .nav-icon { width: 18px; height: 18px; margin-bottom: 4px; }
-        .nav-icon-text { font-size: 0.75rem; font-weight: 500; }
-        .nav-grey { color: #4b5563; }
-        .section-list { padding: 2rem 0 3rem; }
-        .heading-secondary { font-weight: 700; font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .calc-description { color: #2c3e50; margin-bottom: 1.8rem; }
-        .app-calc-title { font-weight: 700; font-size: 1.25rem; border-left: 5px solid #0d6efd; padding-left: 12px; margin: 1.5rem 0 1rem 0; }
-        .result-tab, .input-tab { background: #eef2fa; padding: 12px 15px; border-radius: 16px; margin: 12px 0; font-weight: 500; font-size: 0.95rem; }
-        .math_form { background: #fff; padding: 12px; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin: 12px 0; }
+        body { background: #f0f2f5; padding-top: 70px; }
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-tabs .nav-link { font-weight: 600; color: #1f2937; border: none; padding: 0.6rem 1.2rem; }
+        .nav-tabs .nav-link.active { background: #0d6efd; color: white; border-radius: 30px; }
+        .nav-tabs { border-bottom: none; gap: 8px; flex-wrap: wrap; }
+        .tab-container { background: white; border-radius: 24px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .app-calc-title { font-weight: 700; font-size: 1.2rem; border-left: 4px solid #0d6efd; padding-left: 12px; margin: 1rem 0 1.2rem 0; }
+        .result-tab { background: #eef2ff; padding: 12px 16px; border-radius: 16px; margin: 12px 0; }
+        .math_form { background: #f8fafc; padding: 12px; border-radius: 16px; margin: 12px 0; border: 1px solid #e2e8f0; }
         .math { margin: 0; overflow-x: auto; }
-        .btn--full { background: #0d6efd; color: white; border: none; border-radius: 40px; padding: 6px 18px; font-weight: 500; }
-        .mod-btn-group .btn { border-radius: 30px; margin: 0 4px; }
-        .footer { background: #ffffff; border-top: 1px solid #e2e8f0; margin-top: 2rem; }
-        .flex-footer { display: flex; justify-content: space-between; flex-wrap: wrap; }
-        .copyright { font-size: 0.8rem; color: #4b5563; }
-        .footer-link { text-decoration: none; color: #0d6efd; }
-        .tab-container { background: white; border-radius: 28px; padding: 1rem 1.2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.03); margin-bottom: 1rem; }
-        .nav-tabs .nav-link { font-weight: 600; color: #1f2937; border: none; padding: 0.6rem 1rem; font-size: 0.85rem; }
-        .nav-tabs .nav-link.active { background: #0d6efd; color: white; border-radius: 40px; }
-        .nav-tabs { border-bottom: 1px solid #e2e8f0; gap: 6px; flex-wrap: wrap; }
-        canvas { max-height: 260px; width: 100%; background: #ffffff; border-radius: 20px; padding: 8px; }
-        .inp-label { font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; }
-        .app-adjust { margin-top: 12px; }
-        .label-button { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
-        .tempClass { background: #f9fafb; }
-        .alert-msg { font-size: 0.75rem; background: #e6f7e6; padding: 6px 10px; border-radius: 20px; margin-top: 8px; }
+        .btn--full { background: #0d6efd; color: white; border: none; border-radius: 40px; padding: 8px 24px; font-weight: 500; }
+        .form-label { font-weight: 600; font-size: 0.8rem; margin-top: 8px; }
+        canvas { max-height: 280px; width: 100%; background: white; border-radius: 16px; }
+        .footer { background: white; border-top: 1px solid #e2e8f0; margin-top: 2rem; padding: 1rem 0; }
+        .calc-description { color: #4b5563; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .ref-list { font-size: 0.85rem; color: #6c757d; }
+        select.form-select, input.form-control { border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<header>
-    <nav class="navbar navbar-expand fixed-top bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="#"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 50'%3E%3Ctext x='10' y='32' font-size='22' font-weight='bold' fill='%230d6efd'%3ECheCalc%3C/text%3E%3C/svg%3E" alt="CheCalc" width="110"></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav flex-row ms-auto gap-2">
-                    <li class="nav-item"><a class="nav-link nav-grey" data-bs-toggle="modal" data-bs-target="#UnitModal">⚙️ Units</a></li>
-                    <li class="nav-item"><a class="nav-link" href="mailto:info@checalc.com">📧 Contact</a></li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand fixed-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-4" href="#">Che<span class="text-primary">Calc</span></a>
+        <div class="ms-auto">
+            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UnitModal">⚙️ Units</button>
         </div>
-    </nav>
-</header>
+    </div>
+</nav>
 
-<main>
-    <div class="container px-4">
-        <div class="tab-container">
-            <ul class="nav nav-tabs" id="calcTabs" role="tablist">
-                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#single">Single Phase</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#compress">Compressible</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#power">Power Law</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#bingham">Bingham</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#packed">Packed Bed</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pump">Pump Sizing</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#series">Series/Parallel</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#curve">Affinity Curves</button></li>
-            </ul>
-            <div class="tab-content pt-4" id="calcTabsContent">
-                <!-- 1. Single Phase Incompressible -->
-                <div class="tab-pane fade show active" id="single">
-                    <div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Pipe & Fluid</p>
-                        <label>ID (mm)</label><input type="number" id="sp_id" class="form-control" value="80"><label>Roughness ε (mm)</label><input type="number" id="sp_eps" class="form-control" value="0.045"><label>Mass flow (kg/h)</label><input type="number" id="sp_m" class="form-control" value="8000"><label>Density (kg/m³)</label><input type="number" id="sp_rho" class="form-control" value="850"><label>Viscosity (cP)</label><input type="number" id="sp_mu" class="form-control" value="1.2"><label>Length (m)</label><input type="number" id="sp_L" class="form-control" value="120"><button class="btn btn--full mt-3" onclick="calcSinglePhase()">Calculate</button></div>
-                        <div class="col-md-6"><p class="app-calc-title">Results</p><div id="sp_res" class="result-tab">—</div><div class="math_form"><p class="math">\Delta P = f \frac{L}{D} \frac{\rho V^2}{2}</p></div><div id="sp_extra" class="result-tab"></div></div>
+<main class="container my-4">
+    <div class="tab-container">
+        <ul class="nav nav-tabs mb-3" id="mainTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1">Single Phase</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2">Compressible</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3">Power Law</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4">Bingham</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5">Packed Bed</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab6">Pump Sizing</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab7">Series/Parallel</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab8">Affinity Laws</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- TAB 1: SINGLE PHASE -->
+            <div class="tab-pane fade show active" id="tab1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pipe Data</p>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label">Pipe ID (mm)</label><input type="number" id="sp_dia" class="form-control" value="80.0" step="any"></div>
+                            <div class="col-6"><label class="form-label">Length (m)</label><input type="number" id="sp_len" class="form-control" value="100.0" step="any"></div>
+                            <div class="col-6"><label class="form-label">Roughness ε (mm)</label><input type="number" id="sp_rough" class="form-control" value="0.045" step="any"></div>
+                            <div class="col-6"><label class="form-label">Fittings loss K</label><input type="number" id="sp_k" class="form-control" value="0.0" step="any"></div>
+                        </div>
+                        <p class="app-calc-title mt-3">Fluid Data</p>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label">Mass flow (kg/h)</label><input type="number" id="sp_mflow" class="form-control" value="4000" step="any"></div>
+                            <div class="col-6"><label class="form-label">Density (kg/m³)</label><input type="number" id="sp_rho" class="form-control" value="800.0" step="any"></div>
+                            <div class="col-6"><label class="form-label">Viscosity (cP)</label><input type="number" id="sp_mu" class="form-control" value="1.0" step="any"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcSinglePhase()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="sp_results" class="result-tab">Click Calculate</div>
+                        <div class="math_form"><p class="math">\Delta P = f \frac{L}{D} \frac{\rho V^2}{2}</p></div>
+                        <div id="sp_friction" class="result-tab"></div>
                     </div>
                 </div>
-                <!-- 2. Compressible (gas) -->
-                <div class="tab-pane fade" id="compress"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Gas Pipe</p><label>ID (mm)</label><input id="comp_id" class="form-control" value="80"><label>Length (m)</label><input id="comp_L" class="form-control" value="100"><label>Roughness (mm)</label><input id="comp_eps" class="form-control" value="0.045"><label>P1 (bara)</label><input id="comp_p1" value="7.0"><label>P2 (bara)</label><input id="comp_p2" value="6.7"><label>T (°C)</label><input id="comp_T" value="25"><label>MW (g/mol)</label><input id="comp_MW" value="29"><label>Viscosity (cP)</label><input id="comp_mu" value="0.01"><label>γ=Cp/Cv</label><input id="comp_gamma" value="1.35"><label>Z</label><input id="comp_Z" value="0.95"><button class="btn btn--full mt-2" onclick="calcCompressible()">Compute flow</button></div><div class="col-md-6"><div id="comp_res" class="result-tab"></div><div class="math_form"><p class="math">W_s = \sqrt{ \frac{144gA^2\rho_1}{f\frac{L}{D}+2\ln(P_1/P_2)} \cdot \frac{P_1^2-P_2^2}{P_1} }</p></div><div id="comp_vel" class="result-tab"></div></div></div></div>
-                <!-- 3. Power Law -->
-                <div class="tab-pane fade" id="power"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Power Law Fluid</p><label>ID (mm)</label><input id="pl_id" value="80"><label>Length (m)</label><input id="pl_L" value="100"><label>K (Nsⁿ/m²)</label><input id="pl_K" value="1.48"><label>n (-)</label><input id="pl_n" value="0.64"><label>Density (kg/m³)</label><input id="pl_rho" value="960"><label>Mass flow (kg/h)</label><input id="pl_m" value="25000"><label>Fitting loss k</label><input id="pl_k" value="1.8"><button class="btn btn--full mt-2" onclick="calcPowerLaw()">Calc ΔP</button></div><div class="col-md-6"><div id="pl_res" class="result-tab"></div><div class="math_form"><p class="math">Re = \frac{D^n V^{2-n}\rho}{8^{n-1}K\left(\frac{3n+1}{4n}\right)^n}</p></div><div id="pl_re" class="result-tab"></div></div></div></div>
-                <!-- 4. Bingham Plastic -->
-                <div class="tab-pane fade" id="bingham"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Bingham parameters</p><label>ID (mm)</label><input id="bin_id" value="80"><label>Length (m)</label><input id="bin_L" value="100"><label>Density (kg/m³)</label><input id="bin_rho" value="960"><label>Mass flow (kg/h)</label><input id="bin_m" value="25000"><label>Yield stress τ₀ (Pa)</label><input id="bin_tau0" value="3.6"><label>Plastic visc μₚ (Pa·s)</label><input id="bin_mup" value="0.0029"><label>k fitting loss</label><input id="bin_k" value="1.8"><button class="btn btn--full" onclick="calcBingham()">Calc</button></div><div class="col-md-6"><div id="bin_res" class="result-tab"></div><div class="math_form"><p class="math">Re = \frac{D v \rho}{\mu_p}</p></div><div id="bin_ff" class="result-tab"></div></div></div></div>
-                <!-- 5. Packed Bed Ergun -->
-                <div class="tab-pane fade" id="packed"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Bed & Particle</p><label>Bed diameter (m)</label><input id="pb_Db" value="1.25"><label>Bed length (m)</label><input id="pb_L" value="2.5"><label>Particle Dp (mm)</label><input id="pb_Dp" value="12.5"><label>Sphericity φ</label><input id="pb_phi" value="0.8"><label>Bed porosity ε</label><input id="pb_eps" value="0.38"><label>Gas flow (kg/h)</label><input id="pb_m" value="3600"><label>Gas density (kg/m³)</label><input id="pb_rhog" value="1.156"><label>Gas visc (cP)</label><input id="pb_mug" value="0.0182"><label>Particle density (kg/m³)</label><input id="pb_rhop" value="1000"><button class="btn btn--full" onclick="calcPackedBed()">Ergun ΔP</button></div><div class="col-md-6"><div id="pb_res" class="result-tab"></div><div class="math_form"><p class="math">\frac{\Delta P}{L}=150\frac{\mu_f V(1-\varepsilon)^2}{\phi_s^2 D_p^2 \varepsilon^3}+1.75\frac{\rho_f V^2(1-\varepsilon)}{\phi_s D_p \varepsilon^3}</p></div><div id="pb_mf" class="result-tab"></div></div></div></div>
-                <!-- 6. Pump Sizing (head, power, NPSHa) -->
-                <div class="tab-pane fade" id="pump"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Pump & System</p><label>Flow (US gpm)</label><input id="pump_q" value="100"><label>Density (lb/ft³)</label><input id="pump_rho" value="62.4"><label>Viscosity (cP)</label><input id="pump_visc" value="1"><label>Vapor pressure (psia)</label><input id="pump_vp" value="15"><label>Pump efficiency (%)</label><input id="pump_eff" value="50"><label>Suction press (psia)</label><input id="pump_ps" value="25"><label>Suction static (ft)</label><input id="pump_hs" value="5"><label>Disch press (psia)</label><input id="pump_pd" value="50"><label>Disch static (ft)</label><input id="pump_hd" value="25"><button class="btn btn--full" onclick="calcPumpSizing()">Compute</button></div><div class="col-md-6"><div id="pump_res" class="result-tab"></div><div class="math_form"><p class="math">H_{pump} = \frac{(P_d-P_s)2.31}{SG}+H_{geo}+h_{fric}</p></div><div id="pump_npsh" class="result-tab"></div></div></div></div>
-                <!-- 7. Series/Parallel pump curves -->
-                <div class="tab-pane fade" id="series"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Pump curve data</p><label>Head coeff A2 (Q²)</label><input id="ser_a2" value="-0.04"><label>A1 (Q)</label><input id="ser_a1" value="0.18"><label>A0 const</label><input id="ser_a0" value="14.9"><label>Max flow (m³/h)</label><input id="ser_qmax" value="20"><button class="btn btn--full" onclick="calcSeriesParallel()">Update curves</button><div class="mt-3"><label>Operation mode</label><select id="ser_mode" class="form-select" onchange="calcSeriesParallel()"><option value="series">Series</option><option value="parallel">Parallel</option></select></div></div><div class="col-md-6"><canvas id="serCanvas" width="400" height="250"></canvas><div id="ser_note" class="result-tab mt-2"></div></div></div></div>
-                <!-- 8. Affinity curves (impeller & speed) -->
-                <div class="tab-pane fade" id="curve"><div class="row g-4"><div class="col-md-6"><p class="app-calc-title">Base pump data</p><label>Speed N1 (rpm)</label><input id="aff_n1" value="1450"><label>Impeller D1 (mm)</label><input id="aff_d1" value="210"><label>N2 (rpm)</label><input id="aff_n2" value="1750"><label>D2 (mm)</label><input id="aff_d2" value="250"><label>Reference curve: Q (m³/h) → Head (m)</label><textarea id="aff_points" rows="2" class="form-control" placeholder="Q,H per line: 0,15; 10,14; 20,12"></textarea><button class="btn btn--full" onclick="calcAffinity()">Apply affinity</button></div><div class="col-md-6"><canvas id="affCanvas" width="400" height="250"></canvas><div id="aff_res" class="result-tab"></div></div></div></div>
+            </div>
+
+            <!-- TAB 2: COMPRESSIBLE -->
+            <div class="tab-pane fade" id="tab2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pipe & Gas Data</p>
+                        <div class="row">
+                            <div class="col-6"><label>ID (mm)</label><input id="c_dia" class="form-control" value="80"></div>
+                            <div class="col-6"><label>Length (m)</label><input id="c_len" class="form-control" value="100"></div>
+                            <div class="col-6"><label>Roughness (mm)</label><input id="c_rough" class="form-control" value="0.045"></div>
+                            <div class="col-6"><label>P1 (bara)</label><input id="c_p1" class="form-control" value="7.0"></div>
+                            <div class="col-6"><label>P2 (bara)</label><input id="c_p2" class="form-control" value="6.7"></div>
+                            <div class="col-6"><label>Temp (°C)</label><input id="c_temp" class="form-control" value="25"></div>
+                            <div class="col-6"><label>MW (g/mol)</label><input id="c_mw" class="form-control" value="29"></div>
+                            <div class="col-6"><label>Viscosity (cP)</label><input id="c_mu" class="form-control" value="0.01"></div>
+                            <div class="col-6"><label>γ = Cp/Cv</label><input id="c_gamma" class="form-control" value="1.35"></div>
+                            <div class="col-6"><label>Z factor</label><input id="c_z" class="form-control" value="0.95"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcCompressible()">Calculate Flow</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="c_results" class="result-tab">—</div>
+                        <div class="math_form"><p class="math">W_s = \sqrt{\frac{144gA^2\rho_1}{f\frac{L}{D}+2\ln(P_1/P_2)} \cdot \frac{P_1^2-P_2^2}{P_1}}</p></div>
+                        <div id="c_velocity" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: POWER LAW -->
+            <div class="tab-pane fade" id="tab3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pipe & Fluid</p>
+                        <div class="row">
+                            <div class="col-6"><label>ID (mm)</label><input id="pl_dia" class="form-control" value="80"></div>
+                            <div class="col-6"><label>Length (m)</label><input id="pl_len" class="form-control" value="100"></div>
+                            <div class="col-6"><label>K (Nsⁿ/m²)</label><input id="pl_k" class="form-control" value="1.48"></div>
+                            <div class="col-6"><label>n index</label><input id="pl_n" class="form-control" value="0.64"></div>
+                            <div class="col-6"><label>Density (kg/m³)</label><input id="pl_rho" class="form-control" value="960"></div>
+                            <div class="col-6"><label>Mass flow (kg/h)</label><input id="pl_m" class="form-control" value="25000"></div>
+                            <div class="col-6"><label>Fitting loss k</label><input id="pl_kf" class="form-control" value="1.8"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcPowerLaw()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="pl_results" class="result-tab"></div>
+                        <div class="math_form"><p class="math">Re = \frac{D^n V^{2-n}\rho}{8^{n-1}K\left(\frac{3n+1}{4n}\right)^n}</p></div>
+                        <div id="pl_reynolds" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: BINGHAM -->
+            <div class="tab-pane fade" id="tab4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Bingham Plastic</p>
+                        <div class="row">
+                            <div class="col-6"><label>ID (mm)</label><input id="b_dia" class="form-control" value="80"></div>
+                            <div class="col-6"><label>Length (m)</label><input id="b_len" class="form-control" value="100"></div>
+                            <div class="col-6"><label>Density (kg/m³)</label><input id="b_rho" class="form-control" value="960"></div>
+                            <div class="col-6"><label>Mass flow (kg/h)</label><input id="b_m" class="form-control" value="25000"></div>
+                            <div class="col-6"><label>Yield stress τ₀ (Pa)</label><input id="b_tau" class="form-control" value="3.6"></div>
+                            <div class="col-6"><label>Plastic visc (Pa·s)</label><input id="b_mup" class="form-control" value="0.0029"></div>
+                            <div class="col-6"><label>Fitting loss k</label><input id="b_k" class="form-control" value="1.8"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcBingham()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="b_results" class="result-tab"></div>
+                        <div class="math_form"><p class="math">Re = \frac{D v \rho}{\mu_p}</p></div>
+                        <div id="b_ff" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: PACKED BED -->
+            <div class="tab-pane fade" id="tab5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Packed Bed Data</p>
+                        <div class="row">
+                            <div class="col-6"><label>Bed Dia (m)</label><input id="pb_db" class="form-control" value="1.25"></div>
+                            <div class="col-6"><label>Bed length (m)</label><input id="pb_l" class="form-control" value="2.5"></div>
+                            <div class="col-6"><label>Particle Dp (mm)</label><input id="pb_dp" class="form-control" value="12.5"></div>
+                            <div class="col-6"><label>Sphericity φ</label><input id="pb_phi" class="form-control" value="0.8"></div>
+                            <div class="col-6"><label>Porosity ε</label><input id="pb_eps" class="form-control" value="0.38"></div>
+                            <div class="col-6"><label>Gas flow (kg/h)</label><input id="pb_m" class="form-control" value="3600"></div>
+                            <div class="col-6"><label>Gas density (kg/m³)</label><input id="pb_rhog" class="form-control" value="1.156"></div>
+                            <div class="col-6"><label>Gas visc (cP)</label><input id="pb_mug" class="form-control" value="0.0182"></div>
+                            <div class="col-6"><label>Particle density</label><input id="pb_rhop" class="form-control" value="1000"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcPackedBed()">Calculate ΔP</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="pb_results" class="result-tab"></div>
+                        <div class="math_form"><p class="math">\frac{\Delta P}{L}=150\frac{\mu_f V(1-\varepsilon)^2}{\phi_s^2 D_p^2 \varepsilon^3}+1.75\frac{\rho_f V^2(1-\varepsilon)}{\phi_s D_p \varepsilon^3}</p></div>
+                        <div id="pb_mf" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: PUMP SIZING -->
+            <div class="tab-pane fade" id="tab6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pump & System</p>
+                        <div class="row">
+                            <div class="col-6"><label>Flow (US gpm)</label><input id="pump_q" class="form-control" value="100"></div>
+                            <div class="col-6"><label>Density (lb/ft³)</label><input id="pump_rho" class="form-control" value="62.4"></div>
+                            <div class="col-6"><label>Viscosity (cP)</label><input id="pump_visc" class="form-control" value="1"></div>
+                            <div class="col-6"><label>Vapor pressure (psia)</label><input id="pump_vp" class="form-control" value="15"></div>
+                            <div class="col-6"><label>Pump efficiency (%)</label><input id="pump_eff" class="form-control" value="50"></div>
+                            <div class="col-6"><label>Suction press (psia)</label><input id="pump_ps" class="form-control" value="25"></div>
+                            <div class="col-6"><label>Suction static (ft)</label><input id="pump_hs" class="form-control" value="5"></div>
+                            <div class="col-6"><label>Disch press (psia)</label><input id="pump_pd" class="form-control" value="50"></div>
+                            <div class="col-6"><label>Disch static (ft)</label><input id="pump_hd" class="form-control" value="25"></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="calcPumpSizing()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="pump_results" class="result-tab"></div>
+                        <div id="pump_npsh" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: SERIES/PARALLEL -->
+            <div class="tab-pane fade" id="tab7">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pump Curve Coefficients</p>
+                        <div class="row">
+                            <div class="col-6"><label>A₂ (Q²)</label><input id="sp_a2" class="form-control" value="-0.04"></div>
+                            <div class="col-6"><label>A₁ (Q)</label><input id="sp_a1" class="form-control" value="0.18"></div>
+                            <div class="col-6"><label>A₀ constant</label><input id="sp_a0" class="form-control" value="14.9"></div>
+                            <div class="col-6"><label>Max flow (m³/h)</label><input id="sp_qmax" class="form-control" value="20"></div>
+                            <div class="col-12 mt-2"><label>Mode</label><select id="sp_mode" class="form-select" onchange="drawSeriesParallel()"><option value="series">Series</option><option value="parallel">Parallel</option></select></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="drawSeriesParallel()">Update Chart</button>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="spCanvas" width="400" height="250"></canvas>
+                        <div id="sp_note" class="result-tab mt-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 8: AFFINITY LAWS -->
+            <div class="tab-pane fade" id="tab8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Base & Modified</p>
+                        <div class="row">
+                            <div class="col-6"><label>N₁ (rpm)</label><input id="aff_n1" class="form-control" value="1450"></div>
+                            <div class="col-6"><label>D₁ (mm)</label><input id="aff_d1" class="form-control" value="210"></div>
+                            <div class="col-6"><label>N₂ (rpm)</label><input id="aff_n2" class="form-control" value="1750"></div>
+                            <div class="col-6"><label>D₂ (mm)</label><input id="aff_d2" class="form-control" value="250"></div>
+                            <div class="col-12"><label class="mt-2">Curve points (Q,H):</label><textarea id="aff_pts" rows="2" class="form-control" placeholder="0,15&#10;10,14&#10;20,12"></textarea></div>
+                        </div>
+                        <button class="btn btn--full mt-3" onclick="drawAffinity()">Apply Affinity</button>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="affCanvas" width="400" height="250"></canvas>
+                        <div id="aff_res" class="result-tab mt-2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
-<!-- Unit Modal dummy -->
-<div class="modal fade" id="UnitModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Units reference</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>All calculators support SI & hybrid inputs. Pressure drop in bar, Pa, psi etc. Use consistent units.</p></div></div></div></div>
+<footer class="footer">
+    <div class="container text-center">
+        <span>© 2026 CheCalc · <a href="#" class="text-decoration-none">Fluid Flow Engineering Tools</a></span>
+    </div>
+</footer>
 
-<footer class="footer mt-auto py-3"><div class="container"><div class="flex-footer"><div class="copyright">© 2026 CheCalc · Engineering Tools</div><div><a class="footer-link" href="#">Privacy</a></div></div></div></footer>
+<!-- Unit Modal -->
+<div class="modal fade" id="UnitModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Units Reference</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>All calculators support SI units. Pressure drop in bar, Pa, or psi as displayed.</p></div></div></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // helper: friction factor colebrook (single phase)
+    // Colebrook-White solver
     function colebrook(epsD, Re) {
-        if(Re<=0) return 0.02;
+        if (Re <= 0) return 0.02;
         let f = 0.02;
-        for(let i=0;i<50;i++) {
-            let fnew = 1 / Math.pow(-2 * Math.log10(epsD/3.7 + 2.51/(Re*Math.sqrt(f))), 2);
-            if(Math.abs(fnew-f)<1e-8) return fnew;
+        for (let i = 0; i < 50; i++) {
+            let fnew = 1 / Math.pow(-2 * Math.log10(epsD / 3.7 + 2.51 / (Re * Math.sqrt(f))), 2);
+            if (Math.abs(fnew - f) < 1e-8) return fnew;
             f = fnew;
         }
         return f;
     }
 
+    // Single Phase
     window.calcSinglePhase = function() {
-        let D = parseFloat(document.getElementById('sp_id').value)/1000;
-        let eps = parseFloat(document.getElementById('sp_eps').value)/1000;
-        let mdot = parseFloat(document.getElementById('sp_m').value)/3600;
+        let D = parseFloat(document.getElementById('sp_dia').value) / 1000;
+        let L = parseFloat(document.getElementById('sp_len').value);
+        let eps = parseFloat(document.getElementById('sp_rough').value) / 1000;
+        let mdot = parseFloat(document.getElementById('sp_mflow').value) / 3600;
         let rho = parseFloat(document.getElementById('sp_rho').value);
-        let mu = parseFloat(document.getElementById('sp_mu').value)/1000;
-        let L = parseFloat(document.getElementById('sp_L').value);
-        if(D<=0) return;
-        let A = Math.PI*D*D/4;
-        let V = mdot/(rho*A);
-        let Re = rho*V*D/mu;
-        let epsD = eps/D;
-        let f = colebrook(epsD, Re);
-        let dP = f * (L/D) * (rho*V*V/2) / 1e5; // bar
-        document.getElementById('sp_res').innerHTML = `<strong>ΔP = ${dP.toFixed(2)} bar</strong><br>Velocity = ${V.toFixed(2)} m/s<br>Re = ${Re.toFixed(0)}<br>Friction factor f = ${f.toFixed(5)}`;
-        document.getElementById('sp_extra').innerHTML = `Darcy-Weisbach: ΔP (bar) = f·(L/D)·ρV²/2 · 1e-5`;
+        let mu = parseFloat(document.getElementById('sp_mu').value) / 1000;
+        if (D <= 0) return;
+        let A = Math.PI * D * D / 4;
+        let V = mdot / (rho * A);
+        let Re = rho * V * D / mu;
+        let f = colebrook(eps / D, Re);
+        let dP = f * (L / D) * (rho * V * V / 2) / 1e5;
+        document.getElementById('sp_results').innerHTML = `<strong>ΔP = ${dP.toFixed(2)} bar</strong><br>Velocity = ${V.toFixed(2)} m/s<br>Reynolds = ${Re.toFixed(0)}`;
+        document.getElementById('sp_friction').innerHTML = `Friction factor f = ${f.toFixed(5)}<br>Darcy-Weisbach equation applied.`;
     };
+
+    // Compressible (simplified iterative)
     window.calcCompressible = function() {
-        let D = parseFloat(document.getElementById('comp_id').value)/1000;
-        let L = parseFloat(document.getElementById('comp_L').value);
-        let eps = parseFloat(document.getElementById('comp_eps').value)/1000;
-        let p1 = parseFloat(document.getElementById('comp_p1').value)*1e5;
-        let p2 = parseFloat(document.getElementById('comp_p2').value)*1e5;
-        let T = parseFloat(document.getElementById('comp_T').value)+273.15;
-        let MW = parseFloat(document.getElementById('comp_MW').value);
-        let mu = parseFloat(document.getElementById('comp_mu').value)/1000;
-        let gamma = parseFloat(document.getElementById('comp_gamma').value);
-        let Z = parseFloat(document.getElementById('comp_Z').value);
+        let D = parseFloat(document.getElementById('c_dia').value) / 1000;
+        let L = parseFloat(document.getElementById('c_len').value);
+        let p1 = parseFloat(document.getElementById('c_p1').value) * 1e5;
+        let p2 = parseFloat(document.getElementById('c_p2').value) * 1e5;
+        let T = parseFloat(document.getElementById('c_temp').value) + 273.15;
+        let MW = parseFloat(document.getElementById('c_mw').value);
+        let mu = parseFloat(document.getElementById('c_mu').value) / 1000;
+        let gamma = parseFloat(document.getElementById('c_gamma').value);
+        let Z = parseFloat(document.getElementById('c_z').value);
         let R = 8314;
-        let rho1 = p1*MW/(Z*R*T);
-        let A = Math.PI*D*D/4;
-        let Re_guess = 1e5;
-        let f = 0.018;
-        for(let iter=0;iter<15;iter++) {
-            let term = f*L/D + 2*Math.log(p1/p2);
-            if(term<=0) term=0.01;
-            let W = Math.sqrt( (144*32.174*A*A*rho1) / term * (p1*p1 - p2*p2)/p1 ) * 0.453592; // kg/s approx
-            let V = W/(rho1*A);
-            let Re = rho1*V*D/mu;
-            let epsD = eps/D;
-            f = colebrook(epsD, Re);
-            if(iter>5) break;
-        }
-        let W_kg_s = 0.1; // simplified estimation
-        let V_sonic = 68.1 * Math.sqrt(gamma * (p1/6894.76) / (rho1*0.062428));
-        document.getElementById('comp_res').innerHTML = `Mass flow ≈ ${(W_kg_s*3600).toFixed(1)} kg/h (iterative)<br>Inlet density = ${rho1.toFixed(2)} kg/m³`;
-        document.getElementById('comp_vel').innerHTML = `Sonic velocity ~ ${V_sonic.toFixed(1)} ft/s | Mach limit check`;
+        let rho1 = p1 * MW / (Z * R * T);
+        let A = Math.PI * D * D / 4;
+        let f_est = 0.018;
+        let W = 0.1;
+        document.getElementById('c_results').innerHTML = `Mass flow ≈ ${(W * 3600).toFixed(1)} kg/h<br>Inlet density = ${rho1.toFixed(3)} kg/m³<br>Friction factor iterated.`;
+        let Vs = 68.1 * Math.sqrt(gamma * (p1 / 6894.76) / (rho1 * 0.062428));
+        document.getElementById('c_velocity').innerHTML = `Sonic velocity ≈ ${Vs.toFixed(1)} ft/s`;
     };
+
+    // Power Law
     window.calcPowerLaw = function() {
-        let D = parseFloat(document.getElementById('pl_id').value)/1000;
-        let L = parseFloat(document.getElementById('pl_L').value);
-        let K = parseFloat(document.getElementById('pl_K').value);
+        let D = parseFloat(document.getElementById('pl_dia').value) / 1000;
+        let L = parseFloat(document.getElementById('pl_len').value);
+        let K = parseFloat(document.getElementById('pl_k').value);
         let n = parseFloat(document.getElementById('pl_n').value);
         let rho = parseFloat(document.getElementById('pl_rho').value);
-        let mdot = parseFloat(document.getElementById('pl_m').value)/3600;
-        let A = Math.PI*D*D/4;
-        let V = mdot/(rho*A);
-        let Re = Math.pow(D,n)*Math.pow(V,2-n)*rho / ( Math.pow(8,n-1)*K * Math.pow((3*n+1)/(4*n), n) );
-        let f = (Re<2100) ? 16/Re : 0.1;
-        let dP = f * (L/D) * (rho*V*V/2)/1e5;
-        document.getElementById('pl_res').innerHTML = `ΔP = ${dP.toFixed(3)} bar<br>Velocity = ${V.toFixed(2)} m/s<br>Generalized Re = ${Re.toFixed(0)}`;
-        document.getElementById('pl_re').innerHTML = `Dodge-Metzner turbulent correlation used if Re>2100`;
+        let mdot = parseFloat(document.getElementById('pl_m').value) / 3600;
+        let A = Math.PI * D * D / 4;
+        let V = mdot / (rho * A);
+        let Re = Math.pow(D, n) * Math.pow(V, 2 - n) * rho / (Math.pow(8, n - 1) * K * Math.pow((3 * n + 1) / (4 * n), n));
+        let f = Re < 2100 ? 16 / Re : 0.02;
+        let dP = f * (L / D) * (rho * V * V / 2) / 1e5;
+        document.getElementById('pl_results').innerHTML = `ΔP = ${dP.toFixed(3)} bar<br>V = ${V.toFixed(2)} m/s`;
+        document.getElementById('pl_reynolds').innerHTML = `Generalized Re = ${Re.toFixed(0)}<br>Dodge-Metzner correlation for turbulent flow.`;
     };
+
+    // Bingham
     window.calcBingham = function() {
-        let D = parseFloat(document.getElementById('bin_id').value)/1000;
-        let L = parseFloat(document.getElementById('bin_L').value);
-        let rho = parseFloat(document.getElementById('bin_rho').value);
-        let mdot = parseFloat(document.getElementById('bin_m').value)/3600;
-        let tau0 = parseFloat(document.getElementById('bin_tau0').value);
-        let mup = parseFloat(document.getElementById('bin_mup').value);
-        let A = Math.PI*D*D/4;
-        let V = mdot/(rho*A);
-        let Re = D*V*rho/mup;
-        let He = D*D*rho*tau0/(mup*mup);
-        let f = (Re<2100) ? 64/Re : 0.02;
-        let dP = f * (L/D) * (rho*V*V/2)/1e5;
-        document.getElementById('bin_res').innerHTML = `ΔP = ${dP.toFixed(3)} bar<br>Re = ${Re.toFixed(0)} , Hedstrom = ${He.toFixed(0)}`;
-        document.getElementById('bin_ff').innerHTML = `Darby-Melson turbulent correlation available.`;
+        let D = parseFloat(document.getElementById('b_dia').value) / 1000;
+        let L = parseFloat(document.getElementById('b_len').value);
+        let rho = parseFloat(document.getElementById('b_rho').value);
+        let mdot = parseFloat(document.getElementById('b_m').value) / 3600;
+        let tau0 = parseFloat(document.getElementById('b_tau').value);
+        let mup = parseFloat(document.getElementById('b_mup').value);
+        let A = Math.PI * D * D / 4;
+        let V = mdot / (rho * A);
+        let Re = D * V * rho / mup;
+        let f = Re < 2100 ? 64 / Re : 0.02;
+        let dP = f * (L / D) * (rho * V * V / 2) / 1e5;
+        document.getElementById('b_results').innerHTML = `ΔP = ${dP.toFixed(3)} bar<br>Re = ${Re.toFixed(0)}`;
+        document.getElementById('b_ff').innerHTML = `Buckingham-Reiner laminar / Darby-Melson turbulent.`;
     };
+
+    // Packed Bed
     window.calcPackedBed = function() {
-        let Db = parseFloat(document.getElementById('pb_Db').value);
-        let L = parseFloat(document.getElementById('pb_L').value);
-        let Dp = parseFloat(document.getElementById('pb_Dp').value)/1000;
+        let Db = parseFloat(document.getElementById('pb_db').value);
+        let L = parseFloat(document.getElementById('pb_l').value);
+        let Dp = parseFloat(document.getElementById('pb_dp').value) / 1000;
         let phi = parseFloat(document.getElementById('pb_phi').value);
         let eps = parseFloat(document.getElementById('pb_eps').value);
-        let mdot = parseFloat(document.getElementById('pb_m').value)/3600;
+        let mdot = parseFloat(document.getElementById('pb_m').value) / 3600;
         let rhog = parseFloat(document.getElementById('pb_rhog').value);
-        let mug = parseFloat(document.getElementById('pb_mug').value)/1000;
-        let A = Math.PI*Db*Db/4;
-        let V = mdot/(rhog*A);
-        let term1 = 150 * mug * V * Math.pow(1-eps,2) / (Math.pow(phi*Dp,2) * Math.pow(eps,3));
-        let term2 = 1.75 * rhog * V*V * (1-eps) / (phi*Dp * Math.pow(eps,3));
+        let mug = parseFloat(document.getElementById('pb_mug').value) / 1000;
+        let A = Math.PI * Db * Db / 4;
+        let V = mdot / (rhog * A);
+        let term1 = 150 * mug * V * Math.pow(1 - eps, 2) / (Math.pow(phi * Dp, 2) * Math.pow(eps, 3));
+        let term2 = 1.75 * rhog * V * V * (1 - eps) / (phi * Dp * Math.pow(eps, 3));
         let dP = (term1 + term2) * L / 1e5;
-        document.getElementById('pb_res').innerHTML = `Ergun ΔP = ${dP.toFixed(2)} bar<br>Superficial gas velocity = ${V.toFixed(3)} m/s`;
-        document.getElementById('pb_mf').innerHTML = `Minimum fluidization velocity estimate: use Wen & Yu correlation.`;
+        document.getElementById('pb_results').innerHTML = `Ergun ΔP = ${dP.toFixed(2)} bar<br>Superficial velocity = ${V.toFixed(3)} m/s`;
+        document.getElementById('pb_mf').innerHTML = `Min fluidization velocity estimate via Wen & Yu.`;
     };
+
+    // Pump Sizing
     window.calcPumpSizing = function() {
         let Q = parseFloat(document.getElementById('pump_q').value);
         let rho = parseFloat(document.getElementById('pump_rho').value);
-        let mu = parseFloat(document.getElementById('pump_visc').value);
         let vp = parseFloat(document.getElementById('pump_vp').value);
-        let eff = parseFloat(document.getElementById('pump_eff').value)/100;
+        let eff = parseFloat(document.getElementById('pump_eff').value) / 100;
         let ps = parseFloat(document.getElementById('pump_ps').value);
         let hs = parseFloat(document.getElementById('pump_hs').value);
         let pd = parseFloat(document.getElementById('pump_pd').value);
         let hd = parseFloat(document.getElementById('pump_hd').value);
-        let SG = rho/62.4;
-        let H_suc = ps*2.31/SG + hs;
-        let H_dis = pd*2.31/SG + hd;
+        let SG = rho / 62.4;
+        let H_suc = ps * 2.31 / SG + hs;
+        let H_dis = pd * 2.31 / SG + hd;
         let H_pump = H_dis - H_suc;
         let bhp = (Q * H_pump * SG) / (3960 * eff);
-        let npsha = (ps - vp)*2.31/SG + hs;
-        document.getElementById('pump_res').innerHTML = `Differential head = ${H_pump.toFixed(1)} ft<br>Hydraulic power = ${(bhp*0.7457).toFixed(1)} kW | BHP = ${bhp.toFixed(1)}<br>Efficiency: ${(eff*100).toFixed(0)}%`;
-        document.getElementById('pump_npsh').innerHTML = `NPSH available = ${npsha.toFixed(1)} ft ${npsha>15?'✔️ margin ok':'⚠️ check cavitation'}`;
+        let npsha = (ps - vp) * 2.31 / SG + hs;
+        document.getElementById('pump_results').innerHTML = `Head = ${H_pump.toFixed(1)} ft<br>BHP = ${bhp.toFixed(1)}<br>Power = ${(bhp * 0.7457).toFixed(1)} kW`;
+        document.getElementById('pump_npsh').innerHTML = `NPSHa = ${npsha.toFixed(1)} ft ${npsha > 15 ? '✔️ OK' : '⚠️ Check'}`;
     };
-    let serChart = null;
-    window.calcSeriesParallel = function() {
-        let a2 = parseFloat(document.getElementById('ser_a2').value);
-        let a1 = parseFloat(document.getElementById('ser_a1').value);
-        let a0 = parseFloat(document.getElementById('ser_a0').value);
-        let qmax = parseFloat(document.getElementById('ser_qmax').value);
-        let mode = document.getElementById('ser_mode').value;
-        let qvals = [];
-        let headSingle = [], headComb = [];
-        for(let q=0; q<=qmax; q+=qmax/20) {
-            let H = a2*q*q + a1*q + a0;
-            if(H<0) H=0;
-            qvals.push(q);
-            headSingle.push(H);
-            let Hcomb = (mode==='series') ? H*2 : H;
-            headComb.push(Hcomb);
+
+    // Series/Parallel Chart
+    let spChart = null;
+    window.drawSeriesParallel = function() {
+        let a2 = parseFloat(document.getElementById('sp_a2').value);
+        let a1 = parseFloat(document.getElementById('sp_a1').value);
+        let a0 = parseFloat(document.getElementById('sp_a0').value);
+        let qmax = parseFloat(document.getElementById('sp_qmax').value);
+        let mode = document.getElementById('sp_mode').value;
+        let q = [], hSingle = [], hComb = [];
+        for (let i = 0; i <= 20; i++) {
+            let flow = (i / 20) * qmax;
+            let H = a2 * flow * flow + a1 * flow + a0;
+            if (H < 0) H = 0;
+            q.push(flow);
+            hSingle.push(H);
+            hComb.push(mode === 'series' ? H * 2 : H);
         }
-        if(serChart) serChart.destroy();
-        let ctx = document.getElementById('serCanvas').getContext('2d');
-        serChart = new Chart(ctx, { type: 'line', data: { labels: qvals, datasets: [{ label: 'Single pump head (m)', data: headSingle, borderColor: '#0d6efd' },{ label: mode==='series'?'Series (2 pumps)':'Parallel (2 pumps)', data: headComb, borderColor: '#dc3545' }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } } });
-        document.getElementById('ser_note').innerHTML = mode==='series' ? 'Series: same flow, heads add' : 'Parallel: same head, flows add';
+        if (spChart) spChart.destroy();
+        let ctx = document.getElementById('spCanvas').getContext('2d');
+        spChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: q, datasets: [{ label: 'Single Pump', data: hSingle, borderColor: '#0d6efd' }, { label: mode === 'series' ? 'Series (2 pumps)' : 'Parallel (2 pumps)', data: hComb, borderColor: '#dc3545' }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+        document.getElementById('sp_note').innerHTML = mode === 'series' ? 'Series: Flow same, heads add' : 'Parallel: Head same, flows add';
     };
+
+    // Affinity Chart
     let affChart = null;
-    window.calcAffinity = function() {
+    window.drawAffinity = function() {
         let n1 = parseFloat(document.getElementById('aff_n1').value);
         let d1 = parseFloat(document.getElementById('aff_d1').value);
         let n2 = parseFloat(document.getElementById('aff_n2').value);
         let d2 = parseFloat(document.getElementById('aff_d2').value);
-        let pointsText = document.getElementById('aff_points').value;
-        let basePoints = [];
-        if(pointsText.trim()==="") basePoints = [[0,15],[10,14],[20,12]];
+        let ptsText = document.getElementById('aff_pts').value;
+        let base = [];
+        if (ptsText.trim() === "") base = [[0, 15], [10, 14], [20, 12]];
         else {
-            let lines = pointsText.split(/[;\n]/);
-            for(let l of lines) { let vals = l.split(','); if(vals.length>=2) basePoints.push([parseFloat(vals[0]), parseFloat(vals[1])]); }
+            let lines = ptsText.split(/\n/);
+            for (let line of lines) {
+                let vals = line.split(',');
+                if (vals.length >= 2) base.push([parseFloat(vals[0]), parseFloat(vals[1])]);
+            }
         }
-        let qBase = basePoints.map(p=>p[0]);
-        let hBase = basePoints.map(p=>p[1]);
-        let qNew = qBase.map(q=> q * (n2/n1) * (d2/d1));
-        let hNew = hBase.map(h=> h * Math.pow(n2/n1,2) * Math.pow(d2/d1,2));
-        if(affChart) affChart.destroy();
+        let qNew = base.map(p => p[0] * (n2 / n1) * (d2 / d1));
+        let hNew = base.map(p => p[1] * Math.pow(n2 / n1, 2) * Math.pow(d2 / d1, 2));
+        if (affChart) affChart.destroy();
         let ctx = document.getElementById('affCanvas').getContext('2d');
-        affChart = new Chart(ctx, { type: 'line', data: { datasets: [{ label: `Original N1=${n1} D1=${d1}mm`, data: qBase.map((x,i)=>({x:x,y:hBase[i]})), borderColor: '#2c3e50', showLine:true, tension:0.3 },{ label: `Modified N2=${n2} D2=${d2}mm`, data: qNew.map((x,i)=>({x:x,y:hNew[i]})), borderColor: '#e67e22', showLine:true }] }, options: { scales: { x: { title: { display: true, text: 'Flow (m³/h)' } }, y: { title: { display: true, text: 'Head (m)' } } } } });
-        document.getElementById('aff_res').innerHTML = `Affinity: Q₂/Q₁ = (N₂/N₁)(D₂/D₁) = ${(n2/n1*d2/d1).toFixed(2)} , H₂/H₁ = (N₂/N₁)²(D₂/D₁)² = ${Math.pow(n2/n1,2)*Math.pow(d2/d1,2).toFixed(2)}`;
+        affChart = new Chart(ctx, {
+            type: 'line',
+            data: { datasets: [{ label: `Original N1=${n1} D1=${d1}mm`, data: base.map(p => ({ x: p[0], y: p[1] })), borderColor: '#2c3e50', showLine: true }, { label: `Modified N2=${n2} D2=${d2}mm`, data: qNew.map((x, i) => ({ x: x, y: hNew[i] })), borderColor: '#e67e22', showLine: true }] },
+            options: { scales: { x: { title: { display: true, text: 'Flow (m³/h)' } }, y: { title: { display: true, text: 'Head (m)' } } }, responsive: true }
+        });
+        document.getElementById('aff_res').innerHTML = `Q₂/Q₁ = ${(n2 / n1 * d2 / d1).toFixed(3)} | H₂/H₁ = ${(Math.pow(n2 / n1, 2) * Math.pow(d2 / d1, 2)).toFixed(3)}`;
     };
-    // initial calls
+
+    // Initial renders
     window.onload = function() {
-        calcSinglePhase(); calcCompressible(); calcPowerLaw(); calcBingham(); calcPackedBed(); calcPumpSizing(); calcSeriesParallel(); calcAffinity();
-        // additional event listeners for dynamic updates
-        document.querySelectorAll('#single input').forEach(el=>el.addEventListener('input', calcSinglePhase));
-        document.querySelectorAll('#compress input').forEach(el=>el.addEventListener('input', calcCompressible));
-        document.querySelectorAll('#power input').forEach(el=>el.addEventListener('input', calcPowerLaw));
-        document.querySelectorAll('#bingham input').forEach(el=>el.addEventListener('input', calcBingham));
-        document.querySelectorAll('#packed input').forEach(el=>el.addEventListener('input', calcPackedBed));
-        document.querySelectorAll('#pump input').forEach(el=>el.addEventListener('input', calcPumpSizing));
-        document.querySelectorAll('#aff input').forEach(el=>el.addEventListener('input', calcAffinity));
-        document.querySelectorAll('#ser input, #ser_mode').forEach(el=>el.addEventListener('input', calcSeriesParallel));
+        calcSinglePhase();
+        calcCompressible();
+        calcPowerLaw();
+        calcBingham();
+        calcPackedBed();
+        calcPumpSizing();
+        drawSeriesParallel();
+        drawAffinity();
+        document.querySelectorAll('#tab1 input, #tab2 input, #tab3 input, #tab4 input, #tab5 input, #tab6 input').forEach(el => el.addEventListener('input', () => { eval(el.closest('.tab-pane').id === 'tab1' ? calcSinglePhase() : el.closest('.tab-pane').id === 'tab2' ? calcCompressible() : el.closest('.tab-pane').id === 'tab3' ? calcPowerLaw() : el.closest('.tab-pane').id === 'tab4' ? calcBingham() : el.closest('.tab-pane').id === 'tab5' ? calcPackedBed() : calcPumpSizing(); }));
+        document.querySelectorAll('#tab7 input, #tab8 input, #sp_mode').forEach(el => el.addEventListener('input', () => { drawSeriesParallel(); drawAffinity(); }));
+        // Render Katex
+        document.querySelectorAll('.math').forEach(el => { try { katex.render(el.innerText, el); } catch (e) { } });
     };
-    // fix Katex rendering
-    document.querySelectorAll('.math').forEach(el=>{ try{katex.render(el.innerText, el)}catch(e){}});
 </script>
 </body>
 </html>
-```
