@@ -20,13 +20,13 @@
         .gas-section h2{color:#0a2e5c;margin-bottom:15px;font-size:1.3rem}
         .gas-section h3{color:#0a2e5c;margin-bottom:15px;font-size:1rem}
         .input-row{margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-        .input-row label{width:140px;font-size:.85rem;font-weight:500;color:#555}
-        .input-row input,.input-row select{flex:1;min-width:120px;padding:8px 12px;border:2px solid #ddd;border-radius:8px;background:#fff}
+        .input-row label{width:150px;font-size:.85rem;font-weight:600;color:#333}
+        .input-row input,.input-row select{flex:1;min-width:130px;padding:8px 12px;border:2px solid #ddd;border-radius:8px;background:#fff}
         .input-row .blue-input{background:#e3f2fd!important;border-color:#2196f3!important}
         .gas-result{font-weight:700;color:#0a2e5c;background:#e8f0fe;padding:8px 12px;border-radius:8px;flex:1;text-align:center}
-        .grid-2col{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:20px}
+        .grid-2col{display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:20px}
         hr{margin:15px 0;border:none;border-top:1px solid #ddd}
-        .footer-quote{text-align:center;margin-top:30px;padding:15px;color:#ff9800;font-style:italic;font-size:1.1rem}
+        .footer-quote{text-align:center;margin-top:30px;padding:15px;color:#ff9800;font-style:italic;font-size:1.2rem}
         .copyright{text-align:center;font-size:.7rem;color:#888;margin-top:10px}
         @media(max-width:768px){.grid-2col{grid-template-columns:1fr}.input-row{flex-direction:column;align-items:flex-start}.input-row label{width:100%}}
     </style>
@@ -41,16 +41,16 @@
         <div class="gas-section"><h2>📊 Flowrate Calculations</h2>
             <div class="grid-2col">
                 <div><h3>Path A: MW + Mass Flow → Molar Flow + Vol Flow</h3>
-                    <div class="input-row"><label>Molecular Weight</label><input id="pa_mw" class="blue-input" value="28" oninput="calcPA()"><select id="pa_mw_u" onchange="calcPA()"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
-                    <div class="input-row"><label>Mass Flowrate</label><input id="pa_m" class="blue-input" value="2000" oninput="calcPA()"><select id="pa_m_u" onchange="calcPA()"><option>kg/hr</option><option>lb/hr</option><option>kg/s</option><option>lb/s</option><option>ton/hr</option></select></div>
-                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="pa_mol_out">--</div><select id="pa_mol_u" onchange="calcPA()"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option><option>kmol/s</option><option>lbmol/s</option></select></div>
-                    <div class="input-row"><label>→ Volumetric Flowrate</label><div class="gas-result" id="pa_vol_out">--</div><select id="pa_vol_u" onchange="calcPA()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>m³/hr</option><option>ft³/hr</option></select></div>
+                    <div class="input-row"><label>Molecular Weight</label><input id="a_mw" class="blue-input" value="28"><select id="a_mw_u"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
+                    <div class="input-row"><label>Mass Flowrate</label><input id="a_m" class="blue-input" value="2000"><select id="a_m_u"><option>kg/hr</option><option>lb/hr</option><option>kg/s</option><option>lb/s</option><option>ton/hr</option></select></div>
+                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="a_mol_out">--</div><select id="a_mol_u"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option></select></div>
+                    <div class="input-row"><label>→ Volumetric Flowrate</label><div class="gas-result" id="a_vol_out">--</div><select id="a_vol_u"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>m³/hr</option><option>ft³/hr</option></select></div>
                 </div>
                 <div><h3>Path B: MW + Vol Flow → Molar Flow + Mass Flow</h3>
-                    <div class="input-row"><label>Molecular Weight</label><input id="pb_mw" class="blue-input" value="28" oninput="calcPB()"><select id="pb_mw_u" onchange="calcPB()"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
-                    <div class="input-row"><label>Volumetric Flowrate</label><input id="pb_v" class="blue-input" value="16007" oninput="calcPB()"><select id="pb_v_u" onchange="calcPB()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>m³/hr</option><option>ft³/hr</option></select></div>
-                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="pb_mol_out">--</div><select id="pb_mol_u" onchange="calcPB()"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option><option>kmol/s</option><option>lbmol/s</option></select></div>
-                    <div class="input-row"><label>→ Mass Flowrate</label><div class="gas-result" id="pb_m_out">--</div><select id="pb_m_u" onchange="calcPB()"><option>kg/hr</option><option>lb/hr</option><option>kg/s</option><option>lb/s</option><option>ton/hr</option></select></div>
+                    <div class="input-row"><label>Molecular Weight</label><input id="b_mw" class="blue-input" value="28"><select id="b_mw_u"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
+                    <div class="input-row"><label>Volumetric Flowrate</label><input id="b_v" class="blue-input" value="16007"><select id="b_v_u"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>m³/hr</option><option>ft³/hr</option></select></div>
+                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="b_mol_out">--</div><select id="b_mol_u"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option></select></div>
+                    <div class="input-row"><label>→ Mass Flowrate</label><div class="gas-result" id="b_m_out">--</div><select id="b_m_u"><option>kg/hr</option><option>lb/hr</option><option>kg/s</option><option>lb/s</option><option>ton/hr</option></select></div>
                 </div>
             </div>
         </div>
@@ -59,34 +59,35 @@
         <div class="gas-section"><h2>📏 Actual Volumetric Flowrate</h2>
             <div class="grid-2col">
                 <div><h3>Actual → Normal Conditions</h3>
-                    <div class="input-row"><label>Operating Pressure</label><input id="act_p" class="blue-input" value="800" oninput="calcActToNorm()"><select id="act_p_u" onchange="calcActToNorm()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option><option>Pa g</option><option>atm g</option><option>N/m² g</option></select></div>
-                    <div class="input-row"><label>Operating Temperature</label><input id="act_t" class="blue-input" value="308" oninput="calcActToNorm()"><select id="act_t_u" onchange="calcActToNorm()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
-                    <div class="input-row"><label>Compression Ratio</label><input id="act_ratio" class="blue-input" value="1" oninput="calcActToNorm()"></div>
-                    <div class="input-row"><label>Actual Flow</label><input id="act_flow" class="blue-input" value="100" oninput="calcActToNorm()"><select id="act_flow_u" onchange="calcActToNorm()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>BLPD</option></select></div>
-                    <div class="input-row"><label>→ Normal Flow</label><div class="gas-result" id="act_norm_out">--</div><select id="act_norm_u" onchange="calcActToNorm()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option></select></div>
-                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="act_mol_out">--</div><select id="act_mol_u" onchange="calcActToNorm()"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option><option>kmol/s</option><option>lbmol/s</option></select></div>
+                    <div class="input-row"><label>Operating Pressure</label><input id="c_p" class="blue-input" value="800"><select id="c_p_u"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option><option>Pa g</option><option>atm g</option></select></div>
+                    <div class="input-row"><label>Operating Temperature</label><input id="c_t" class="blue-input" value="308"><select id="c_t_u"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+                    <div class="input-row"><label>Compression Ratio</label><input id="c_r" class="blue-input" value="1"></div>
+                    <div class="input-row"><label>Actual Flow</label><input id="c_flow" class="blue-input" value="100"><select id="c_flow_u"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>BLPD</option></select></div>
+                    <div class="input-row"><label>→ Normal Flow</label><div class="gas-result" id="c_norm_out">--</div><select id="c_norm_u"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option></select></div>
+                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="c_mol_out">--</div><select id="c_mol_u"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option></select></div>
                 </div>
                 <div><h3>Normal → Actual Conditions</h3>
-                    <div class="input-row"><label>Operating Pressure</label><input id="norm_p" class="blue-input" value="800" oninput="calcNormToAct()"><select id="norm_p_u" onchange="calcNormToAct()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option><option>Pa g</option><option>atm g</option><option>N/m² g</option></select></div>
-                    <div class="input-row"><label>Operating Temperature</label><input id="norm_t" class="blue-input" value="308" oninput="calcNormToAct()"><select id="norm_t_u" onchange="calcNormToAct()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
-                    <div class="input-row"><label>Compression Ratio</label><input id="norm_ratio" class="blue-input" value="1" oninput="calcNormToAct()"></div>
-                    <div class="input-row"><label>Normal Flow</label><input id="norm_flow" class="blue-input" value="16007" oninput="calcNormToAct()"><select id="norm_flow_u" onchange="calcNormToAct()"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option></select></div>
-                    <div class="input-row"><label>→ Actual Flow</label><div class="gas-result" id="norm_act_out">--</div><select id="norm_act_u" onchange="calcNormToAct()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>BLPD</option></select></div>
-                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="norm_mol_out">--</div><select id="norm_mol_u" onchange="calcNormToAct()"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option><option>kmol/s</option><option>lbmol/s</option></select></div>
+                    <div class="input-row"><label>Operating Pressure</label><input id="d_p" class="blue-input" value="800"><select id="d_p_u"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option></select></div>
+                    <div class="input-row"><label>Operating Temperature</label><input id="d_t" class="blue-input" value="308"><select id="d_t_u"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+                    <div class="input-row"><label>Compression Ratio</label><input id="d_r" class="blue-input" value="1"></div>
+                    <div class="input-row"><label>Normal Flow</label><input id="d_flow" class="blue-input" value="16007"><select id="d_flow_u"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option></select></div>
+                    <div class="input-row"><label>→ Actual Flow</label><div class="gas-result" id="d_act_out">--</div><select id="d_act_u"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>BLPD</option></select></div>
+                    <div class="input-row"><label>→ Molar Flowrate</label><div class="gas-result" id="d_mol_out">--</div><select id="d_mol_u"><option>kmol/hr</option><option>lbmol/hr</option><option>mole/s</option><option>mole/hr</option></select></div>
                 </div>
             </div>
         </div>
 
         <!-- SECTION 3: IDEAL GAS LAW -->
         <div class="gas-section"><h2>⚙️ Ideal Gas Law</h2>
-            <div class="input-row"><label>Solve for</label><select id="igl_solve" onchange="calcIGL()"><option value="p">Pressure</option><option value="t">Temperature</option><option value="m">Mass Flowrate</option><option value="v">Volumetric Flowrate</option></select></div>
-            <div class="input-row"><label>Gauge Pressure</label><input id="igl_pg" class="blue-input" value="101.325" oninput="updatePG()"><select id="igl_pg_u" onchange="updatePG()"><option>kPa g</option><option>bar g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option><option>Pa g</option><option>atm g</option><option>N/m² g</option></select></div>
-            <div class="input-row"><label>Absolute Pressure</label><div class="gas-result" id="igl_pa">--</div><select id="igl_pa_u" onchange="updatePA()"><option>kPa a</option><option>bar a</option><option>psi a</option><option>atm a</option><option>mm Hg a</option><option>kg/cm² a</option><option>Pa a</option><option>N/m² a</option></select></div>
-            <div class="input-row"><label>Temperature</label><input id="igl_t" class="blue-input" value="273" oninput="calcIGL()"><select id="igl_t_u" onchange="calcIGL()"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
-            <div class="input-row"><label>Molecular Weight</label><input id="igl_mw" class="blue-input" value="28" oninput="calcIGL()"><select id="igl_mw_u" onchange="calcIGL()"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
-            <div class="input-row"><label>Z Factor</label><input id="igl_z" class="blue-input" value="0.997" oninput="calcIGL()"></div>
-            <div class="input-row"><label>Mass Flowrate</label><input id="igl_m" class="blue-input" value="1000" oninput="calcIGL()"><select id="igl_m_u" onchange="calcIGL()"><option>kg/hr</option><option>lb/hr</option></select></div>
-            <div class="input-row"><label>Volumetric Flowrate</label><input id="igl_v" class="blue-input" value="800" oninput="calcIGL()"><select id="igl_v_u" onchange="calcIGL()"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option></select></div>
+            <div class="input-row"><label>Solve for</label><select id="e_solve"><option value="v">Volumetric Flowrate</option><option value="p">Pressure</option><option value="t">Temperature</option><option value="m">Mass Flowrate</option></select></div>
+            <div class="input-row"><label>Gauge Pressure</label><input id="e_pg" class="blue-input" value="101.325"><select id="e_pg_u"><option>bar g</option><option>kPa g</option><option>psi g</option><option>kg/cm² g</option></select></div>
+            <div class="input-row"><label>Absolute Pressure</label><div class="gas-result" id="e_pa">--</div><select id="e_pa_u"><option>kPa a</option><option>bar a</option><option>psi a</option></select></div>
+            <div class="input-row"><label>Temperature</label><input id="e_t" class="blue-input" value="273"><select id="e_t_u"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+            <div class="input-row"><label>Molecular Weight</label><input id="e_mw" class="blue-input" value="28"><select id="e_mw_u"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
+            <div class="input-row"><label>Z Factor</label><input id="e_z" class="blue-input" value="0.997"></div>
+            <div class="input-row"><label>Mass Flowrate</label><input id="e_m" class="blue-input" value="1000"><select id="e_m_u"><option>kg/hr</option><option>lb/hr</option></select></div>
+            <div class="input-row"><label>Volumetric Flowrate</label><input id="e_v" class="blue-input" value="800"><select id="e_v_u"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option></select></div>
+            <div class="input-row"><label>→ Result</label><div class="gas-result" id="e_res">--</div><select id="e_res_u"><option>m³/hr</option><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>kPa a</option><option>bar a</option><option>psi a</option><option>K</option><option>°C</option><option>°F</option><option>°R</option><option>kg/hr</option><option>lb/hr</option></select></div>
             <div class="input-row"><label>Gas Constant</label><div class="gas-result"><strong>8.31447 J/mol·K</strong></div></div>
         </div>
     </div>
@@ -95,22 +96,18 @@
 </div>
 
 <script>
-// Anti-copy protection
-(function(){
-    document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
-    document.addEventListener('keydown',function(e){if(e.ctrlKey&&(e.key==='u'||e.key==='s'||e.key==='c'||e.key==='v'||e.key==='i')){e.preventDefault();return false;}if(e.key==='F12'){e.preventDefault();return false;}});
-    document.addEventListener('selectstart',function(e){e.preventDefault();return false;});
-})();
+// ==================== ANTI-COPY ====================
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&(e.key==='u'||e.key==='s'||e.key==='c'))e.preventDefault();if(e.key==='F12')e.preventDefault();});
+document.addEventListener('selectstart',e=>e.preventDefault());
 
-function formatNum(n){if(isNaN(n)||n===null)return"0";if(n===0)return"0";if(Math.abs(n)<1e-4)return n.toExponential(4);if(Math.abs(n)>=1e6)return n.toLocaleString('en-US',{maximumFractionDigits:2});return parseFloat(n.toFixed(6)).toString();}
+// ==================== FORMAT NUMBER ====================
+function fmt(n){if(isNaN(n)||n===null)return"0";if(n===0)return"0";if(Math.abs(n)<1e-4)return n.toExponential(4);if(Math.abs(n)>=1e6)return n.toLocaleString('en-US',{maxFractionDigits:2});return parseFloat(n.toFixed(6)).toString();}
 
-// Constants
-const MV=22.414;      // Molar volume Nm³/kmol
-const SP=101.325;     // Standard pressure kPa a
-const ST=273.15;      // Standard temperature K
-const R=8.31447;      // Gas constant J/mol·K
+// ==================== CONSTANTS ====================
+const MV=22.414, SP=101.325, ST=273.15, R=8.31447;
 
-// ==================== UNIT CONVERSION FUNCTIONS ====================
+// ==================== UNIT CONVERSIONS ====================
 function toKpaA(v,u){
     if(u==="kPa g") return v+SP;
     if(u==="bar g") return v*100+SP;
@@ -120,18 +117,11 @@ function toKpaA(v,u){
     if(u==="mm Hg g") return v*0.133322+SP;
     if(u==="Pa g") return v*0.001+SP;
     if(u==="atm g") return v*SP+SP;
-    if(u==="N/m² g") return v*0.001+SP;
     if(u==="kPa a") return v;
     if(u==="bar a") return v*100;
     if(u==="psi a") return v*6.89476;
-    if(u==="atm a") return v*SP;
-    if(u==="mm Hg a") return v*0.133322;
-    if(u==="kg/cm² a") return v*98.0665;
-    if(u==="Pa a") return v*0.001;
-    if(u==="N/m² a") return v*0.001;
     return v;
 }
-
 function toKelvin(v,u){
     if(u==="K") return v;
     if(u==="°C") return v+273.15;
@@ -139,8 +129,7 @@ function toKelvin(v,u){
     if(u==="°R") return v/1.8;
     return v;
 }
-
-function volToNm3(v,u){
+function volToBase(v,u){
     if(u==="Nm³/hr") return v;
     if(u==="Sm³/hr") return v/1.057;
     if(u==="MMSCFD") return v/0.000895846;
@@ -153,8 +142,7 @@ function volToNm3(v,u){
     if(u==="BLPD") return v/150.955;
     return v;
 }
-
-function volFromNm3(v,u){
+function volFromBase(v,u){
     if(u==="Nm³/hr") return v;
     if(u==="Sm³/hr") return v*1.057;
     if(u==="MMSCFD") return v*0.000895846;
@@ -167,8 +155,7 @@ function volFromNm3(v,u){
     if(u==="BLPD") return v*150.955;
     return v;
 }
-
-function massToKghr(v,u){
+function massToBase(v,u){
     if(u==="kg/hr") return v;
     if(u==="lb/hr") return v*0.453592;
     if(u==="kg/s") return v*3600;
@@ -176,8 +163,7 @@ function massToKghr(v,u){
     if(u==="ton/hr") return v*1000;
     return v;
 }
-
-function massFromKghr(v,u){
+function massFromBase(v,u){
     if(u==="kg/hr") return v;
     if(u==="lb/hr") return v/0.453592;
     if(u==="kg/s") return v/3600;
@@ -185,197 +171,207 @@ function massFromKghr(v,u){
     if(u==="ton/hr") return v/1000;
     return v;
 }
-
-function mwToKgmkol(v,u){
+function mwToBase(v,u){
     if(u==="kg/kmol"||u==="g/mol"||u==="lb/lbmol") return v;
     if(u==="kg/mol") return v*1000;
     return v;
 }
-
-function molarFromKmolhr(v,u){
+function molarFromBase(v,u){
     if(u==="kmol/hr") return v;
     if(u==="lbmol/hr") return v*2.20462;
     if(u==="mole/s") return v*0.2777778;
     if(u==="mole/hr") return v*1000;
-    if(u==="kmol/s") return v/3600;
-    if(u==="lbmol/s") return v*0.0006123944;
     return v;
 }
 
-// ==================== PATH A ====================
-function calcPA(){
-    let mw=parseFloat(document.getElementById('pa_mw').value)||0;
-    let mwu=document.getElementById('pa_mw_u').value;
-    let m=parseFloat(document.getElementById('pa_m').value)||0;
-    let mu=document.getElementById('pa_m_u').value;
-    let mw_b=mwToKgmkol(mw,mwu);
-    let m_b=massToKghr(m,mu);
+// ==================== ATTACH EVENT LISTENERS ====================
+function attachEvents(){
+    // Section A
+    ['a_mw','a_m','a_mw_u','a_m_u','a_mol_u','a_vol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcA); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcA);
+    });
+    // Section B
+    ['b_mw','b_v','b_mw_u','b_v_u','b_mol_u','b_m_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcB); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcB);
+    });
+    // Section C
+    ['c_p','c_t','c_r','c_flow','c_p_u','c_t_u','c_flow_u','c_norm_u','c_mol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcC); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcC);
+    });
+    // Section D
+    ['d_p','d_t','d_r','d_flow','d_p_u','d_t_u','d_flow_u','d_act_u','d_mol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcD); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcD);
+    });
+    // Section E
+    ['e_solve','e_pg','e_t','e_mw','e_z','e_m','e_v','e_pg_u','e_t_u','e_mw_u','e_m_u','e_v_u','e_pa_u','e_res_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcE); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcE);
+    });
+    // Special for gauge/absolute
+    let pg=document.getElementById('e_pg'), pgu=document.getElementById('e_pg_u'), pau=document.getElementById('e_pa_u');
+    if(pg) pg.addEventListener('input',updatePA);
+    if(pgu) pgu.addEventListener('change',updatePA);
+    if(pau) pau.addEventListener('change',updatePA);
+}
+
+// ==================== SECTION A ====================
+function calcA(){
+    let mw=parseFloat(document.getElementById('a_mw').value)||0;
+    let mwu=document.getElementById('a_mw_u').value;
+    let m=parseFloat(document.getElementById('a_m').value)||0;
+    let mu=document.getElementById('a_m_u').value;
+    let mw_b=mwToBase(mw,mwu);
+    let m_b=massToBase(m,mu);
     if(mw_b>0&&m_b>0){
         let mol_b=m_b/mw_b;
         let vol_b=mol_b*MV;
-        let mol_u=document.getElementById('pa_mol_u').value;
-        let vol_u=document.getElementById('pa_vol_u').value;
-        let mol_out=molarFromKmolhr(mol_b,mol_u);
-        let vol_out=volFromNm3(vol_b,vol_u);
-        document.getElementById('pa_mol_out').innerHTML='<strong>'+formatNum(mol_out)+'</strong> '+mol_u;
-        document.getElementById('pa_vol_out').innerHTML='<strong>'+formatNum(vol_out)+'</strong> '+vol_u;
+        let mol_u=document.getElementById('a_mol_u').value;
+        let vol_u=document.getElementById('a_vol_u').value;
+        document.getElementById('a_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,mol_u))+'</strong> '+mol_u;
+        document.getElementById('a_vol_out').innerHTML='<strong>'+fmt(volFromBase(vol_b,vol_u))+'</strong> '+vol_u;
     }
 }
 
-// ==================== PATH B ====================
-function calcPB(){
-    let mw=parseFloat(document.getElementById('pb_mw').value)||0;
-    let mwu=document.getElementById('pb_mw_u').value;
-    let v=parseFloat(document.getElementById('pb_v').value)||0;
-    let vu=document.getElementById('pb_v_u').value;
-    let mw_b=mwToKgmkol(mw,mwu);
-    let v_b=volToNm3(v,vu);
+// ==================== SECTION B ====================
+function calcB(){
+    let mw=parseFloat(document.getElementById('b_mw').value)||0;
+    let mwu=document.getElementById('b_mw_u').value;
+    let v=parseFloat(document.getElementById('b_v').value)||0;
+    let vu=document.getElementById('b_v_u').value;
+    let mw_b=mwToBase(mw,mwu);
+    let v_b=volToBase(v,vu);
     if(mw_b>0&&v_b>0){
         let mol_b=v_b/MV;
         let m_b=mol_b*mw_b;
-        let mol_u=document.getElementById('pb_mol_u').value;
-        let mu=document.getElementById('pb_m_u').value;
-        let mol_out=molarFromKmolhr(mol_b,mol_u);
-        let m_out=massFromKghr(m_b,mu);
-        document.getElementById('pb_mol_out').innerHTML='<strong>'+formatNum(mol_out)+'</strong> '+mol_u;
-        document.getElementById('pb_m_out').innerHTML='<strong>'+formatNum(m_out)+'</strong> '+mu;
+        let mol_u=document.getElementById('b_mol_u').value;
+        let mu=document.getElementById('b_m_u').value;
+        document.getElementById('b_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,mol_u))+'</strong> '+mol_u;
+        document.getElementById('b_m_out').innerHTML='<strong>'+fmt(massFromBase(m_b,mu))+'</strong> '+mu;
     }
 }
 
-// ==================== ACTUAL → NORMAL ====================
-function calcActToNorm(){
-    let p=parseFloat(document.getElementById('act_p').value)||0;
-    let pu=document.getElementById('act_p_u').value;
-    let t=parseFloat(document.getElementById('act_t').value)||0;
-    let tu=document.getElementById('act_t_u').value;
-    let r=parseFloat(document.getElementById('act_ratio').value)||1;
-    let a=parseFloat(document.getElementById('act_flow').value)||0;
-    let au=document.getElementById('act_flow_u').value;
+// ==================== SECTION C (Actual → Normal) ====================
+function calcC(){
+    let p=parseFloat(document.getElementById('c_p').value)||0;
+    let pu=document.getElementById('c_p_u').value;
+    let t=parseFloat(document.getElementById('c_t').value)||0;
+    let tu=document.getElementById('c_t_u').value;
+    let r=parseFloat(document.getElementById('c_r').value)||1;
+    let a=parseFloat(document.getElementById('c_flow').value)||0;
+    let au=document.getElementById('c_flow_u').value;
     let p_abs=toKpaA(p,pu);
     let t_k=toKelvin(t,tu);
-    let a_b=volToNm3(a,au);
+    let a_b=volToBase(a,au);
     if(p_abs>0&&t_k>0&&a_b>0){
         let n_b=a_b*(p_abs/SP)*(ST/t_k)/r;
         let mol_b=n_b/MV;
-        let nu=document.getElementById('act_norm_u').value;
-        let molu=document.getElementById('act_mol_u').value;
-        let n_out=volFromNm3(n_b,nu);
-        let mol_out=molarFromKmolhr(mol_b,molu);
-        document.getElementById('act_norm_out').innerHTML='<strong>'+formatNum(n_out)+'</strong> '+nu;
-        document.getElementById('act_mol_out').innerHTML='<strong>'+formatNum(mol_out)+'</strong> '+molu;
+        let nu=document.getElementById('c_norm_u').value;
+        let molu=document.getElementById('c_mol_u').value;
+        document.getElementById('c_norm_out').innerHTML='<strong>'+fmt(volFromBase(n_b,nu))+'</strong> '+nu;
+        document.getElementById('c_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,molu))+'</strong> '+molu;
     }
 }
 
-// ==================== NORMAL → ACTUAL ====================
-function calcNormToAct(){
-    let p=parseFloat(document.getElementById('norm_p').value)||0;
-    let pu=document.getElementById('norm_p_u').value;
-    let t=parseFloat(document.getElementById('norm_t').value)||0;
-    let tu=document.getElementById('norm_t_u').value;
-    let r=parseFloat(document.getElementById('norm_ratio').value)||1;
-    let n=parseFloat(document.getElementById('norm_flow').value)||0;
-    let nu=document.getElementById('norm_flow_u').value;
+// ==================== SECTION D (Normal → Actual) ====================
+function calcD(){
+    let p=parseFloat(document.getElementById('d_p').value)||0;
+    let pu=document.getElementById('d_p_u').value;
+    let t=parseFloat(document.getElementById('d_t').value)||0;
+    let tu=document.getElementById('d_t_u').value;
+    let r=parseFloat(document.getElementById('d_r').value)||1;
+    let n=parseFloat(document.getElementById('d_flow').value)||0;
+    let nu=document.getElementById('d_flow_u').value;
     let p_abs=toKpaA(p,pu);
     let t_k=toKelvin(t,tu);
-    let n_b=volToNm3(n,nu);
+    let n_b=volToBase(n,nu);
     if(p_abs>0&&t_k>0&&n_b>0){
         let a_b=n_b*(SP/p_abs)*(t_k/ST)*r;
         let mol_b=n_b/MV;
-        let au=document.getElementById('norm_act_u').value;
-        let molu=document.getElementById('norm_mol_u').value;
-        let a_out=volFromNm3(a_b,au);
-        let mol_out=molarFromKmolhr(mol_b,molu);
-        document.getElementById('norm_act_out').innerHTML='<strong>'+formatNum(a_out)+'</strong> '+au;
-        document.getElementById('norm_mol_out').innerHTML='<strong>'+formatNum(mol_out)+'</strong> '+molu;
+        let au=document.getElementById('d_act_u').value;
+        let molu=document.getElementById('d_mol_u').value;
+        document.getElementById('d_act_out').innerHTML='<strong>'+fmt(volFromBase(a_b,au))+'</strong> '+au;
+        document.getElementById('d_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,molu))+'</strong> '+molu;
     }
 }
 
-// ==================== IDEAL GAS LAW ====================
-function updatePG(){
-    let pg=parseFloat(document.getElementById('igl_pg').value)||0;
-    let pgu=document.getElementById('igl_pg_u').value;
-    let pa=toKpaA(pg,pgu);
-    let pau=document.getElementById('igl_pa_u').value;
-    if(pau==="kPa a") document.getElementById('igl_pa').innerHTML=formatNum(pa);
-    else if(pau==="bar a") document.getElementById('igl_pa').innerHTML=formatNum(pa/100);
-    else if(pau==="psi a") document.getElementById('igl_pa').innerHTML=formatNum(pa/6.89476);
-    else if(pau==="atm a") document.getElementById('igl_pa').innerHTML=formatNum(pa/SP);
-    else if(pau==="mm Hg a") document.getElementById('igl_pa').innerHTML=formatNum(pa/0.133322);
-    else if(pau==="kg/cm² a") document.getElementById('igl_pa').innerHTML=formatNum(pa/98.0665);
-    else if(pau==="Pa a") document.getElementById('igl_pa').innerHTML=formatNum(pa*1000);
-    else if(pau==="N/m² a") document.getElementById('igl_pa').innerHTML=formatNum(pa*1000);
-    calcIGL();
-}
-
+// ==================== UPDATE ABSOLUTE PRESSURE ====================
 function updatePA(){
-    let pav=parseFloat(document.getElementById('igl_pa').innerHTML)||0;
-    let pau=document.getElementById('igl_pa_u').value;
-    let pa=pav;
-    if(pau==="bar a") pa=pav*100;
-    else if(pau==="psi a") pa=pav*6.89476;
-    else if(pau==="atm a") pa=pav*SP;
-    else if(pau==="mm Hg a") pa=pav*0.133322;
-    else if(pau==="kg/cm² a") pa=pav*98.0665;
-    else if(pau==="Pa a") pa=pav*0.001;
-    else if(pau==="N/m² a") pa=pav*0.001;
-    let pgk=pa-SP;
-    let pgu=document.getElementById('igl_pg_u').value;
-    if(pgu==="kPa g") document.getElementById('igl_pg').value=formatNum(pgk);
-    else if(pgu==="bar g") document.getElementById('igl_pg').value=formatNum(pgk/100);
-    else if(pgu==="psi g") document.getElementById('igl_pg').value=formatNum(pgk/6.89476);
-    else if(pgu==="kg/cm² g") document.getElementById('igl_pg').value=formatNum(pgk/98.0665);
-    else if(pgu==="mm water g") document.getElementById('igl_pg').value=formatNum(pgk/0.00980665);
-    else if(pgu==="mm Hg g") document.getElementById('igl_pg').value=formatNum(pgk/0.133322);
-    else if(pgu==="Pa g") document.getElementById('igl_pg').value=formatNum(pgk*1000);
-    else if(pgu==="atm g") document.getElementById('igl_pg').value=formatNum(pgk/SP);
-    else if(pgu==="N/m² g") document.getElementById('igl_pg').value=formatNum(pgk*1000);
-    calcIGL();
+    let pg=parseFloat(document.getElementById('e_pg').value)||0;
+    let pgu=document.getElementById('e_pg_u').value;
+    let pa=toKpaA(pg,pgu);
+    let pau=document.getElementById('e_pa_u').value;
+    if(pau==="kPa a") document.getElementById('e_pa').innerHTML=fmt(pa);
+    else if(pau==="bar a") document.getElementById('e_pa').innerHTML=fmt(pa/100);
+    else if(pau==="psi a") document.getElementById('e_pa').innerHTML=fmt(pa/6.89476);
+    calcE();
 }
 
-function calcIGL(){
-    let sl=document.getElementById('igl_solve').value;
-    let pg=parseFloat(document.getElementById('igl_pg').value)||0;
-    let pgu=document.getElementById('igl_pg_u').value;
+// ==================== SECTION E (Ideal Gas Law) ====================
+function calcE(){
+    let solve=document.getElementById('e_solve').value;
+    let pg=parseFloat(document.getElementById('e_pg').value)||0;
+    let pgu=document.getElementById('e_pg_u').value;
     let pa=toKpaA(pg,pgu);
-    let t=parseFloat(document.getElementById('igl_t').value)||0;
-    let tu=document.getElementById('igl_t_u').value;
+    let t=parseFloat(document.getElementById('e_t').value)||0;
+    let tu=document.getElementById('e_t_u').value;
     let tK=toKelvin(t,tu);
-    let mw=parseFloat(document.getElementById('igl_mw').value)||0;
-    let mwu=document.getElementById('igl_mw_u').value;
-    let mw_b=mwToKgmkol(mw,mwu);
-    let z=parseFloat(document.getElementById('igl_z').value)||1;
-    let m=parseFloat(document.getElementById('igl_m').value)||0;
-    let mu=document.getElementById('igl_m_u').value;
-    let m_b=massToKghr(m,mu);
-    let v=parseFloat(document.getElementById('igl_v').value)||0;
-    let vu=document.getElementById('igl_v_u').value;
-    let v_b=volToNm3(v,vu);
-    let ru=document.getElementById('igl_res_u').value;
+    let mw=parseFloat(document.getElementById('e_mw').value)||0;
+    let mwu=document.getElementById('e_mw_u').value;
+    let mw_b=mwToBase(mw,mwu);
+    let z=parseFloat(document.getElementById('e_z').value)||1;
+    let m=parseFloat(document.getElementById('e_m').value)||0;
+    let mu=document.getElementById('e_m_u').value;
+    let m_b=massToBase(m,mu);
+    let v=parseFloat(document.getElementById('e_v').value)||0;
+    let vu=document.getElementById('e_v_u').value;
+    let v_b=volToBase(v,vu);
+    let ru=document.getElementById('e_res_u').value;
     let res="--";
     
-    if(sl==="p" && tK>0 && mw_b>0 && v_b>0 && z>0){
+    if(solve==="v" && pa>0 && tK>0 && mw_b>0 && m_b>0 && z>0){
+        let n=(m_b/mw_b)/3600;
+        let v_calc=(n*R*tK*z)/pa*3600;
+        if(ru==="m³/hr"||ru==="Nm³/hr") res=fmt(v_calc);
+        else if(ru==="Sm³/hr") res=fmt(v_calc*1.057);
+        else if(ru==="MMSCFD") res=fmt(v_calc*0.000895846);
+        else if(ru==="SCFM") res=fmt(v_calc*0.622083333);
+        else if(ru==="SCFD") res=fmt(v_calc*895.8);
+        else if(ru==="ft³/hr") res=fmt(v_calc*35.3147);
+        else if(ru==="US GPM") res=fmt(v_calc*4.4029);
+        else if(ru==="kLPD") res=fmt(v_calc*24);
+    }
+    else if(solve==="p" && tK>0 && mw_b>0 && v_b>0 && z>0){
         let n=(m_b/mw_b)/3600;
         let p_calc=(n*R*tK*z)/(v_b/3600);
-        if(ru==="kPa a") res=formatNum(p_calc);
-        else if(ru==="bar a") res=formatNum(p_calc/100);
-        else if(ru==="psi a") res=formatNum(p_calc/6.89476);
-        else if(ru==="atm a") res=formatNum(p_calc/SP);
-        else if(ru==="kg/cm² a") res=formatNum(p_calc/98.0665);
+        if(ru==="kPa a") res=fmt(p_calc);
+        else if(ru==="bar a") res=fmt(p_calc/100);
+        else if(ru==="psi a") res=fmt(p_calc/6.89476);
     }
-    else if(sl==="t" && pa>0 && mw_b>0 && v_b>0 && z>0){
+    else if(solve==="t" && pa>0 && mw_b>0 && v_b>0 && z>0){
         let n=(m_b/mw_b)/3600;
         let t_calc=(pa*(v_b/3600))/(n*R*z);
-        if(ru==="K") res=formatNum(t_calc);
-        else if(ru==="°C") res=formatNum(t_calc-273.15);
-        else if(ru==="°F") res=formatNum(t_calc*1.8-459.67);
-        else if(ru==="°R") res=formatNum(t_calc*1.8);
+        if(ru==="K") res=fmt(t_calc);
+        else if(ru==="°C") res=fmt(t_calc-273.15);
+        else if(ru==="°F") res=fmt(t_calc*1.8-459.67);
+        else if(ru==="°R") res=fmt(t_calc*1.8);
     }
-    else if(sl==="m" && pa>0 && tK>0 && mw_b>0 && v_b>0 && z>0){
+    else if(solve==="m" && pa>0 && tK>0 && mw_b>0 && v_b>0 && z>0){
         let n=(pa*(v_b/3600))/(R*tK*z);
         let m_calc=n*mw_b*3600;
-        if(ru==="kg/hr") res=formatNum(m_calc);
-        else if(ru==="lb/hr") res=formatNum(m_calc/0.453592);
-        else if(ru==="kg/s") res=formatNum(m_calc/3600);
-        else if(ru==="lb/s") res=formatNum(m_calc/1633);
+        if(ru==="kg/hr") res=fmt(m_calc);
+        else if(ru==="lb/hr") res=fmt(m_calc/0.453592);
     }
-    else if(sl==="v" && pa>0 && tK>0 && mw_b>0 && m_b>0 && z
+    
+    document.getElementById('e_res').innerHTML='<strong>'+res+'</strong>';
+}
+
+// ==================== INITIALIZE ====================
+attachEvents();
+calcA();calcB();calcC();calcD();updatePA();
+</script>
+</body>
+</html>
