@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Equipment Suite - Vessels, Tanks & Heat Exchangers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+    <style>
+        * { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f2f5; padding-top: 20px; }
+        .back-btn {
+            background: #ff9800; color: #1a2a3a; border: none; padding: 10px 20px;
+            border-radius: 40px; font-size: 0.9rem; font-weight: bold; cursor: pointer;
+            margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px;
+            text-decoration: none;
+        }
+        .back-btn:hover { background: #e68900; transform: translateX(-5px); }
+        .container-custom { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .nav-tabs .nav-link { font-weight: 600; border: none; padding: 0.6rem 1.2rem; border-radius: 30px; }
+        .nav-tabs .nav-link.active { background: #0a2e5c; color: white; }
+        .nav-tabs { gap: 8px; flex-wrap: wrap; border-bottom: none; }
+        .tab-container { background: white; border-radius: 24px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .app-calc-title { font-weight: 700; font-size: 1.2rem; border-left: 4px solid #ff9800; padding-left: 12px; margin: 1rem 0 1.2rem 0; }
+        .result-tab { background: #eef2ff; padding: 12px 16px; border-radius: 16px; margin: 12px 0; }
+        .math_form { background: #f8fafc; padding: 12px; border-radius: 16px; margin: 12px 0; border: 1px solid #e2e8f0; }
+        .math { margin: 0; overflow-x: auto; }
+        .btn-calc { background: #ff9800; color: #1a2a3a; border: none; border-radius: 40px; padding: 8px 24px; font-weight: 600; margin-top: 15px; }
+        .btn-calc:hover { background: #e68900; }
+        .form-control, .form-select { border-radius: 12px; margin-bottom: 10px; }
+        .form-label { font-weight: 600; font-size: 0.8rem; margin-top: 8px; }
+        .footer-quote { text-align: center; margin-top: 30px; padding: 15px; color: #ff9800; font-style: italic; }
+    </style>
+</head>
+<body>
+<div class="container-custom">
+    <a href="index.html" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="tab-container">
+        <ul class="nav nav-tabs mb-3" id="mainTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1">Pressure Vessel</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2">Storage Tank</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3">Flash Drum</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4">Heat Exchanger</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5">Air Cooler</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab6">Kettle Reboiler</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Tab 1: Pressure Vessel -->
+            <div class="tab-pane fade show active" id="tab1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Pressure Vessel (ASME Section VIII)</p>
+                        <label class="form-label">Design Pressure (barg)</label>
+                        <input type="number" id="pv_p" class="form-control" value="10">
+                        <label class="form-label">Inside Diameter (mm)</label>
+                        <input type="number" id="pv_d" class="form-control" value="1200">
+                        <label class="form-label">Allowable Stress (MPa)</label>
+                        <input type="number" id="pv_s" class="form-control" value="138">
+                        <label class="form-label">Joint Efficiency</label>
+                        <input type="number" id="pv_e" class="form-control" value="0.85" step="0.01">
+                        <label class="form-label">Corrosion Allowance (mm)</label>
+                        <input type="number" id="pv_ca" class="form-control" value="3">
+                        <button class="btn-calc" onclick="calcPressureVessel()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="pv_results" class="result-tab">Click Calculate</div>
+                        <div class="math_form"><p class="math">t = \frac{P \times D}{2SE - 1.2P} + CA</p></div>
+                        <div id="pv_weight" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Storage Tank -->
+            <div class="tab-pane fade" id="tab2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Storage Tank (API 650)</p>
+                        <label class="form-label">Tank Diameter (m)</label>
+                        <input type="number" id="tank_d" class="form-control" value="5">
+                        <label class="form-label">Tank Height (m)</label>
+                        <input type="number" id="tank_h" class="form-control" value="6">
+                        <label class="form-label">Liquid Density (kg/m³)</label>
+                        <input type="number" id="tank_rho" class="form-control" value="850">
+                        <label class="form-label">Fill Level (%)</label>
+                        <input type="number" id="tank_level" class="form-control" value="90">
+                        <button class="btn-calc" onclick="calcStorageTank()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="tank_results" class="result-tab">Click Calculate</div>
+                        <div class="math_form"><p class="math">V = \frac{\pi D^2}{4} \times H</p></div>
+                        <div id="tank_wetted" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Flash Drum -->
+            <div class="tab-pane fade" id="tab3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Flash Drum / Separator</p>
+                        <label class="form-label">Vapor Flow (kg/h)</label>
+                        <input type="number" id="fd_mv" class="form-control" value="5000">
+                        <label class="form-label">Liquid Flow (kg/h)</label>
+                        <input type="number" id="fd_ml" class="form-control" value="20000">
+                        <label class="form-label">Vapor Density (kg/m³)</label>
+                        <input type="number" id="fd_rhov" class="form-control" value="3.5">
+                        <label class="form-label">Liquid Density (kg/m³)</label>
+                        <input type="number" id="fd_rhol" class="form-control" value="800">
+                        <label class="form-label">Operating Pressure (barg)</label>
+                        <input type="number" id="fd_p" class="form-control" value="5">
+                        <button class="btn-calc" onclick="calcFlashDrum()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="fd_results" class="result-tab">Click Calculate</div>
+                        <div class="math_form"><p class="math">V_{max} = K \sqrt{\frac{\rho_l - \rho_v}{\rho_v}}</p></div>
+                        <div id="fd_dimensions" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Heat Exchanger -->
+            <div class="tab-pane fade" id="tab4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Shell & Tube Heat Exchanger</p>
+                        <label class="form-label">Hot Side Inlet T (°C)</label>
+                        <input type="number" id="hx_th1" class="form-control" value="150">
+                        <label class="form-label">Hot Side Outlet T (°C)</label>
+                        <input type="number" id="hx_th2" class="form-control" value="100">
+                        <label class="form-label">Cold Side Inlet T (°C)</label>
+                        <input type="number" id="hx_tc1" class="form-control" value="30">
+                        <label class="form-label">Cold Side Outlet T (°C)</label>
+                        <input type="number" id="hx_tc2" class="form-control" value="80">
+                        <label class="form-label">Heat Duty (kW)</label>
+                        <input type="number" id="hx_q" class="form-control" value="1000">
+                        <label class="form-label">Overall U (W/m²·K)</label>
+                        <input type="number" id="hx_u" class="form-control" value="500">
+                        <button class="btn-calc" onclick="calcHeatExchanger()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="hx_results" class="result-tab">Click Calculate</div>
+                        <div class="math_form"><p class="math">\Delta T_{LM} = \frac{\Delta T_1 - \Delta T_2}{\ln(\Delta T_1/\Delta T_2)}</p></div>
+                        <div id="hx_area" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Air Cooler -->
+            <div class="tab-pane fade" id="tab5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Air Cooled Heat Exchanger</p>
+                        <label class="form-label">Heat Duty (kW)</label>
+                        <input type="number" id="ac_q" class="form-control" value="2000">
+                        <label class="form-label">Air Inlet T (°C)</label>
+                        <input type="number" id="ac_ta" class="form-control" value="30">
+                        <label class="form-label">Process Outlet T (°C)</label>
+                        <input type="number" id="ac_tp" class="form-control" value="60">
+                        <label class="form-label">Overall U (W/m²·K)</label>
+                        <input type="number" id="ac_u" class="form-control" value="350">
+                        <button class="btn-calc" onclick="calcAirCooler()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="ac_results" class="result-tab">Click Calculate</div>
+                        <div id="ac_fan" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Kettle Reboiler -->
+            <div class="tab-pane fade" id="tab6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Kettle Reboiler</p>
+                        <label class="form-label">Heat Duty (kW)</label>
+                        <input type="number" id="kr_q" class="form-control" value="1500">
+                        <label class="form-label">Steam Temperature (°C)</label>
+                        <input type="number" id="kr_ts" class="form-control" value="180">
+                        <label class="form-label">Process Temperature (°C)</label>
+                        <input type="number" id="kr_tp" class="form-control" value="150">
+                        <label class="form-label">Overall U (W/m²·K)</label>
+                        <input type="number" id="kr_u" class="form-control" value="800">
+                        <button class="btn-calc" onclick="calcKettleReboiler()">Calculate</button>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="app-calc-title">Results</p>
+                        <div id="kr_results" class="result-tab">Click Calculate</div>
+                        <div id="kr_steam" class="result-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function calcPressureVessel() {
+        let P = parseFloat(document.getElementById('pv_p').value);
+        let D = parseFloat(document.getElementById('pv_d').value);
+        let S = parseFloat(document.getElementById('pv_s').value);
+        let E = parseFloat(document.getElementById('pv_e').value);
+        let CA = parseFloat(document.getElementById('pv_ca').value);
+        
+        let t = (P * D) / (2 * S * E - 1.2 * P) + CA;
+        let t_min = Math.max(t, 4);
+        
+        document.getElementById('pv_results').innerHTML = `<strong>Required Thickness = ${t_min.toFixed(1)} mm</strong><br>Calculated t = ${t.toFixed(1)} mm + corrosion<br>MAWP ≈ ${((2*S*E*t_min)/(D+1.2*t_min)).toFixed(1)} barg`;
+        document.getElementById('pv_weight').innerHTML = `Shell weight ≈ ${(Math.PI * D * t_min/1000 * 7850 / 1000).toFixed(0)} kg/m`;
+    }
+
+    function calcStorageTank() {
+        let D = parseFloat(document.getElementById('tank_d').value);
+        let H = parseFloat(document.getElementById('tank_h').value);
+        let rho = parseFloat(document.getElementById('tank_rho').value);
+        let level = parseFloat(document.getElementById('tank_level').value) / 100;
+        
+        let V = Math.PI * D * D / 4 * H;
+        let V_liq = V * level;
+        let mass = V_liq * rho;
+        
+        document.getElementById('tank_results').innerHTML = `<strong>Total Volume = ${V.toFixed(1)} m³</strong><br>Liquid Volume = ${V_liq.toFixed(1)} m³<br>Liquid Mass = ${mass.toFixed(0)} kg (${(mass/1000).toFixed(1)} tonnes)`;
+        document.getElementById('tank_wetted').innerHTML = `Wetted Area = ${(Math.PI * D * H * level).toFixed(1)} m²`;
+    }
+
+    function calcFlashDrum() {
+        let mv = parseFloat(document.getElementById('fd_mv').value) / 3600;
+        let ml = parseFloat(document.getElementById('fd_ml').value) / 3600;
+        let rhov = parseFloat(document.getElementById('fd_rhov').value);
+        let rhol = parseFloat(document.getElementById('fd_rhol').value);
+        
+        let K = 0.107;
+        let Vmax = K * Math.sqrt((rhol - rhov) / rhov);
+        let area = mv / (rhov * Vmax);
+        let D = Math.sqrt(area * 4 / Math.PI);
+        let L = D * 3;
+        
+        document.getElementById('fd_results').innerHTML = `<strong>Vessel Diameter = ${D.toFixed(2)} m</strong><br>Vessel Length = ${L.toFixed(1)} m<br>Max Vapor Velocity = ${Vmax.toFixed(2)} m/s`;
+        document.getElementById('fd_dimensions').innerHTML = `Liquid hold-up volume = ${(ml/rhol*300).toFixed(1)} m³ (5 min)`;
+    }
+
+    function calcHeatExchanger() {
+        let th1 = parseFloat(document.getElementById('hx_th1').value);
+        let th2 = parseFloat(document.getElementById('hx_th2').value);
+        let tc1 = parseFloat(document.getElementById('hx_tc1').value);
+        let tc2 = parseFloat(document.getElementById('hx_tc2').value);
+        let Q = parseFloat(document.getElementById('hx_q').value) * 1000;
+        let U = parseFloat(document.getElementById('hx_u').value);
+        
+        let dT1 = th1 - tc2;
+        let dT2 = th2 - tc1;
+        let LMTD = (dT1 - dT2) / Math.log(dT1 / dT2);
+        let area = Q / (U * LMTD);
+        
+        document.getElementById('hx_results').innerHTML = `<strong>LMTD = ${LMTD.toFixed(1)} °C</strong><br>Required Area = ${area.toFixed(0)} m²`;
+        document.getElementById('hx_area').innerHTML = `For 1-2 pass, correction factor F ≈ 0.95<br>Actual area = ${(area/0.95).toFixed(0)} m²`;
+    }
+
+    function calcAirCooler() {
+        let Q = parseFloat(document.getElementById('ac_q').value) * 1000;
+        let ta = parseFloat(document.getElementById('ac_ta').value);
+        let tp = parseFloat(document.getElementById('ac_tp').value);
+        let U = parseFloat(document.getElementById('ac_u').value);
+        
+        let dT = tp - ta;
+        let area = Q / (U * dT);
+        let fanPower = Q / 1000 * 0.05;
+        
+        document.getElementById('ac_results').innerHTML = `<strong>Required Area = ${area.toFixed(0)} m²</strong><br>Approach = ${dT.toFixed(1)} °C`;
+        document.getElementById('ac_fan').innerHTML = `Fan Power ≈ ${fanPower.toFixed(1)} kW`;
+    }
+
+    function calcKettleReboiler() {
+        let Q = parseFloat(document.getElementById('kr_q').value) * 1000;
+        let ts = parseFloat(document.getElementById('kr_ts').value);
+        let tp = parseFloat(document.getElementById('kr_tp').value);
+        let U = parseFloat(document.getElementById('kr_u').value);
+        
+        let dT = ts - tp;
+        let area = Q / (U * dT);
+        let steamFlow = Q / 2200;
+        
+        document.getElementById('kr_results').innerHTML = `<strong>Heat Transfer Area = ${area.toFixed(0)} m²</strong><br>ΔT = ${dT.toFixed(1)} °C`;
+        document.getElementById('kr_steam').innerHTML = `Steam Consumption = ${steamFlow.toFixed(1)} kg/s (${(steamFlow*3600).toFixed(0)} kg/h)`;
+    }
+
+    document.querySelectorAll('.math').forEach(el => { try { katex.render(el.innerText, el); } catch(e) {} });
+</script>
+</body>
+</html>
