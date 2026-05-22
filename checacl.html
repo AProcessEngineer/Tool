@@ -1,0 +1,1638 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-SBVGKBRCCV"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-SBVGKBRCCV");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CheCalc | Chemical Engineering Calculations</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles -->
+    <style>
+      :root {
+        --brand-blue: #005493;
+        --brand-blue-dark: #003c6b;
+        --brand-red: #d9534f;
+        --brand-red-light: #fde8e8;
+        --brand-gray-dark: #374151;
+        --bs-secondary-rgb: 85, 101, 123;
+        --bs-body-line-height: 1.6;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--brand-gray-dark);
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+
+      .delay-1 {
+        animation-delay: 0.1s;
+      }
+      .delay-2 {
+        animation-delay: 0.2s;
+      }
+      .delay-3 {
+        animation-delay: 0.3s;
+      }
+
+      .hero-gradient {
+        background: linear-gradient(
+          135deg,
+          rgba(240, 249, 255, 1) 0%,
+          rgba(255, 255, 255, 1) 100%
+        );
+      }
+
+      .navbar {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+      }
+
+      .calculator-card {
+        transition:
+          transform 0.2s ease-in-out,
+          box-shadow 0.2s ease-in-out;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .calculator-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+        border-color: rgba(0, 84, 147, 0.2);
+      }
+
+      .category-link {
+        transition: all 0.2s ease-in-out;
+      }
+      .category-link:hover {
+        background-color: var(--brand-red-light) !important;
+        border-color: var(--brand-red-light) !important;
+        transform: translateY(-2px);
+      }
+      .category-link .cat-icon {
+        color: var(--brand-blue);
+        transition: transform 0.2s ease;
+      }
+      .category-link:hover .cat-icon {
+        color: var(--brand-red);
+        transform: scale(1.1);
+      }
+      .category-link:hover .link-text {
+        color: var(--brand-red) !important;
+      }
+
+      .icon-bg {
+        background-color: var(--brand-red-light);
+        color: var(--brand-red);
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .feature-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        background-color: rgba(0, 84, 147, 0.1);
+        color: var(--brand-blue);
+        font-size: 1.75rem;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .col-md-4:hover .feature-icon {
+        background-color: var(--brand-blue);
+        color: white;
+      }
+
+      .btn-primary {
+        background-color: var(--brand-blue);
+        border-color: var(--brand-blue);
+        transition: all 0.2s ease;
+      }
+      .btn-primary:hover {
+        background-color: var(--brand-blue-dark);
+        border-color: var(--brand-blue-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 84, 147, 0.2);
+      }
+
+      .btn-brand-red {
+        background-color: var(--brand-red);
+        border-color: var(--brand-red);
+        color: white;
+        transition: all 0.2s ease;
+      }
+      .btn-brand-red:hover {
+        background-color: #c12e2a; /* Slightly darker shade for hover */
+        border-color: #c12e2a;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(217, 83, 79, 0.25);
+      }
+
+      /* Search Bar Enhancements */
+      #searchInput {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+      #searchInput:focus {
+        border-color: rgba(0, 84, 147, 0.3);
+        box-shadow: 0 0 0 0.25rem rgba(0, 84, 147, 0.1);
+      }
+
+      .search-item-link {
+        transition: background-color 0.2s ease;
+      }
+      .search-item-link:hover,
+      .active-search-item {
+        background-color: rgba(0, 84, 147, 0.08) !important;
+        cursor: pointer;
+      }
+
+      .article-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(0, 84, 147, 0.9);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+      }
+      /* Recent Additions Styling */
+      .recent-addition-link {
+        transition: all 0.2s ease-in-out;
+      }
+      .recent-addition-link:hover {
+        background-color: var(--brand-blue) !important;
+        border-color: var(--brand-blue) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 84, 147, 0.2) !important;
+      }
+      .recent-addition-link:hover .addition-text {
+        color: white !important;
+      }
+      .recent-addition-link:hover .addition-icon-bg {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+      }
+    </style>
+  </head>
+  <body class="bg-white">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-md sticky-top border-bottom shadow-sm">
+      <div class="container" style="max-width: 1140px">
+        <a class="navbar-brand" href="index.html">
+          <img
+            src="https://checalc.com/assetsN/img/Full_Logo_Transparent.png"
+            alt="CheCalc Logo"
+            style="height: 2.5rem"
+            onerror="
+              this.onerror = null;
+              this.src =
+                'https://placehold.co/150x40/005493/FFFFFF?text=CheCalc';
+            "
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav ms-auto mb-2 mb-md-0 fw-medium">
+            <!-- <li class="nav-item">
+              <a class="nav-link px-3" href="#calculators">Calculators</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link px-3" href="#categories">Categories</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link px-3" href="#articles">Articles</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link px-3" href="about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-gradient py-5 position-relative" style="z-index: 10">
+        <div
+          class="container text-center py-4 py-md-5 fade-in-up"
+          style="max-width: 1140px"
+        >
+          <span
+            class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2 rounded-pill fw-semibold border border-primary-subtle"
+          >
+            <i class="bi bi-stars me-1"></i> The Engineer's Toolkit
+          </span>
+          <h1 class="display-4 fw-bold mb-3 text-dark">
+            Fast & Accurate Chemical Engineering Calculations
+          </h1>
+          <p class="fs-5 text-dark text-opacity-75 col-md-8 mx-auto mb-5">
+            Your go-to resource for reliable online calculators, for all your
+            essential process and plant design needs. Built by engineers, for
+            engineers.
+          </p>
+
+          <!-- Search Bar -->
+          <div
+            class="col-lg-8 mx-auto position-relative delay-1"
+            id="search-container"
+          >
+            <div class="position-relative">
+              <span
+                class="position-absolute top-50 start-0 translate-middle-y ps-4 text-secondary fs-5"
+              >
+                <i class="bi bi-search"></i>
+              </span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search for a calculator (e.g., 'Vessel Volume')"
+                class="form-control form-control-lg rounded-pill shadow py-3 ps-5 pe-4"
+                autocomplete="off"
+              />
+            </div>
+            <!-- Search Results Dropdown -->
+            <div
+              id="searchResults"
+              class="dropdown-menu w-100 mt-2 shadow-lg p-0 border-0 rounded-4"
+              style="max-height: 400px; overflow-y: auto"
+            >
+              <!-- Results will be injected here by JavaScript -->
+            </div>
+
+            <div class="mt-3 text-secondary small">
+              <i class="bi bi-people-fill text-primary"></i> Trusted by
+              <span class="fw-semibold text-dark">5,000+ users</span> worldwide
+              every single day.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- What's New Section -->
+      <section
+        id="whats-new"
+        class="py-5 bg-white position-relative"
+        style="z-index: 1"
+      >
+        <div class="container fade-in-up delay-2" style="max-width: 1140px">
+          <div
+            class="bg-light border border-primary-subtle rounded-4 p-4 p-md-5 shadow-sm position-relative overflow-hidden mb-4 mb-md-5"
+          >
+            <!-- Decorative background element: Explicit inline opacity and color to prevent it from rendering solid dark -->
+            <div
+              class="position-absolute top-0 end-0 p-5 d-none d-md-block"
+              style="
+                transform: translate(20%, -20%);
+                opacity: 0.08;
+                color: var(--brand-blue);
+              "
+            >
+              <i class="bi bi-gear-wide-connected" style="font-size: 15rem"></i>
+            </div>
+
+            <div class="row align-items-center position-relative z-1">
+              <div class="col-md text-center text-md-start">
+                <div
+                  class="d-flex align-items-center justify-content-center justify-content-md-start mb-2"
+                >
+                  <span class="badge bg-danger me-2">NEW</span>
+                  <span
+                    class="text-uppercase fw-bold text-secondary"
+                    style="letter-spacing: 1px; font-size: 0.85rem"
+                    >Just Launched</span
+                  >
+                  <span class="mx-2 text-secondary opacity-50">•</span>
+                  <span
+                    class="text-secondary fw-medium"
+                    style="font-size: 0.85rem"
+                    ><i class="bi bi-calendar3 me-1"></i> May 2026</span
+                  >
+                </div>
+                <h2 class="h3 fw-bold mb-2">
+                  Solvent Property & Sizing Calculator
+                </h2>
+                <p class="lead text-secondary mb-3 mb-md-0 fs-6">
+                  Access dynamic thermophysical properties, safety data, and
+                  perform preliminary engineering calculations for line sizing
+                  and heat transfer.
+                </p>
+              </div>
+              <div class="col-md-auto text-center mt-3 mt-md-0">
+                <a
+                  href="solvent.html"
+                  class="btn btn-brand-red btn-lg rounded-pill px-4 shadow-sm text-white"
+                >
+                  Try it Now <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Additions List -->
+          <div class="px-2 px-md-3">
+            <h3
+              class="h6 text-uppercase text-secondary fw-bold mb-3 d-flex align-items-center"
+              style="letter-spacing: 1px"
+            >
+              <i class="bi bi-clock-history me-2 fs-5 text-primary"></i> Added
+              in the past 3 months
+            </h3>
+            <div class="row g-3">
+              <!-- Item 4 -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <a
+                  href="vesselThick.html"
+                  class="d-flex align-items-center p-3 rounded-3 text-decoration-none border border-light shadow-sm bg-white recent-addition-link h-100"
+                >
+                  <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 addition-icon-bg flex-shrink-0"
+                    style="width: 36px; height: 36px"
+                  >
+                    <i class="bi bi-plus-lg"></i>
+                  </div>
+                  <span class="text-dark small fw-semibold addition-text"
+                    >Pressure Vessel Thickness</span
+                  >
+                </a>
+              </div>
+              <!-- Item 1 -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <a
+                  href="PT_Phase.html"
+                  class="d-flex align-items-center p-3 rounded-3 text-decoration-none border border-light shadow-sm bg-white recent-addition-link h-100"
+                >
+                  <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 addition-icon-bg flex-shrink-0"
+                    style="width: 36px; height: 36px"
+                  >
+                    <i class="bi bi-plus-lg"></i>
+                  </div>
+                  <span class="text-dark small fw-semibold addition-text"
+                    >Phase Envelope Generator</span
+                  >
+                </a>
+              </div>
+              <!-- Item 2 -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <a
+                  href="gas_properties.html"
+                  class="d-flex align-items-center p-3 rounded-3 text-decoration-none border border-light shadow-sm bg-white recent-addition-link h-100"
+                >
+                  <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 addition-icon-bg flex-shrink-0"
+                    style="width: 36px; height: 36px"
+                  >
+                    <i class="bi bi-plus-lg"></i>
+                  </div>
+                  <span class="text-dark small fw-semibold addition-text"
+                    >Gas Mixture Properties</span
+                  >
+                </a>
+              </div>
+              <!-- Item 3 -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <a
+                  href="tube_rupture_relief.html"
+                  class="d-flex align-items-center p-3 rounded-3 text-decoration-none border border-light shadow-sm bg-white recent-addition-link h-100"
+                >
+                  <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 addition-icon-bg flex-shrink-0"
+                    style="width: 36px; height: 36px"
+                  >
+                    <i class="bi bi-plus-lg"></i>
+                  </div>
+                  <span class="text-dark small fw-semibold addition-text"
+                    >Tube Rupture Relief Valve</span
+                  >
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Calculators Section -->
+      <section id="calculators" class="py-5 bg-white">
+        <div class="container py-4 py-md-5" style="max-width: 1140px">
+          <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold">Popular Calculators</h2>
+            <p class="fs-5 text-secondary">
+              Get started with our most frequently used tools.
+            </p>
+          </div>
+
+          <div class="row g-4">
+            <!-- Calculator Card 1 -->
+            <div class="col-sm-6 col-lg-3 fade-in-up delay-1">
+              <a
+                href="calc/vessel.html"
+                class="card h-100 text-decoration-none calculator-card rounded-4"
+              >
+                <div class="card-body p-4 position-relative">
+                  <!-- <span
+                    class="position-absolute top-0 end-0 mt-3 me-3 badge bg-danger-subtle text-danger rounded-pill"
+                    >Hot</span
+                  > -->
+                  <div class="icon-bg rounded-circle mb-4">
+                    <i class="bi bi-database"></i>
+                  </div>
+                  <h3 class="h5 fw-bold text-dark mb-2">
+                    Vessel Volume & Level Calculation
+                  </h3>
+                  <p class="card-text text-secondary small mb-0">
+                    Calculate partial volumes and levels for various vessel
+                    shapes and head types.
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            <!-- Calculator Card 2 -->
+            <div class="col-sm-6 col-lg-3 fade-in-up delay-1">
+              <a
+                href="calc/inshoriz.html"
+                class="card h-100 text-decoration-none calculator-card rounded-4"
+              >
+                <div class="card-body p-4">
+                  <div class="icon-bg rounded-circle mb-4">
+                    <i class="bi bi-thermometer-sun"></i>
+                  </div>
+                  <h3 class="h5 fw-bold text-dark mb-2">
+                    Insulation Heat Loss
+                  </h3>
+                  <p class="card-text text-secondary small mb-0">
+                    Determine heat loss from a bare and insulated pipe along
+                    with surface temperature.
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            <!-- Calculator Card 3 -->
+            <div class="col-sm-6 col-lg-3 fade-in-up delay-2">
+              <a
+                href="calc/pump.html"
+                class="card h-100 text-decoration-none calculator-card rounded-4"
+              >
+                <div class="card-body p-4">
+                  <div class="icon-bg rounded-circle mb-4">
+                    <i class="bi bi-gear-wide-connected"></i>
+                  </div>
+                  <h3 class="h5 fw-bold text-dark mb-2">Pump Sizing</h3>
+                  <p class="card-text text-secondary small mb-0">
+                    Estimate hydraulic power, brake horsepower, and NPSH for
+                    centrifugal pumps.
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            <!-- Calculator Card 4 -->
+            <div class="col-sm-6 col-lg-3 fade-in-up delay-2">
+              <a
+                href="solved/gasPipeSizing.html"
+                class="card h-100 text-decoration-none calculator-card rounded-4"
+              >
+                <div class="card-body p-4">
+                  <div class="icon-bg rounded-circle mb-4">
+                    <i class="bi bi-fire"></i>
+                  </div>
+                  <h3 class="h5 fw-bold text-dark mb-2">
+                    Natural Gas Pipeline Sizing
+                  </h3>
+                  <p class="card-text text-secondary small mb-0">
+                    Size pipelines for natural gas flow based on Gas flowrate
+                    and pressure.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Browse by Category Section -->
+      <section id="categories" class="py-5 bg-light border-top border-bottom">
+        <div class="container py-4 py-md-5" style="max-width: 1140px">
+          <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold mb-1">Browse by Category</h2>
+            <p class="fs-5 text-secondary mb-0">
+              Explore tools across all chemical engineering disciplines.
+            </p>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-1">
+              <a
+                href="fluid_flow.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-water"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Fluid Flow</span>
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-1">
+              <a
+                href="heat.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-thermometer-half"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text"
+                  >Heat Transfer</span
+                >
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-1">
+              <a
+                href="instrument.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-speedometer2"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Instrument</span>
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-1">
+              <a
+                href="properties.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-clipboard-data"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Properties</span>
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-2">
+              <a
+                href="distillation.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-layers"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text"
+                  >Distillation</span
+                >
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-2">
+              <a
+                href="agitation.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-fan"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Mixing</span>
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-2">
+              <a
+                href="vaporliquid.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-droplet-half"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text"
+                  >Vapor Liquid Equilibria</span
+                >
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-2">
+              <a
+                href="equipment.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-gear"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Equipment</span>
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up delay-3">
+              <a
+                href="others.html"
+                class="d-flex align-items-center p-3 bg-white rounded-4 text-decoration-none category-link border shadow-sm h-100"
+              >
+                <div
+                  class="fs-4 cat-icon me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px"
+                >
+                  <i class="bi bi-collection"></i>
+                </div>
+                <span class="fw-semibold text-dark link-text">Others</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why Choose Us Section -->
+      <section id="features" class="py-5 bg-white">
+        <div class="container py-4 py-md-5" style="max-width: 1140px">
+          <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold">Why CheCalc?</h2>
+            <p class="fs-5 text-secondary">
+              A resource built for the modern engineer.
+            </p>
+          </div>
+          <div class="row g-4 text-center">
+            <div class="col-md-4 fade-in-up delay-1">
+              <div
+                class="feature-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
+              >
+                <i class="bi bi-check2-circle"></i>
+              </div>
+              <h3 class="h5 fw-bold mb-3">Accurate & Reliable</h3>
+              <p class="text-secondary px-xl-3">
+                Based on established literature and developed by experienced
+                chemical engineers to ensure reliable results every time.
+              </p>
+            </div>
+            <div class="col-md-4 fade-in-up delay-2">
+              <div
+                class="feature-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
+              >
+                <i class="bi bi-phone"></i>
+              </div>
+              <h3 class="h5 fw-bold mb-3">Modern & Accessible</h3>
+              <p class="text-secondary px-xl-3">
+                A clean, responsive interface that works flawlessly on any
+                device, from your office desktop to the plant floor mobile.
+              </p>
+            </div>
+            <div class="col-md-4 fade-in-up delay-3">
+              <div
+                class="feature-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
+              >
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold mb-3">Community Resource</h3>
+              <p class="text-secondary px-xl-3">
+                Built for the community. Our core tools remain openly available
+                for students, researchers, and professionals alike.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- From Our Articles Section -->
+      <section id="articles" class="py-5 bg-light border-top">
+        <div class="container py-4 py-md-5" style="max-width: 1140px">
+          <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold">From Our Knowledge Base</h2>
+            <p class="fs-5 text-secondary">
+              Learn the theory and principles behind the calculations.
+            </p>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-4 fade-in-up delay-1">
+              <div
+                class="card h-100 shadow-sm calculator-card overflow-hidden border-0 rounded-4"
+              >
+                <div class="position-relative">
+                  <span class="article-badge">Properties</span>
+                  <img
+                    src="assetsN/img/solv_thumb.jpg"
+                    class="card-img-top border-bottom border-light bg-light"
+                    alt="Pressure Vessel Design: Thickness, MAWP & Hydrotest Calculations"
+                    style="
+                      height: 220px;
+                      width: 100%;
+                      object-fit: contain;
+                      padding: 1rem;
+                    "
+                    onerror="
+                      this.onerror = null;
+                      this.src =
+                        'https://placehold.co/600x220/cccccc/969696?text=Image+Not+Found';
+                    "
+                  />
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                  <div
+                    class="d-flex justify-content-between text-secondary small mb-2"
+                  >
+                    <span
+                      ><i class="bi bi-calendar3 me-1"></i> May 21, 2026</span
+                    >
+                    <span><i class="bi bi-clock me-1"></i> 14 min read</span>
+                  </div>
+                  <h5 class="card-title fw-bold mb-3">
+                    Mastering Solvent Selection and Property Calculations
+                  </h5>
+                  <p class="card-text text-secondary mb-4 flex-grow-1">
+                    A comprehensive engineering guide to evaluating
+                    thermodynamic properties, utilizing Hansen Solubility
+                    Parameters (HSP), and determining safety criteria for
+                    process design.
+                  </p>
+                  <a
+                    href="solvent_guide.html"
+                    class="text-decoration-none fw-bold mt-auto"
+                    style="color: var(--brand-blue)"
+                  >
+                    Read Article
+                    <i class="bi bi-arrow-right-short fs-5 align-middle"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 fade-in-up delay-1">
+              <div
+                class="card h-100 shadow-sm calculator-card overflow-hidden border-0 rounded-4"
+              >
+                <div class="position-relative">
+                  <span class="article-badge">Equipment</span>
+                  <img
+                    src="assetsN/img/vessel_thumb.jpg"
+                    class="card-img-top border-bottom border-light bg-light"
+                    alt="Pressure Vessel Design: Thickness, MAWP & Hydrotest Calculations"
+                    style="
+                      height: 220px;
+                      width: 100%;
+                      object-fit: contain;
+                      padding: 1rem;
+                    "
+                    onerror="
+                      this.onerror = null;
+                      this.src =
+                        'https://placehold.co/600x220/cccccc/969696?text=Image+Not+Found';
+                    "
+                  />
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                  <div
+                    class="d-flex justify-content-between text-secondary small mb-2"
+                  >
+                    <span
+                      ><i class="bi bi-calendar3 me-1"></i> May 13, 2026</span
+                    >
+                    <span><i class="bi bi-clock me-1"></i> 15 min read</span>
+                  </div>
+                  <h5 class="card-title fw-bold mb-3">
+                    Pressure Vessel Design: Thickness, MAWP & Hydrotest
+                    Calculations
+                  </h5>
+                  <p class="card-text text-secondary mb-4 flex-grow-1">
+                    A comprehensive step-by-step engineering guide to
+                    calculating required wall thickness, Maximum Allowable
+                    Working Pressure (MAWP), and hydrotest pressure in
+                    accordance with ASME BPVC Section VIII Division 1.
+                  </p>
+                  <a
+                    href="vessel_guide.html"
+                    class="text-decoration-none fw-bold mt-auto"
+                    style="color: var(--brand-blue)"
+                  >
+                    Read Article
+                    <i class="bi bi-arrow-right-short fs-5 align-middle"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 fade-in-up delay-1">
+              <div
+                class="card h-100 shadow-sm calculator-card overflow-hidden border-0 rounded-4"
+              >
+                <div class="position-relative">
+                  <span class="article-badge">Instrument</span>
+                  <img
+                    src="assetsN/img/tube_thumb.jpg"
+                    class="card-img-top border-bottom border-light bg-light"
+                    alt="Mitigating Heat Exchanger Tube Rupture"
+                    style="
+                      height: 220px;
+                      width: 100%;
+                      object-fit: contain;
+                      padding: 1rem;
+                    "
+                    onerror="
+                      this.onerror = null;
+                      this.src =
+                        'https://placehold.co/600x220/cccccc/969696?text=Image+Not+Found';
+                    "
+                  />
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                  <div
+                    class="d-flex justify-content-between text-secondary small mb-2"
+                  >
+                    <span
+                      ><i class="bi bi-calendar3 me-1"></i> April 12, 2026</span
+                    >
+                    <span><i class="bi bi-clock me-1"></i> 9 min read</span>
+                  </div>
+                  <h5 class="card-title fw-bold mb-3">
+                    Sizing Relief Systems for Heat Exchanger Tube Rupture
+                    Scenarios
+                  </h5>
+                  <p class="card-text text-secondary mb-4 flex-grow-1">
+                    A comprehensive step-by-step methodology to evaluate API 521
+                    exemption criteria and accurately size pressure relief
+                    valves for both liquid and gas tube failure cases.
+                  </p>
+                  <a
+                    href="tube_rupture_article.html"
+                    class="text-decoration-none fw-bold mt-auto"
+                    style="color: var(--brand-blue)"
+                  >
+                    Read Article
+                    <i class="bi bi-arrow-right-short fs-5 align-middle"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Custom Application Development Section -->
+      <section id="custom-services" class="py-5 bg-white border-top">
+        <div class="container py-3" style="max-width: 1140px">
+          <div
+            class="bg-primary bg-opacity-10 border border-primary-subtle rounded-4 p-4 p-md-5 shadow-sm"
+          >
+            <div class="row align-items-center">
+              <div class="col-md text-center text-md-start mb-4 mb-md-0">
+                <h2 class="h3 fw-bold text-dark">
+                  Need a Custom Enterprise Solution?
+                </h2>
+                <p class="text-secondary mb-0 fs-5">
+                  Beyond our standard tools, we develop proprietary, secure
+                  calculators tailored to your plant's specific processes.
+                </p>
+              </div>
+              <div class="col-md-auto text-center">
+                <a
+                  href="mailto:info@checalc.com?subject=Custom%20Calculator%20Quote%20Request&body=Hi%20CheCalc%20Team,%0A%0AWe%20are%20interested%20in%20a%20custom%20engineering%20calculator.%20Here%20are%20our%20requirements:%0A%0A"
+                  class="btn btn-primary btn-lg fw-bold px-4 rounded-pill shadow-sm"
+                >
+                  Get a Custom Quote
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white">
+      <div class="container py-5" style="max-width: 1140px">
+        <div class="row g-4">
+          <div class="col-md-3">
+            <h4 class="fw-semibold mb-3">CheCalc</h4>
+            <p class="text-secondary">
+              Professional calculation tools for chemical and process engineers
+              across design and operations.
+            </p>
+          </div>
+          <div class="col-6 col-md-3">
+            <h4 class="fw-semibold mb-3">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="index.html" class="text-secondary text-decoration-none"
+                  >Home</a
+                >
+              </li>
+              <!-- <li class="mb-2">
+                <a
+                  href="#calculators"
+                  class="text-secondary text-decoration-none"
+                  >Calculators</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="articles.html"
+                  class="text-secondary text-decoration-none"
+                  >Articles</a
+                >
+              </li> -->
+              <li class="mb-2">
+                <a href="about.html" class="text-secondary text-decoration-none"
+                  >About</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-3">
+            <h4 class="fw-semibold mb-3">Legal</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a
+                  href="privacy.html"
+                  class="text-secondary text-decoration-none"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li class="mb-2">
+                <a href="terms.html" class="text-secondary text-decoration-none"
+                  >Terms of Service</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="disclaimer.html"
+                  class="text-secondary text-decoration-none"
+                  >Disclaimer</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h4 class="fw-semibold mb-3">Connect</h4>
+            <p class="text-secondary">info@checalc.com</p>
+          </div>
+        </div>
+        <hr class="my-4 border-secondary" />
+        <div class="text-center text-secondary">
+          <p>
+            &copy; <span class="year">2025</span> CheCalc. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script>
+      ///////////////////////////////////////////////////////////
+      // Set current year
+      const yearEl = document.querySelector(".year");
+      const currentYear = new Date().getFullYear();
+      yearEl.textContent = currentYear;
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Custom JS for Search -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const allCalculators = [
+          {
+            name: "Liquid Thermal Expansion Relief Sizing",
+            description:
+              "Sizing for Relief Valves protecting liquid-filled equipment based on API 520/521",
+            url: "liquid_thermal_exp.html",
+            category: "Instrument",
+          },
+          {
+            name: "Pipe Sizing Liquid & Solvents",
+            description:
+              "Pipe sizing calculation for Liquid and Solvents based on velocity, pressure drop",
+            url: "pipe_sizing.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Single Phase Fluid Flow",
+            description:
+              "Calculate pressure drop in a straight pipe based on Darcy - Weisbach equation",
+            url: "fluid_flow_single_phase.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Compressible Fluid Flow",
+            description:
+              "Calculate pressure drop for a single phase compressible fluid",
+            url: "fluid_flow_compressible.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Power Law Fluid",
+            description:
+              "Calculate pressure drop in a straight pipe for a non-Newtonian power law fluid",
+            url: "fluid_flow_power_law.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Bingham Plastic Fluid",
+            description:
+              "Calculate pressure drop in a straight pipe for a non-Newtonian Bingham Plastic Fluid",
+            url: "fluid_flow_bingham_plastic.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Packed Bed Pressure Drop",
+            description:
+              "Calculate packed bed pressure drop based on Ergun equation",
+            url: "packed_bed.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Pump Sizing Calculation",
+            description:
+              "Estimate hydraulic power, brake horsepower, and NPSH.",
+            url: "calc/pump.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Pump Operation Series & Parallel",
+            description:
+              "Determine change in pump head vs flow curve for series & parallel operation",
+            url: "solved/pumpOp.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Centrifugal Pump Curves",
+            description: "Centrifugal Pump performance based on Affinity Laws",
+            url: "solved/pumpCurve.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Pipe Fitting Losses",
+            description:
+              "Pressure loss in a pipe due to fittings based on 3K and 2K method",
+            url: "fluid_flow_fitting_losses.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Natural Gas Pipeline Sizing",
+            description:
+              "Natural Gas Pipeline Sizing calculation based on General flow equation, AGA, Weymouth etc.",
+            url: "solved/gasPipeSizing.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Blower & Fan Calculation",
+            description:
+              "Calculate power required for air flow in a Fan/ Blower",
+            url: "fan.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Reciprocating Compressor Rating",
+            description:
+              "Estimates capacity and power required for compressing a gas mixture",
+            url: "recipRating.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Reciprocating Compressor Calculation",
+            description:
+              "Calculate Temperature Rise and Power Consumed in compressing a gas mixture",
+            url: "compress.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Beggs & Brill Method",
+            description:
+              "Calculate pressure drop in a straight pipe due to two phase fluid flow",
+            url: "fluid_flow_beggs_brill.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Two Phase Flow - Horizontal Pipe",
+            description:
+              "Calculate pressure drop in a straight pipe due to two phase fluid flow through a horizontal pipe",
+            url: "fluid_flow_two_phase.html",
+            category: "Fluid Flow",
+          },
+          {
+            name: "Heat Exchanger Rating",
+            description:
+              "Does Heat Exchanger Rating based on Bell Delaware Method",
+            url: "solved/heat_exchanger.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Heat Exchanger Analysis",
+            description:
+              "Heat Exchanger Analysis based on effectiveness (ε) - NTU method",
+            url: "solved/heat_exch_analysis.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Double Pipe Heat Exchanger",
+            description:
+              "Does the Thermal and Hydraulic design of double pipe heat exchangers",
+            url: "solved/doublePipe.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Air Cooled Heat Exchanger",
+            description:
+              "Estimation of Finned Area, Face Area, Total Fan Power, Air Outlet Temperature for an Air Cooler",
+            url: "calc/AirExch.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Shortcut Heat Exchanger Sizing",
+            description:
+              "Estimates LMTD, Exchanger surface area, number of tubes, shell diameter and number of shell in series",
+            url: "calc/ShortExch.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Insulation Heat Loss - Steel Pipe",
+            description:
+              "Calculates heat Loss from an Insulated and Bare Horizontal Steel Pipe",
+            url: "calc/inshoriz.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Insulation Heat Loss - Flat Surface",
+            description:
+              "Calculates heat Loss from an Insulated and Bare Vertical Flat Vessel surface",
+            url: "calc/insFlat.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Jacketed Vessel Heat Transfer",
+            description:
+              "Calculates overall heat transfer coefficient for a vessel with an agitator",
+            url: "solved/jacketHeat.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Batch Reactor Heating & Cooling",
+            description:
+              "Calculates time required to heat or cool reaction mass in a jacketed batch reactor",
+            url: "calc/batchRx.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "Tank Heating using Steam Coil",
+            description:
+              "Calculate the area & length required for an internal coil for heating the tank contents",
+            url: "solved/tankcoil.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "LMTD Correction Factor Charts",
+            description:
+              "Calculates Logarithmic Mean Temperature Difference (LMTD) Correction factor for exchanger",
+            url: "solved/LMTD_Chart.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "LMTD Calculation",
+            description:
+              "Calculate Log Mean Temperature Difference (LMTD) for shell and tube exchanger",
+            url: "solved/lmtd.html",
+            category: "Heat Transfer",
+          },
+          {
+            name: "PSV Sizing Liquid Filled Vessel",
+            description:
+              "Calculate wetted area, releiving capacity and orifice size for Fire Case",
+            url: "calc/fireLiqPSV.html",
+            category: "Instrument",
+          },
+          {
+            name: "PSV Sizing Vapor Filled Vessel",
+            description:
+              "Calculate wetted area, releiving capacity and orifice size for a Vessel filled with Gas",
+            url: "calc/fireVapPSV.html",
+            category: "Instrument",
+          },
+          {
+            name: "Tube Rupture Relief Valve Sizing",
+            description:
+              "Sizing for Relief Valves protecting low-pressure shell sides from high-pressure tube ruptures.",
+            url: "tube_rupture_relief.html",
+            category: "Instrument",
+          },
+          {
+            name: "Gas Orifice Plate Sizing",
+            description:
+              "Calculation for Gas Orifice Plate Sizing & Rating based on ISO 5167 & ASME MFC-14M standards",
+            url: "orifice_gas_sizing.html",
+            category: "Instrument",
+          },
+          {
+            name: "Liquid Orifice Plate Sizing",
+            description:
+              "Calculation for Liquid Orifice Plate Sizing & Rating based on ISO 5167 & ASME MFC-14M standards",
+            url: "orifice_liquid_sizing.html",
+            category: "Instrument",
+          },
+          {
+            name: "Liquid Control Valve Sizing",
+            description:
+              "Calculation for Incompressible Flow Coefficients Cv/Kv as per ISA-75.01-2012 Standards",
+            url: "liquid_cv_sizing.html",
+            category: "Instrument",
+          },
+          {
+            name: "Gas Control Valve Sizing",
+            description:
+              "Calculation for Compressible Flow Coefficients Cv/Kv as per ISA-75.01-2012 Standards",
+            url: "gas_cv_sizing.html",
+            category: "Instrument",
+          },
+          {
+            name: "Steam Control Valve Sizing",
+            description:
+              "Calculation for Saturated and Superheated Steam Coefficients Cv/Kv as per ISA-75.01-2012 Standards",
+            url: "steam_cv_sizing.html",
+            category: "Instrument",
+          },
+          {
+            name: "Natural Gas Compressibility Factor",
+            description:
+              "Calculates compressibility factor for natural gas based on DAK - EOS",
+            url: "solved/naturalgasZ.html",
+            category: "Properties",
+          },
+          {
+            name: "Natural Gas Viscosity",
+            description:
+              "Calculates viscosity for natural gas based on Lee, Gonzales and Eakin Equations",
+            url: "solved/gasVisc.html",
+            category: "Properties",
+          },
+          {
+            name: "Solvent Property & Sizing Calculator",
+            description:
+              "Calculate thermophysical properties and perform preliminary engineering calculations",
+            url: "solvent.html",
+            category: "Properties",
+          },
+          {
+            name: "Gas Mixture Properties Calculator",
+            description:
+              "Calculate density, specific heats, transport properties using Equations of State",
+            url: "gas_properties.html",
+            category: "Properties",
+          },
+          {
+            name: "Properties Estimation Joback Method",
+            description:
+              "Calculates pure component physical properties based on Joback Group Contribution method",
+            url: "solved/property_joback.html",
+            category: "Properties",
+          },
+          {
+            name: "Shortcut Distillation",
+            description:
+              "Shortcut distillation for multi-component system based on FUG method",
+            url: "solved/shortcut_distillation.html",
+            category: "Distillation",
+          },
+          {
+            name: "McCabe Thiele Diagram",
+            description:
+              "Calculates total number of stages based on McCabe Thiele Diagram for binary mixture",
+            url: "calc/binary.html",
+            category: "Distillation",
+          },
+          {
+            name: "Packed Tower Sizing",
+            description:
+              "Calculates percent flooding, column diamter, pressure drop based on GPDC Diagram",
+            url: "calc/packcol.html",
+            category: "Distillation",
+          },
+          {
+            name: "Agitation Scaleup Calculation",
+            description:
+              "Scaleup from smaller to larger scale agitation based on criteria like equal tip speed",
+            url: "solved/agitatorScaleup.html",
+            category: "Mixing",
+          },
+          {
+            name: "Agitator Power",
+            description:
+              "Calculates agitator speed and power requirement for a given reactor geometry and mixture properties",
+            url: "solved/agitator.html",
+            category: "Mixing",
+          },
+          {
+            name: "Curve Fitting Vapor Pressure",
+            description:
+              "Curve fitting experimental vapor pressure data into equations like Antoine, Short Antione",
+            url: "solved/antvap.html",
+            category: "VLE",
+          },
+          {
+            name: "Phase Envelope Generator",
+            description:
+              "Generate Pressure-Temperature (PT) phase envelopes using Peng-Robinson or SRK Equations of State",
+            url: "PT_Phase.html",
+            category: "VLE",
+          },
+          {
+            name: "Multicomponent Flash Calculation",
+            description:
+              "Performs Flash Calculations like BUBBLE P, DEW P, BUBBLE T, DEW T and PT Flash",
+            url: "solved/multi_flash.html",
+            category: "VLE",
+          },
+          {
+            name: "Binary VLE",
+            description:
+              "Binary Vapor Liquid Equilibrium (VLE) calculation plots Px-y, Tx-y diagram",
+            url: "solved/binary_vle.html",
+            category: "VLE",
+          },
+          {
+            name: "Vessel Volume & Level Calculation",
+            description:
+              "Calculates Volume filled in a Vessel, Tank with Ellipsoidal, Spherical, Torispherical heads",
+            url: "calc/vessel.html",
+            category: "Equipment",
+          },
+          {
+            name: "Pressure Vessel Thickness & MAWP Calculation",
+            description:
+              "Sizing per ASME VIII Div 1 & Div 2, EN 13445-3, and PD 5500 — Shell, Heads, Conical, MAWP, Hydrotest",
+            url: "vesselThick.html",
+            category: "Equipment",
+          },
+          {
+            name: "Vapor Liquid Horizontal Separator",
+            description:
+              "Design sizing and calculation for a horizontal gas liquid separator ",
+            url: "calc/horizsep.html",
+            category: "Equipment",
+          },
+          {
+            name: "Vapor Liquid Vertical Separator",
+            description:
+              "Design sizing and calculation for a vertical gas liquid separator ",
+            url: "calc/vertsep.html",
+            category: "Equipment",
+          },
+          {
+            name: "Steam Tables IAPWS IF-97",
+            description:
+              "Calculates steam and water properties based on IAPWS IF-97 ",
+            url: "calc/steam.html",
+            category: "Others",
+          },
+          {
+            name: "Condensate Flash Calculation",
+            description:
+              "Calculate amount of vapor and liquid generated on flashing steam condensate",
+            url: "calc/steamFlash.html",
+            category: "Others",
+          },
+          {
+            name: "Steam Desuperheating Calculation",
+            description:
+              "Calculate amount of water required to bring down the temperature of Superheated Steam",
+            url: "calc/desuperheat.html",
+            category: "Others",
+          },
+          {
+            name: "Unit Conversion",
+            description:
+              "Online unit converter to easily convert between different units of measurement",
+            url: "solved/unitconv.html",
+            category: "Others",
+          },
+          {
+            name: "Gas Volume Conversion",
+            description:
+              "Convert Gas volume from given condition to different pressure, temperature conditions",
+            url: "solved/volconv.html",
+            category: "Others",
+          },
+          {
+            name: "Cooling Tower Makeup Water",
+            description:
+              "Calculate the amount of makeup water required for a cooling tower",
+            url: "solved/ctmakeup.html",
+            category: "Others",
+          },
+          {
+            name: "Psychrometric Calculations",
+            description:
+              "Calculate Wet Bulb Temperature, Relative Humidity and Dry Bulb Temperature",
+            url: "calc/wetBulb.html",
+            category: "Others",
+          },
+        ];
+
+        const searchContainer = document.getElementById("search-container");
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+        let currentFocus = -1;
+
+        searchInput.addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          searchResults.innerHTML = "";
+          currentFocus = -1;
+
+          if (searchTerm.length < 3) {
+            searchResults.classList.remove("show");
+            return;
+          }
+
+          const matchedItems = allCalculators.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchTerm) ||
+              (item.description &&
+                item.description.toLowerCase().includes(searchTerm)),
+          );
+
+          // Sort results: Name matches at the top, description-only matches below
+          matchedItems.sort((a, b) => {
+            const aNameMatch = a.name.toLowerCase().includes(searchTerm);
+            const bNameMatch = b.name.toLowerCase().includes(searchTerm);
+
+            if (aNameMatch && !bNameMatch) return -1;
+            if (!aNameMatch && bNameMatch) return 1;
+            return 0; // Keep original order if both match in name or both match only in description
+          });
+
+          if (matchedItems.length > 0) {
+            matchedItems.forEach((item) => {
+              const link = document.createElement("a");
+              link.href = item.url;
+              // Added text-wrap to prevent overlap and border-bottom for better separation
+              link.className =
+                "dropdown-item py-2 px-3 text-wrap border-bottom search-item-link";
+
+              // Use Flexbox to perfectly align the title and the badge
+              const headerDiv = document.createElement("div");
+              headerDiv.className =
+                "d-flex justify-content-between align-items-start gap-2 mb-1";
+
+              // Render badge only if category exists
+              const categoryBadge = item.category
+                ? `<span class="badge bg-light text-secondary border text-nowrap">${item.category}</span>`
+                : "";
+              headerDiv.innerHTML = `<span class="fw-bold text-dark lh-sm">${item.name}</span> ${categoryBadge}`;
+
+              link.appendChild(headerDiv);
+
+              if (item.description) {
+                const descSpan = document.createElement("span");
+                descSpan.textContent = item.description;
+                // lh-sm makes the line-height slightly tighter for multi-line descriptions
+                descSpan.className = "text-secondary d-block small lh-sm";
+                link.appendChild(descSpan);
+              }
+
+              searchResults.appendChild(link);
+            });
+            searchResults.classList.add("show");
+          } else {
+            const noResult = document.createElement("span");
+            noResult.className = "dropdown-item text-secondary py-2 px-3";
+            // Removed 'dropdown-item' to prevent the blue background on click
+            noResult.className = "text-secondary py-3 px-3 text-center d-block";
+            noResult.innerHTML =
+              "<i class='bi bi-search me-2'></i> No calculators found. <br><a href='mailto:contact@checalc.com?subject=Calculator%20Request&body=Hi%20ChEcalc%20Team,%0A%0AI%20would%20like%20to%20request%20a%20new%20calculator:%0A%0A' class='text-primary small mt-2 d-inline-block text-decoration-none'>Request a calculator?</a>";
+            searchResults.appendChild(noResult);
+            searchResults.classList.add("show");
+          }
+        });
+
+        // Keyboard Navigation for Search
+        searchInput.addEventListener("keydown", function (e) {
+          let x = document.getElementById("searchResults");
+          if (x) x = x.getElementsByClassName("search-item-link");
+          if (!x || x.length === 0) return;
+
+          if (e.keyCode == 40) {
+            // Down arrow
+            currentFocus++;
+            addActive(x);
+            e.preventDefault();
+          } else if (e.keyCode == 38) {
+            // Up arrow
+            currentFocus--;
+            addActive(x);
+            e.preventDefault();
+          } else if (e.keyCode == 13) {
+            // Enter
+            e.preventDefault();
+            if (currentFocus > -1) {
+              if (x) x[currentFocus].click();
+            }
+          }
+        });
+
+        function addActive(x) {
+          if (!x) return false;
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = x.length - 1;
+          x[currentFocus].classList.add("active-search-item");
+          // Ensure element is visible in scroll area
+          x[currentFocus].scrollIntoView({
+            block: "nearest",
+            behavior: "smooth",
+          });
+        }
+
+        function removeActive(x) {
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("active-search-item");
+          }
+        }
+
+        document.addEventListener("click", (e) => {
+          if (!searchContainer.contains(e.target)) {
+            searchResults.classList.remove("show");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
