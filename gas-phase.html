@@ -23,6 +23,7 @@
         .input-row label{width:150px;font-size:.85rem;font-weight:600;color:#333}
         .input-row input,.input-row select{flex:1;min-width:130px;padding:8px 12px;border:2px solid #ddd;border-radius:8px;background:#fff}
         .input-row .blue-input{background:#e3f2fd!important;border-color:#2196f3!important}
+        .input-row .black-output{background:#e8f0fe!important;border-color:#aaa!important;color:#0a2e5c;font-weight:700}
         .gas-result{font-weight:700;color:#0a2e5c;background:#e8f0fe;padding:8px 12px;border-radius:8px;flex:1;text-align:center}
         .grid-2col{display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:20px}
         hr{margin:15px 0;border:none;border-top:1px solid #ddd}
@@ -37,7 +38,7 @@
     <div class="calc-page">
         <div class="header" style="margin-bottom:20px;padding:0"><h1><span>🔥</span> Gas Phase Calculator</h1><p>Flowrate | Actual Volumetric Flow | Ideal Gas Law</p></div>
 
-        <!-- SECTION 1: FLOWRATE CALCULATIONS -->
+        <!-- ==================== SECTION 1: FLOWRATE CALCULATIONS (FROZEN - WORKING) ==================== -->
         <div class="gas-section"><h2>📊 Flowrate Calculations</h2>
             <div class="grid-2col">
                 <div><h3>Path A: MW + Mass Flow → Molar Flow + Vol Flow</h3>
@@ -55,7 +56,7 @@
             </div>
         </div>
 
-        <!-- SECTION 2: ACTUAL VOLUMETRIC FLOWRATE -->
+        <!-- ==================== SECTION 2: ACTUAL VOLUMETRIC FLOWRATE (FROZEN - WORKING) ==================== -->
         <div class="gas-section"><h2>📏 Actual Volumetric Flowrate</h2>
             <div class="grid-2col">
                 <div><h3>Actual → Normal Conditions</h3>
@@ -77,18 +78,39 @@
             </div>
         </div>
 
-        <!-- SECTION 3: IDEAL GAS LAW -->
+        <!-- ==================== SECTION 3: IDEAL GAS LAW (REBUILT WITH DYNAMIC BEHAVIOR) ==================== -->
         <div class="gas-section"><h2>⚙️ Ideal Gas Law</h2>
-            <div class="input-row"><label>Solve for</label><select id="e_solve"><option value="v">Volumetric Flowrate</option><option value="p">Pressure</option><option value="t">Temperature</option><option value="m">Mass Flowrate</option></select></div>
-            <div class="input-row"><label>Gauge Pressure</label><input id="e_pg" class="blue-input" value="101.325"><select id="e_pg_u"><option>bar g</option><option>kPa g</option><option>psi g</option><option>kg/cm² g</option></select></div>
-            <div class="input-row"><label>Absolute Pressure</label><div class="gas-result" id="e_pa">--</div><select id="e_pa_u"><option>kPa a</option><option>bar a</option><option>psi a</option></select></div>
-            <div class="input-row"><label>Temperature</label><input id="e_t" class="blue-input" value="273"><select id="e_t_u"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+            <div class="input-row"><label>Solve for</label><select id="e_solve"><option value="p">Pressure</option><option value="t">Temperature</option><option value="m">Mass Flowrate</option><option value="v">Volumetric Flowrate</option><option value="d">Density</option></select></div>
+            
+            <!-- Gauge Pressure (Always INPUT) -->
+            <div class="input-row"><label>Gauge Pressure</label><input id="e_pg" class="blue-input" value="101.325"><select id="e_pg_u"><option>bar g</option><option>kPa g</option><option>psi g</option><option>kg/cm² g</option><option>mm water g</option><option>mm Hg g</option><option>Pa g</option><option>atm g</option><option>N/m² g</option></select></div>
+            
+            <!-- Absolute Pressure (Auto-calculated OUTPUT) -->
+            <div class="input-row"><label>Absolute Pressure</label><div class="black-output" id="e_pa">--</div><select id="e_pa_u"><option>kPa a</option><option>bar a</option><option>psi a</option><option>atm a</option><option>mm Hg a</option><option>kg/cm² a</option><option>Pa a</option><option>N/m² a</option></select></div>
+            
+            <!-- Temperature (INPUT or OUTPUT) -->
+            <div class="input-row" id="e_t_row"><label>Temperature</label><input id="e_t" class="blue-input" value="273"><select id="e_t_u"><option>K</option><option>°C</option><option>°F</option><option>°R</option></select></div>
+            
+            <!-- Molecular Weight (Always INPUT) -->
             <div class="input-row"><label>Molecular Weight</label><input id="e_mw" class="blue-input" value="28"><select id="e_mw_u"><option>kg/kmol</option><option>g/mol</option><option>kg/mol</option><option>lb/lbmol</option></select></div>
+            
+            <!-- Mass Flowrate (INPUT or OUTPUT) -->
+            <div class="input-row" id="e_m_row"><label>Mass Flowrate</label><input id="e_m" class="blue-input" value="100"><select id="e_m_u"><option>kg/hr</option><option>lb/hr</option><option>kg/s</option><option>lb/s</option><option>ton/hr</option></select></div>
+            
+            <!-- Volumetric Flowrate (INPUT or OUTPUT) -->
+            <div class="input-row" id="e_v_row"><label>Volumetric Flowrate</label><input id="e_v" class="blue-input" value="20"><select id="e_v_u"><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>m³/hr</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>BLPD</option></select></div>
+            
+            <!-- Z Factor (Always INPUT) -->
             <div class="input-row"><label>Z Factor</label><input id="e_z" class="blue-input" value="0.997"></div>
-            <div class="input-row"><label>Mass Flowrate</label><input id="e_m" class="blue-input" value="1000"><select id="e_m_u"><option>kg/hr</option><option>lb/hr</option></select></div>
-            <div class="input-row"><label>Volumetric Flowrate</label><input id="e_v" class="blue-input" value="800"><select id="e_v_u"><option>m³/hr</option><option>Nm³/hr</option><option>ft³/hr</option></select></div>
-            <div class="input-row"><label>→ Result</label><div class="gas-result" id="e_res">--</div><select id="e_res_u"><option>m³/hr</option><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>SCFD</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option><option>kPa a</option><option>bar a</option><option>psi a</option><option>K</option><option>°C</option><option>°F</option><option>°R</option><option>kg/hr</option><option>lb/hr</option></select></div>
+            
+            <!-- Density (OUTPUT only when solving for Density) -->
+            <div class="input-row" id="e_d_row" style="display:none"><label>Density</label><div class="black-output" id="e_d">--</div><select id="e_d_u"><option>kg/m³</option><option>g/cm³</option><option>lb/ft³</option><option>lb/US gal</option><option>kg/L</option><option>g/L</option><option>mg/L</option><option>SG</option></select></div>
+            
+            <!-- Gas Constant (Display only) -->
             <div class="input-row"><label>Gas Constant</label><div class="gas-result"><strong>8.31447 J/mol·K</strong></div></div>
+            
+            <!-- Result -->
+            <div class="input-row"><label>→ Result</label><div class="gas-result" id="e_res">--</div><select id="e_res_u"><option>kPa a</option><option>bar a</option><option>psi a</option><option>K</option><option>°C</option><option>°F</option><option>°R</option><option>kg/hr</option><option>lb/hr</option><option>m³/hr</option><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>kg/m³</option><option>g/cm³</option><option>lb/ft³</option></select></div>
         </div>
     </div>
     <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
@@ -117,9 +139,15 @@ function toKpaA(v,u){
     if(u==="mm Hg g") return v*0.133322+SP;
     if(u==="Pa g") return v*0.001+SP;
     if(u==="atm g") return v*SP+SP;
+    if(u==="N/m² g") return v*0.001+SP;
     if(u==="kPa a") return v;
     if(u==="bar a") return v*100;
     if(u==="psi a") return v*6.89476;
+    if(u==="atm a") return v*SP;
+    if(u==="mm Hg a") return v*0.133322;
+    if(u==="kg/cm² a") return v*98.0665;
+    if(u==="Pa a") return v*0.001;
+    if(u==="N/m² a") return v*0.001;
     return v;
 }
 function toKelvin(v,u){
@@ -127,6 +155,13 @@ function toKelvin(v,u){
     if(u==="°C") return v+273.15;
     if(u==="°F") return (v+459.67)/1.8;
     if(u==="°R") return v/1.8;
+    return v;
+}
+function fromKelvin(v,u){
+    if(u==="K") return v;
+    if(u==="°C") return v-273.15;
+    if(u==="°F") return v*1.8-459.67;
+    if(u==="°R") return v*1.8;
     return v;
 }
 function volToBase(v,u){
@@ -176,49 +211,30 @@ function mwToBase(v,u){
     if(u==="kg/mol") return v*1000;
     return v;
 }
-function molarFromBase(v,u){
-    if(u==="kmol/hr") return v;
-    if(u==="lbmol/hr") return v*2.20462;
-    if(u==="mole/s") return v*0.2777778;
-    if(u==="mole/hr") return v*1000;
+function densityToBase(v,u){
+    if(u==="kg/m³") return v;
+    if(u==="g/cm³") return v*1000;
+    if(u==="lb/ft³") return v*16.0185;
+    if(u==="lb/US gal") return v*119.826;
+    if(u==="kg/L") return v*1000;
+    if(u==="g/L") return v;
+    if(u==="mg/L") return v/1000;
+    if(u==="SG") return v*1000;
+    return v;
+}
+function densityFromBase(v,u){
+    if(u==="kg/m³") return v;
+    if(u==="g/cm³") return v/1000;
+    if(u==="lb/ft³") return v/16.0185;
+    if(u==="lb/US gal") return v/119.826;
+    if(u==="kg/L") return v/1000;
+    if(u==="g/L") return v;
+    if(u==="mg/L") return v*1000;
+    if(u==="SG") return v/1000;
     return v;
 }
 
-// ==================== ATTACH EVENT LISTENERS ====================
-function attachEvents(){
-    // Section A
-    ['a_mw','a_m','a_mw_u','a_m_u','a_mol_u','a_vol_u'].forEach(id=>{
-        let el=document.getElementById(id);
-        if(el) el.addEventListener('input',calcA); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcA);
-    });
-    // Section B
-    ['b_mw','b_v','b_mw_u','b_v_u','b_mol_u','b_m_u'].forEach(id=>{
-        let el=document.getElementById(id);
-        if(el) el.addEventListener('input',calcB); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcB);
-    });
-    // Section C
-    ['c_p','c_t','c_r','c_flow','c_p_u','c_t_u','c_flow_u','c_norm_u','c_mol_u'].forEach(id=>{
-        let el=document.getElementById(id);
-        if(el) el.addEventListener('input',calcC); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcC);
-    });
-    // Section D
-    ['d_p','d_t','d_r','d_flow','d_p_u','d_t_u','d_flow_u','d_act_u','d_mol_u'].forEach(id=>{
-        let el=document.getElementById(id);
-        if(el) el.addEventListener('input',calcD); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcD);
-    });
-    // Section E
-    ['e_solve','e_pg','e_t','e_mw','e_z','e_m','e_v','e_pg_u','e_t_u','e_mw_u','e_m_u','e_v_u','e_pa_u','e_res_u'].forEach(id=>{
-        let el=document.getElementById(id);
-        if(el) el.addEventListener('input',calcE); if(el&&el.tagName==='SELECT') el.addEventListener('change',calcE);
-    });
-    // Special for gauge/absolute
-    let pg=document.getElementById('e_pg'), pgu=document.getElementById('e_pg_u'), pau=document.getElementById('e_pa_u');
-    if(pg) pg.addEventListener('input',updatePA);
-    if(pgu) pgu.addEventListener('change',updatePA);
-    if(pau) pau.addEventListener('change',updatePA);
-}
-
-// ==================== SECTION A ====================
+// ==================== SECTIONS 1 & 2 (FROZEN - WORKING) ====================
 function calcA(){
     let mw=parseFloat(document.getElementById('a_mw').value)||0;
     let mwu=document.getElementById('a_mw_u').value;
@@ -231,12 +247,12 @@ function calcA(){
         let vol_b=mol_b*MV;
         let mol_u=document.getElementById('a_mol_u').value;
         let vol_u=document.getElementById('a_vol_u').value;
-        document.getElementById('a_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,mol_u))+'</strong> '+mol_u;
-        document.getElementById('a_vol_out').innerHTML='<strong>'+fmt(volFromBase(vol_b,vol_u))+'</strong> '+vol_u;
+        let mol_out=mol_b*(mol_u==="lbmol/hr"?2.20462:mol_u==="mole/s"?0.2777778:mol_u==="mole/hr"?1000:1);
+        let vol_out=volFromBase(vol_b,vol_u);
+        document.getElementById('a_mol_out').innerHTML='<strong>'+fmt(mol_out)+'</strong> '+mol_u;
+        document.getElementById('a_vol_out').innerHTML='<strong>'+fmt(vol_out)+'</strong> '+vol_u;
     }
 }
-
-// ==================== SECTION B ====================
 function calcB(){
     let mw=parseFloat(document.getElementById('b_mw').value)||0;
     let mwu=document.getElementById('b_mw_u').value;
@@ -249,12 +265,12 @@ function calcB(){
         let m_b=mol_b*mw_b;
         let mol_u=document.getElementById('b_mol_u').value;
         let mu=document.getElementById('b_m_u').value;
-        document.getElementById('b_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,mol_u))+'</strong> '+mol_u;
-        document.getElementById('b_m_out').innerHTML='<strong>'+fmt(massFromBase(m_b,mu))+'</strong> '+mu;
+        let mol_out=mol_b*(mol_u==="lbmol/hr"?2.20462:mol_u==="mole/s"?0.2777778:mol_u==="mole/hr"?1000:1);
+        let m_out=massFromBase(m_b,mu);
+        document.getElementById('b_mol_out').innerHTML='<strong>'+fmt(mol_out)+'</strong> '+mol_u;
+        document.getElementById('b_m_out').innerHTML='<strong>'+fmt(m_out)+'</strong> '+mu;
     }
 }
-
-// ==================== SECTION C (Actual → Normal) ====================
 function calcC(){
     let p=parseFloat(document.getElementById('c_p').value)||0;
     let pu=document.getElementById('c_p_u').value;
@@ -271,12 +287,12 @@ function calcC(){
         let mol_b=n_b/MV;
         let nu=document.getElementById('c_norm_u').value;
         let molu=document.getElementById('c_mol_u').value;
-        document.getElementById('c_norm_out').innerHTML='<strong>'+fmt(volFromBase(n_b,nu))+'</strong> '+nu;
-        document.getElementById('c_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,molu))+'</strong> '+molu;
+        let n_out=volFromBase(n_b,nu);
+        let mol_out=mol_b*(molu==="lbmol/hr"?2.20462:molu==="mole/s"?0.2777778:molu==="mole/hr"?1000:1);
+        document.getElementById('c_norm_out').innerHTML='<strong>'+fmt(n_out)+'</strong> '+nu;
+        document.getElementById('c_mol_out').innerHTML='<strong>'+fmt(mol_out)+'</strong> '+molu;
     }
 }
-
-// ==================== SECTION D (Normal → Actual) ====================
 function calcD(){
     let p=parseFloat(document.getElementById('d_p').value)||0;
     let pu=document.getElementById('d_p_u').value;
@@ -293,13 +309,15 @@ function calcD(){
         let mol_b=n_b/MV;
         let au=document.getElementById('d_act_u').value;
         let molu=document.getElementById('d_mol_u').value;
-        document.getElementById('d_act_out').innerHTML='<strong>'+fmt(volFromBase(a_b,au))+'</strong> '+au;
-        document.getElementById('d_mol_out').innerHTML='<strong>'+fmt(molarFromBase(mol_b,molu))+'</strong> '+molu;
+        let a_out=volFromBase(a_b,au);
+        let mol_out=mol_b*(molu==="lbmol/hr"?2.20462:molu==="mole/s"?0.2777778:molu==="mole/hr"?1000:1);
+        document.getElementById('d_act_out').innerHTML='<strong>'+fmt(a_out)+'</strong> '+au;
+        document.getElementById('d_mol_out').innerHTML='<strong>'+fmt(mol_out)+'</strong> '+molu;
     }
 }
 
-// ==================== UPDATE ABSOLUTE PRESSURE ====================
-function updatePA(){
+// ==================== SECTION 3: IDEAL GAS LAW (DYNAMIC) ====================
+function updateAbsolutePressure(){
     let pg=parseFloat(document.getElementById('e_pg').value)||0;
     let pgu=document.getElementById('e_pg_u').value;
     let pa=toKpaA(pg,pgu);
@@ -307,71 +325,184 @@ function updatePA(){
     if(pau==="kPa a") document.getElementById('e_pa').innerHTML=fmt(pa);
     else if(pau==="bar a") document.getElementById('e_pa').innerHTML=fmt(pa/100);
     else if(pau==="psi a") document.getElementById('e_pa').innerHTML=fmt(pa/6.89476);
+    else if(pau==="atm a") document.getElementById('e_pa').innerHTML=fmt(pa/SP);
+    else if(pau==="mm Hg a") document.getElementById('e_pa').innerHTML=fmt(pa/0.133322);
+    else if(pau==="kg/cm² a") document.getElementById('e_pa').innerHTML=fmt(pa/98.0665);
+    else if(pau==="Pa a") document.getElementById('e_pa').innerHTML=fmt(pa*1000);
+    else if(pau==="N/m² a") document.getElementById('e_pa').innerHTML=fmt(pa*1000);
     calcE();
 }
-
-// ==================== SECTION E (Ideal Gas Law) ====================
+function updateDynamicFields(){
+    let solve=document.getElementById('e_solve').value;
+    let t_row=document.getElementById('e_t_row');
+    let m_row=document.getElementById('e_m_row');
+    let v_row=document.getElementById('e_v_row');
+    let d_row=document.getElementById('e_d_row');
+    let t_input=document.getElementById('e_t');
+    let m_input=document.getElementById('e_m');
+    let v_input=document.getElementById('e_v');
+    let res_unit=document.getElementById('e_res_u');
+    let t_unit=document.getElementById('e_t_u');
+    let m_unit=document.getElementById('e_m_u');
+    let v_unit=document.getElementById('e_v_u');
+    let d_unit=document.getElementById('e_d_u');
+    
+    if(solve==='p'){ // Pressure
+        t_row.style.display='flex'; m_row.style.display='flex'; v_row.style.display='flex'; d_row.style.display='none';
+        t_input.classList.add('blue-input'); t_input.classList.remove('black-output'); t_input.readOnly=false;
+        m_input.classList.add('blue-input'); m_input.classList.remove('black-output'); m_input.readOnly=false;
+        v_input.classList.add('blue-input'); v_input.classList.remove('black-output'); v_input.readOnly=false;
+        res_unit.innerHTML='<option>kPa a</option><option>bar a</option><option>psi a</option>';
+    }
+    else if(solve==='t'){ // Temperature
+        t_row.style.display='flex'; m_row.style.display='flex'; v_row.style.display='flex'; d_row.style.display='none';
+        t_input.classList.remove('blue-input'); t_input.classList.add('black-output'); t_input.readOnly=true;
+        m_input.classList.add('blue-input'); m_input.classList.remove('black-output'); m_input.readOnly=false;
+        v_input.classList.add('blue-input'); v_input.classList.remove('black-output'); v_input.readOnly=false;
+        res_unit.innerHTML='<option>K</option><option>°C</option><option>°F</option><option>°R</option>';
+    }
+    else if(solve==='m'){ // Mass Flowrate
+        t_row.style.display='flex'; m_row.style.display='flex'; v_row.style.display='flex'; d_row.style.display='none';
+        t_input.classList.add('blue-input'); t_input.classList.remove('black-output'); t_input.readOnly=false;
+        m_input.classList.remove('blue-input'); m_input.classList.add('black-output'); m_input.readOnly=true;
+        v_input.classList.add('blue-input'); v_input.classList.remove('black-output'); v_input.readOnly=false;
+        res_unit.innerHTML='<option>kg/hr</option><option>lb/hr</option>';
+    }
+    else if(solve==='v'){ // Volumetric Flowrate
+        t_row.style.display='flex'; m_row.style.display='flex'; v_row.style.display='flex'; d_row.style.display='none';
+        t_input.classList.add('blue-input'); t_input.classList.remove('black-output'); t_input.readOnly=false;
+        m_input.classList.add('blue-input'); m_input.classList.remove('black-output'); m_input.readOnly=false;
+        v_input.classList.remove('blue-input'); v_input.classList.add('black-output'); v_input.readOnly=true;
+        res_unit.innerHTML='<option>m³/hr</option><option>Nm³/hr</option><option>Sm³/hr</option><option>MMSCFD</option><option>SCFM</option><option>ft³/hr</option><option>US GPM</option><option>kLPD</option>';
+    }
+    else if(solve==='d'){ // Density
+        t_row.style.display='flex'; m_row.style.display='none'; v_row.style.display='none'; d_row.style.display='flex';
+        t_input.classList.add('blue-input'); t_input.classList.remove('black-output'); t_input.readOnly=false;
+        res_unit.innerHTML='<option>kg/m³</option><option>g/cm³</option><option>lb/ft³</option><option>lb/US gal</option><option>kg/L</option><option>g/L</option>';
+        d_unit.innerHTML='<option>kg/m³</option><option>g/cm³</option><option>lb/ft³</option><option>lb/US gal</option><option>kg/L</option><option>g/L</option><option>mg/L</option><option>SG</option>';
+    }
+    calcE();
+}
 function calcE(){
     let solve=document.getElementById('e_solve').value;
     let pg=parseFloat(document.getElementById('e_pg').value)||0;
     let pgu=document.getElementById('e_pg_u').value;
     let pa=toKpaA(pg,pgu);
-    let t=parseFloat(document.getElementById('e_t').value)||0;
-    let tu=document.getElementById('e_t_u').value;
-    let tK=toKelvin(t,tu);
+    let t_val=parseFloat(document.getElementById('e_t').value)||0;
+    let t_u=document.getElementById('e_t_u').value;
+    let tK=toKelvin(t_val,t_u);
     let mw=parseFloat(document.getElementById('e_mw').value)||0;
     let mwu=document.getElementById('e_mw_u').value;
     let mw_b=mwToBase(mw,mwu);
     let z=parseFloat(document.getElementById('e_z').value)||1;
-    let m=parseFloat(document.getElementById('e_m').value)||0;
-    let mu=document.getElementById('e_m_u').value;
-    let m_b=massToBase(m,mu);
-    let v=parseFloat(document.getElementById('e_v').value)||0;
-    let vu=document.getElementById('e_v_u').value;
-    let v_b=volToBase(v,vu);
-    let ru=document.getElementById('e_res_u').value;
+    let m_val=parseFloat(document.getElementById('e_m').value)||0;
+    let m_u=document.getElementById('e_m_u').value;
+    let m_b=massToBase(m_val,m_u);
+    let v_val=parseFloat(document.getElementById('e_v').value)||0;
+    let v_u=document.getElementById('e_v_u').value;
+    let v_b=volToBase(v_val,v_u);
+    let res_unit=document.getElementById('e_res_u').value;
     let res="--";
     
-    if(solve==="v" && pa>0 && tK>0 && mw_b>0 && m_b>0 && z>0){
-        let n=(m_b/mw_b)/3600;
-        let v_calc=(n*R*tK*z)/pa*3600;
-        if(ru==="m³/hr"||ru==="Nm³/hr") res=fmt(v_calc);
-        else if(ru==="Sm³/hr") res=fmt(v_calc*1.057);
-        else if(ru==="MMSCFD") res=fmt(v_calc*0.000895846);
-        else if(ru==="SCFM") res=fmt(v_calc*0.622083333);
-        else if(ru==="SCFD") res=fmt(v_calc*895.8);
-        else if(ru==="ft³/hr") res=fmt(v_calc*35.3147);
-        else if(ru==="US GPM") res=fmt(v_calc*4.4029);
-        else if(ru==="kLPD") res=fmt(v_calc*24);
+    if(solve==='p'){ // Pressure
+        if(tK>0 && mw_b>0 && v_b>0 && z>0){
+            let n=(m_b/mw_b)/3600;
+            let p_calc=(n*R*tK*z)/(v_b/3600);
+            if(res_unit==="kPa a") res=fmt(p_calc);
+            else if(res_unit==="bar a") res=fmt(p_calc/100);
+            else if(res_unit==="psi a") res=fmt(p_calc/6.89476);
+        }
     }
-    else if(solve==="p" && tK>0 && mw_b>0 && v_b>0 && z>0){
-        let n=(m_b/mw_b)/3600;
-        let p_calc=(n*R*tK*z)/(v_b/3600);
-        if(ru==="kPa a") res=fmt(p_calc);
-        else if(ru==="bar a") res=fmt(p_calc/100);
-        else if(ru==="psi a") res=fmt(p_calc/6.89476);
+    else if(solve==='t'){ // Temperature
+        if(pa>0 && mw_b>0 && v_b>0 && z>0){
+            let n=(m_b/mw_b)/3600;
+            let t_calc=(pa*(v_b/3600))/(n*R*z);
+            if(res_unit==="K") res=fmt(t_calc);
+            else if(res_unit==="°C") res=fmt(t_calc-273.15);
+            else if(res_unit==="°F") res=fmt(t_calc*1.8-459.67);
+            else if(res_unit==="°R") res=fmt(t_calc*1.8);
+            document.getElementById('e_t').value=res;
+        }
     }
-    else if(solve==="t" && pa>0 && mw_b>0 && v_b>0 && z>0){
-        let n=(m_b/mw_b)/3600;
-        let t_calc=(pa*(v_b/3600))/(n*R*z);
-        if(ru==="K") res=fmt(t_calc);
-        else if(ru==="°C") res=fmt(t_calc-273.15);
-        else if(ru==="°F") res=fmt(t_calc*1.8-459.67);
-        else if(ru==="°R") res=fmt(t_calc*1.8);
+    else if(solve==='m'){ // Mass Flowrate
+        if(pa>0 && tK>0 && mw_b>0 && v_b>0 && z>0){
+            let n=(pa*(v_b/3600))/(R*tK*z);
+            let m_calc=n*mw_b*3600;
+            if(res_unit==="kg/hr") res=fmt(m_calc);
+            else if(res_unit==="lb/hr") res=fmt(m_calc/0.453592);
+            document.getElementById('e_m').value=res;
+        }
     }
-    else if(solve==="m" && pa>0 && tK>0 && mw_b>0 && v_b>0 && z>0){
-        let n=(pa*(v_b/3600))/(R*tK*z);
-        let m_calc=n*mw_b*3600;
-        if(ru==="kg/hr") res=fmt(m_calc);
-        else if(ru==="lb/hr") res=fmt(m_calc/0.453592);
+    else if(solve==='v'){ // Volumetric Flowrate
+        if(pa>0 && tK>0 && mw_b>0 && m_b>0 && z>0){
+            let n=(m_b/mw_b)/3600;
+            let v_calc=(n*R*tK*z)/pa*3600;
+            if(res_unit==="m³/hr") res=fmt(v_calc);
+            else if(res_unit==="Nm³/hr") res=fmt(v_calc);
+            else if(res_unit==="Sm³/hr") res=fmt(v_calc*1.057);
+            else if(res_unit==="MMSCFD") res=fmt(v_calc*0.000895846);
+            else if(res_unit==="SCFM") res=fmt(v_calc*0.622083333);
+            else if(res_unit==="ft³/hr") res=fmt(v_calc*35.3147);
+            else if(res_unit==="US GPM") res=fmt(v_calc*4.4029);
+            else if(res_unit==="kLPD") res=fmt(v_calc*24);
+            document.getElementById('e_v').value=res;
+        }
     }
-    
-    document.getElementById('e_res').innerHTML='<strong>'+res+'</strong>';
+    else if(solve==='d'){ // Density
+        if(pa>0 && tK>0 && mw_b>0 && z>0){
+            let rho_calc=(pa * mw_b) / (R * tK * z);
+            let d_u=document.getElementById('e_d_u').value;
+            let rho_out=densityFromBase(rho_calc,d_u);
+            res=fmt(rho_out);
+            document.getElementById('e_d').innerHTML='<strong>'+res+'</strong> '+d_u;
+            document.getElementById('e_res').innerHTML='<strong>'+res+'</strong> '+d_u;
+            return;
+        }
+    }
+    document.getElementById('e_res').innerHTML='<strong>'+res+'</strong> '+res_unit;
+}
+
+// ==================== ATTACH EVENT LISTENERS ====================
+function attachEvents(){
+    // Section A
+    ['a_mw','a_m','a_mw_u','a_m_u','a_mol_u','a_vol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcA);
+        if(el && el.tagName==='SELECT') el.addEventListener('change',calcA);
+    });
+    // Section B
+    ['b_mw','b_v','b_mw_u','b_v_u','b_mol_u','b_m_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcB);
+        if(el && el.tagName==='SELECT') el.addEventListener('change',calcB);
+    });
+    // Section C
+    ['c_p','c_t','c_r','c_flow','c_p_u','c_t_u','c_flow_u','c_norm_u','c_mol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcC);
+        if(el && el.tagName==='SELECT') el.addEventListener('change',calcC);
+    });
+    // Section D
+    ['d_p','d_t','d_r','d_flow','d_p_u','d_t_u','d_flow_u','d_act_u','d_mol_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',calcD);
+        if(el && el.tagName==='SELECT') el.addEventListener('change',calcD);
+    });
+    // Section E - Ideal Gas Law
+    ['e_solve','e_pg','e_t','e_mw','e_z','e_m','e_v','e_pg_u','e_t_u','e_mw_u','e_m_u','e_v_u','e_pa_u','e_res_u','e_d_u'].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.addEventListener('input',function(){updateAbsolutePressure();updateDynamicFields();});
+        if(el && el.tagName==='SELECT') el.addEventListener('change',function(){updateAbsolutePressure();updateDynamicFields();});
+    });
+    let pg=document.getElementById('e_pg'), pgu=document.getElementById('e_pg_u'), pau=document.getElementById('e_pa_u');
+    if(pg) pg.addEventListener('input',updateAbsolutePressure);
+    if(pgu) pgu.addEventListener('change',updateAbsolutePressure);
+    if(pau) pau.addEventListener('change',function(){updateAbsolutePressure();calcE();});
+    updateDynamicFields();
 }
 
 // ==================== INITIALIZE ====================
-attachEvents();
-calcA();calcB();calcC();calcD();updatePA();
+calcA();calcB();calcC();calcD();updateAbsolutePressure();attachEvents();
 </script>
 </body>
 </html>
