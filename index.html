@@ -23,6 +23,7 @@
         .tool-card {
             background: rgba(255,255,255,0.95); border-radius: 20px; padding: 28px 20px; text-align: center;
             cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-decoration: none; display: block;
         }
         .tool-card:hover { transform: translateY(-8px); background: white; border-color: #ff9800; }
         .tool-icon { font-size: 3rem; margin-bottom: 15px; }
@@ -125,19 +126,22 @@
     let fromUnit = "meter";
     let toUnit = "kilometer";
 
+    // Tools array - ADDED NEW FLUID FLOW CARD
     const tools = [
-        { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories", link: null },
-        { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law", link: "gas-phase.html" },
-        { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry, circle, cylinder, square, rectangle", link: "mathematical-calc.html" },
-        { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow", link: "#" },
-        { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge", link: "#" },
-        { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH", link: "#" }
+        { id: "unit_converter", icon: "📐", name: "Unit Conversion", desc: "30+ engineering unit categories", link: null, external: false },
+        { id: "gas_phase", icon: "🔥", name: "Gas Phase Calculator", desc: "Flowrate, volumetric flow, ideal gas law", link: "gas-phase.html", external: true },
+        { id: "mathematical", icon: "🧮", name: "Mathematical Calculation", desc: "Interpolation, geometry, circle, cylinder", link: "mathematical-calc.html", external: true },
+        { id: "line_sizing", icon: "📏", name: "Line Sizing", desc: "Liquid, gas & multiphase flow", link: "#", external: true },
+        { id: "psv_sizing", icon: "🔥", name: "PSV Sizing", desc: "Fire case, blocked discharge", link: "#", external: true },
+        { id: "pump_sizing", icon: "🌀", name: "Pump Sizing", desc: "Pump duty, NPSH", link: "#", external: true },
+        // NEW CARD: Fluid Flow & Pump Suite (CheCalc tools)
+        { id: "fluid_flow", icon: "💧", name: "Fluid Flow & Pump Suite", desc: "Single phase, compressible, non-Newtonian, Bingham, packed bed, pump curves, affinity laws", link: "fluid-flow-suite.html", external: true }
     ];
 
     function renderDashboard() {
         return `
             <div class="header"><h1><span>🛠️</span> A Process Engineer's Tool</h1><p>Oil & Gas</p></div>
-            <div class="dashboard-grid">${tools.map(t => `<div class="tool-card" onclick="${t.link ? `window.location.href='${t.link}'` : `selectTool('${t.id}')`}"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></div>`).join('')}</div>
+            <div class="dashboard-grid">${tools.map(t => `<a class="tool-card" href="${t.link ? t.link : '#'}" onclick="${!t.link ? `selectTool('${t.id}')` : ''}return true"><div class="tool-icon">${t.icon}</div><div class="tool-title">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`).join('')}</div>
             <div class="footer-quote">"Built by one. Scaled by intelligence"</div>
             <div class="copyright">© 2026 A Process Engineer's Tool. All rights reserved.</div>
         `;
