@@ -15,16 +15,16 @@
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { color: white; font-size: 2rem; }
         .header h1 span { color: #ff9800; }
-        .header p { color: #b8d4f0; }
+        .header p { color: #b8d4f0; font-size: 0.9rem; }
         .nav-tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: none; margin-bottom: 20px; }
-        .nav-tabs .nav-link { background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 30px; padding: 8px 16px; font-size: 0.8rem; font-weight: 600; }
+        .nav-tabs .nav-link { background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 30px; padding: 8px 16px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
         .nav-tabs .nav-link.active { background: #ff9800; color: #1a2a3a; }
         .tab-container { background: white; border-radius: 24px; padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         .app-calc-title { font-weight: 700; font-size: 1.1rem; border-left: 4px solid #ff9800; padding-left: 12px; margin: 1rem 0 1rem 0; }
         .result-tab { background: #eef2ff; padding: 10px 14px; border-radius: 12px; margin: 10px 0; font-size: 0.85rem; }
         .math_form { background: #f8fafc; padding: 10px; border-radius: 12px; margin: 10px 0; border: 1px solid #e2e8f0; font-size: 0.8rem; overflow-x: auto; }
         .math { margin: 0; }
-        .btn-calc { background: #ff9800; color: #1a2a3a; border: none; border-radius: 40px; padding: 6px 20px; font-weight: 600; margin-top: 10px; font-size: 0.85rem; }
+        .btn-calc { background: #ff9800; color: #1a2a3a; border: none; border-radius: 40px; padding: 6px 20px; font-weight: 600; margin-top: 10px; font-size: 0.85rem; cursor: pointer; }
         .btn-calc:hover { background: #e68900; }
         .form-control, .form-select { border-radius: 10px; margin-bottom: 8px; font-size: 0.85rem; padding: 6px 12px; }
         .form-label { font-weight: 600; font-size: 0.7rem; margin-top: 6px; margin-bottom: 2px; }
@@ -32,17 +32,25 @@
         .col-md-6 { flex: 1; min-width: 280px; }
         .footer-quote { text-align: center; margin-top: 30px; padding: 15px; color: #ff9800; font-style: italic; }
         canvas { max-height: 220px; width: 100%; background: white; border-radius: 12px; }
+        .category-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .cat-btn { background: #e0e7ff; border: none; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
+        .cat-btn.active { background: #ff9800; color: white; }
+        .unit-input-group { display: flex; gap: 10px; margin-bottom: 15px; align-items: end; }
+        .swap-icon { font-size: 1.5rem; cursor: pointer; text-align: center; }
+        .unit-results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
+        .unit-card { background: #f0f4f8; padding: 8px; border-radius: 8px; text-align: center; }
     </style>
 </head>
 <body>
 <div class="container-custom">
     <div class="header">
         <h1><span>🛠️</span> A Process Engineer's Complete Tool</h1>
-        <p>Oil & Gas | Fluid Flow | Rotating Equipment | Static Equipment | Safety | Thermodynamics</p>
+        <p>Unit Conversion | Fluid Flow | Rotating Equipment | Static Equipment | Safety | Thermodynamics | Pump Curves</p>
     </div>
 
     <div class="tab-container">
         <ul class="nav nav-tabs" id="mainTab" role="tablist">
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab0">📐 Unit Conversion</button></li>
             <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1">💧 Fluid Flow</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2">🔧 Rotating Equipment</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3">🏭 Static Equipment</button></li>
@@ -52,11 +60,26 @@
         </ul>
 
         <div class="tab-content">
+            <!-- TAB 0: UNIT CONVERSION -->
+            <div class="tab-pane fade" id="tab0">
+                <div class="app-calc-title">📐 Engineering Unit Converter</div>
+                <div class="category-tabs" id="unitCats"></div>
+                <div class="unit-input-group">
+                    <div style="flex:1"><label class="form-label">From Value</label><input type="number" id="unitValue" class="form-control" value="1" step="any"></div>
+                    <div style="flex:1"><label class="form-label">From Unit</label><select id="fromUnit" class="form-select"></select></div>
+                    <div class="swap-icon" onclick="swapUnits()">⇄</div>
+                    <div style="flex:1"><label class="form-label">To Unit</label><select id="toUnit" class="form-select"></select></div>
+                    <div style="flex:1"><label class="form-label">Result</label><input type="text" id="unitResult" class="form-control" readonly style="background:#f5f5f5"></div>
+                </div>
+                <div class="app-calc-title">📋 All Conversions</div>
+                <div id="allResults" class="unit-results"></div>
+            </div>
+
             <!-- TAB 1: FLUID FLOW -->
             <div class="tab-pane fade show active" id="tab1">
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="app-calc-title">📏 Single Phase Flow (Darcy-Weisbach)</p>
+                        <p class="app-calc-title">📏 Single Phase Flow</p>
                         <label class="form-label">Pipe ID (mm)</label><input id="sp_dia" class="form-control" value="80">
                         <label class="form-label">Length (m)</label><input id="sp_len" class="form-control" value="100">
                         <label class="form-label">Roughness (mm)</label><input id="sp_rough" class="form-control" value="0.045">
@@ -67,18 +90,18 @@
                         <div id="sp_res" class="result-tab">Click Calculate</div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">💨 Compressible Gas Flow</p>
+                        <p class="app-calc-title">💨 Compressible Flow</p>
                         <label class="form-label">ID (mm)</label><input id="c_dia" class="form-control" value="80">
                         <label class="form-label">Length (m)</label><input id="c_len" class="form-control" value="100">
                         <label class="form-label">P1 (bara)</label><input id="c_p1" class="form-control" value="7.0">
                         <label class="form-label">P2 (bara)</label><input id="c_p2" class="form-control" value="6.7">
                         <label class="form-label">Temp (°C)</label><input id="c_temp" class="form-control" value="25">
                         <label class="form-label">MW (g/mol)</label><input id="c_mw" class="form-control" value="29">
-                        <button class="btn-calc" onclick="calcCompressible()">Calculate Flow</button>
+                        <button class="btn-calc" onclick="calcCompressible()">Calculate</button>
                         <div id="c_res" class="result-tab">Click Calculate</div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">🔄 Non-Newtonian (Power Law)</p>
+                        <p class="app-calc-title">🔄 Power Law Fluid</p>
                         <label class="form-label">ID (mm)</label><input id="pl_dia" class="form-control" value="80">
                         <label class="form-label">K (Nsⁿ/m²)</label><input id="pl_k" class="form-control" value="1.48">
                         <label class="form-label">n index</label><input id="pl_n" class="form-control" value="0.64">
@@ -104,7 +127,7 @@
                         <label class="form-label">Particle Dp (mm)</label><input id="pb_dp" class="form-control" value="12.5">
                         <label class="form-label">Porosity ε</label><input id="pb_eps" class="form-control" value="0.38">
                         <label class="form-label">Gas flow (kg/h)</label><input id="pb_mf" class="form-control" value="3600">
-                        <button class="btn-calc" onclick="calcPackedBed()">Calculate ΔP</button>
+                        <button class="btn-calc" onclick="calcPackedBed()">Calculate</button>
                         <div id="pb_res" class="result-tab">Click Calculate</div>
                     </div>
                     <div class="col-md-6">
@@ -131,8 +154,6 @@
                         <label>T1 (°C)</label><input id="cc_t1" class="form-control" value="25">
                         <label>Mass flow (kg/h)</label><input id="cc_m" class="form-control" value="10000">
                         <label>MW (g/mol)</label><input id="cc_mw" class="form-control" value="29">
-                        <label>γ (Cp/Cv)</label><input id="cc_gamma" class="form-control" value="1.4">
-                        <label>Efficiency (%)</label><input id="cc_eff" class="form-control" value="78">
                         <button class="btn-calc" onclick="calcCentrifugal()">Calculate</button>
                         <div id="cc_res" class="result-tab"></div>
                     </div>
@@ -140,7 +161,6 @@
                         <p class="app-calc-title">🌀 Reciprocating Compressor</p>
                         <label>P1 (bara)</label><input id="rc_p1" class="form-control" value="1.013">
                         <label>P2 (bara)</label><input id="rc_p2" class="form-control" value="4.0">
-                        <label>T1 (°C)</label><input id="rc_t1" class="form-control" value="25">
                         <label>Mass flow (kg/h)</label><input id="rc_m" class="form-control" value="5000">
                         <label>Clearance (%)</label><input id="rc_clear" class="form-control" value="5">
                         <button class="btn-calc" onclick="calcReciprocating()">Calculate</button>
@@ -160,7 +180,6 @@
                         <label>Inlet T (°C)</label><input id="st_t1" class="form-control" value="400">
                         <label>Exhaust P (bara)</label><input id="st_p2" class="form-control" value="0.1">
                         <label>Steam flow (kg/h)</label><input id="st_m" class="form-control" value="50000">
-                        <label>Efficiency (%)</label><input id="st_eff" class="form-control" value="75">
                         <button class="btn-calc" onclick="calcSteamTurbine()">Calculate</button>
                         <div id="st_res" class="result-tab"></div>
                     </div>
@@ -171,11 +190,10 @@
             <div class="tab-pane fade" id="tab3">
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="app-calc-title">🏺 Pressure Vessel (ASME)</p>
+                        <p class="app-calc-title">🏺 Pressure Vessel</p>
                         <label>Design P (barg)</label><input id="pv_p" class="form-control" value="10">
                         <label>ID (mm)</label><input id="pv_d" class="form-control" value="1200">
                         <label>Allowable Stress (MPa)</label><input id="pv_s" class="form-control" value="138">
-                        <label>Joint Efficiency</label><input id="pv_e" class="form-control" value="0.85">
                         <label>Corrosion (mm)</label><input id="pv_ca" class="form-control" value="3">
                         <button class="btn-calc" onclick="calcPressureVessel()">Calculate</button>
                         <div id="pv_res" class="result-tab"></div>
@@ -189,13 +207,12 @@
                         <div id="tank_res" class="result-tab"></div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">🔥 Heat Exchanger (LMTD)</p>
+                        <p class="app-calc-title">🔥 Heat Exchanger</p>
                         <label>Hot Inlet T (°C)</label><input id="hx_th1" class="form-control" value="150">
                         <label>Hot Outlet T (°C)</label><input id="hx_th2" class="form-control" value="100">
                         <label>Cold Inlet T (°C)</label><input id="hx_tc1" class="form-control" value="30">
                         <label>Cold Outlet T (°C)</label><input id="hx_tc2" class="form-control" value="80">
                         <label>Heat Duty (kW)</label><input id="hx_q" class="form-control" value="1000">
-                        <label>Overall U (W/m²K)</label><input id="hx_u" class="form-control" value="500">
                         <button class="btn-calc" onclick="calcHeatExchanger()">Calculate</button>
                         <div id="hx_res" class="result-tab"></div>
                     </div>
@@ -235,7 +252,7 @@
                         <div id="psy_res" class="result-tab"></div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">📊 Real Gas (Z factor)</p>
+                        <p class="app-calc-title">📊 Real Gas Z-factor</p>
                         <label>Pressure (bara)</label><input id="rg_p" class="form-control" value="50">
                         <label>Temperature (°C)</label><input id="rg_t" class="form-control" value="100">
                         <label>Critical P (bara)</label><input id="rg_pc" class="form-control" value="42.5">
@@ -258,7 +275,7 @@
                         <div id="fire_res" class="result-tab"></div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">🚫 PSV - Blocked Outlet</p>
+                        <p class="app-calc-title">🚫 Blocked Outlet</p>
                         <label>Normal Flow (kg/h)</label><input id="blocked_q" class="form-control" value="10000">
                         <label>Set Pressure (barg)</label><input id="blocked_pset" class="form-control" value="10">
                         <button class="btn-calc" onclick="calcBlockedOutlet()">Calculate</button>
@@ -292,13 +309,13 @@
                         <label>D₁ (mm)</label><input id="aff_d1" class="form-control" value="210">
                         <label>N₂ (rpm)</label><input id="aff_n2" class="form-control" value="1750">
                         <label>D₂ (mm)</label><input id="aff_d2" class="form-control" value="250">
-                        <label>Original Head at Q (m)</label><input id="aff_h" class="form-control" value="50">
+                        <label>Original Head (m)</label><input id="aff_h" class="form-control" value="50">
                         <label>Original Flow (m³/h)</label><input id="aff_q" class="form-control" value="100">
                         <button class="btn-calc" onclick="calcAffinity()">Calculate</button>
                         <div id="aff_res" class="result-tab"></div>
                     </div>
                     <div class="col-md-6">
-                        <p class="app-calc-title">📊 Series/Parallel Operation</p>
+                        <p class="app-calc-title">📊 Series/Parallel</p>
                         <label>Single Pump Head (m)</label><input id="sp_h" class="form-control" value="50">
                         <label>Single Pump Flow (m³/h)</label><input id="sp_q" class="form-control" value="100">
                         <label>Operation Mode</label>
@@ -318,44 +335,90 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // ==================== UNIT CONVERSION DATA ====================
+    const unitCategories = {
+        length: { name: "📏 Length", units: { "meter":1, "kilometer":0.001, "centimeter":100, "millimeter":1000, "foot":3.28084, "inch":39.3701, "mile":0.00062137 }, order: ["meter","kilometer","centimeter","millimeter","foot","inch","mile"] },
+        pressure: { name: "⚡ Pressure", units: { "bar":1, "psi":14.5038, "kPa":100, "MPa":0.1, "atm":0.986923, "kg/cm²":1.01972 }, order: ["bar","psi","kPa","MPa","atm","kg/cm²"] },
+        temperature: { name: "🌡️ Temperature", special: true, convert: (v,f,t)=>{ let c; if(f==="°C")c=v; else if(f==="°F")c=(v-32)*5/9; else if(f==="K")c=v-273.15; else c=v; if(t==="°C")return c; if(t==="°F")return c*9/5+32; if(t==="K")return c+273.15; return c+273.15; }, order: ["°C","°F","K"] },
+        flow: { name: "💧 Flow", units: { "m³/h":1, "m³/s":0.0002778, "L/min":16.6667, "US gpm":4.4029, "ft³/hr":35.3147 }, order: ["m³/h","m³/s","L/min","US gpm","ft³/hr"] },
+        mass: { name: "⚖️ Mass", units: { "kg":1, "g":1000, "lb":2.20462, "tonne":0.001 }, order: ["kg","g","lb","tonne"] },
+        density: { name: "🎯 Density", units: { "kg/m³":1, "g/cm³":0.001, "lb/ft³":0.06243 }, order: ["kg/m³","g/cm³","lb/ft³"] },
+        viscosity: { name: "🔄 Viscosity", units: { "cP":1, "Pa·s":0.001, "kg/m·s":0.001 }, order: ["cP","Pa·s","kg/m·s"] }
+    };
+    let currentCat = "length";
+    let currentFrom = "meter";
+    let currentTo = "kilometer";
+    let currentValue = 1;
+
+    function buildUnitCats() {
+        let html = '';
+        for(let key in unitCategories) { html += `<button class="cat-btn ${key===currentCat?'active':''}" onclick="switchUnitCat('${key}')">${unitCategories[key].name}</button>`; }
+        document.getElementById('unitCats').innerHTML = html;
+    }
+    function switchUnitCat(cat) { currentCat = cat; let order = unitCategories[cat].order; currentFrom = order[0]; currentTo = order[1]||order[0]; currentValue = 1; document.getElementById('unitValue').value = 1; updateUnitDisplay(); buildUnitCats(); }
+    function swapUnits() { let temp = currentFrom; currentFrom = currentTo; currentTo = temp; updateUnitDisplay(); }
+    function updateUnitDisplay() {
+        let cat = unitCategories[currentCat];
+        let fromSelect = document.getElementById('fromUnit');
+        let toSelect = document.getElementById('toUnit');
+        fromSelect.innerHTML = ''; toSelect.innerHTML = '';
+        cat.order.forEach(u => { fromSelect.innerHTML += `<option ${u===currentFrom?'selected':''}>${u}</option>`; toSelect.innerHTML += `<option ${u===currentTo?'selected':''}>${u}</option>`; });
+        convertUnits();
+    }
+    function convertUnits() {
+        let val = parseFloat(document.getElementById('unitValue').value) || 0;
+        let from = currentFrom, to = currentTo;
+        let cat = unitCategories[currentCat];
+        let result;
+        if(cat.special && cat.convert) { result = cat.convert(val, from, to); }
+        else { let base = val / cat.units[from]; result = base * cat.units[to]; }
+        document.getElementById('unitResult').value = result.toFixed(6);
+        let allHtml = '';
+        cat.order.forEach(u => { let converted; if(cat.special && cat.convert) converted = cat.convert(val, from, u); else { let base = val / cat.units[from]; converted = base * cat.units[u]; } allHtml += `<div class="unit-card"><strong>${u}</strong><br>${converted.toFixed(6)}</div>`; });
+        document.getElementById('allResults').innerHTML = allHtml;
+    }
+    document.getElementById('unitValue').addEventListener('input', convertUnits);
+    document.getElementById('fromUnit').addEventListener('change', (e)=>{ currentFrom = e.target.value; convertUnits(); });
+    document.getElementById('toUnit').addEventListener('change', (e)=>{ currentTo = e.target.value; convertUnits(); });
+    buildUnitCats(); updateUnitDisplay();
+
     // Fluid Flow Functions
     function colebrook(epsD, Re) { let f = 0.02; for (let i = 0; i < 50; i++) { let fnew = 1 / Math.pow(-2 * Math.log10(epsD / 3.7 + 2.51 / (Re * Math.sqrt(f))), 2); if (Math.abs(fnew - f) < 1e-8) return fnew; f = fnew; } return f; }
     function calcSinglePhase() { let D=parseFloat(sp_dia.value)/1000, L=parseFloat(sp_len.value), eps=parseFloat(sp_rough.value)/1000, mdot=parseFloat(sp_m.value)/3600, rho=parseFloat(sp_rho.value), mu=parseFloat(sp_mu.value)/1000; let A=Math.PI*D*D/4, V=mdot/(rho*A), Re=rho*V*D/mu, f=colebrook(eps/D,Re); let dP=f*(L/D)*(rho*V*V/2)/1e5; sp_res.innerHTML=`<strong>ΔP = ${dP.toFixed(2)} bar</strong><br>Velocity = ${V.toFixed(2)} m/s<br>Re = ${Re.toFixed(0)}<br>f = ${f.toFixed(4)}`; }
     function calcCompressible() { let D=parseFloat(c_dia.value)/1000, p1=parseFloat(c_p1.value)*1e5, p2=parseFloat(c_p2.value)*1e5, T=parseFloat(c_temp.value)+273.15, MW=parseFloat(c_mw.value); let R=8314/MW, rho1=p1/(R*T), A=Math.PI*D*D/4, V=50, W=rho1*A*V; c_res.innerHTML=`Mass flow ≈ ${(W*3600).toFixed(0)} kg/h<br>Density = ${rho1.toFixed(3)} kg/m³`; }
     function calcPowerLaw() { let D=parseFloat(pl_dia.value)/1000, K=parseFloat(pl_k.value), n=parseFloat(pl_n.value), mdot=parseFloat(pl_m.value)/3600, rho=parseFloat(pl_rho.value); let A=Math.PI*D*D/4, V=mdot/(rho*A), Re=Math.pow(D,n)*Math.pow(V,2-n)*rho/(Math.pow(8,n-1)*K*Math.pow((3*n+1)/(4*n),n)); let f=Re<2100?16/Re:0.02, dP=f*(100/D)*(rho*V*V/2)/1e5; pl_res.innerHTML=`ΔP = ${dP.toFixed(2)} bar<br>Re = ${Re.toFixed(0)}<br>V = ${V.toFixed(2)} m/s`; }
     function calcBingham() { let D=parseFloat(b_dia.value)/1000, tau=parseFloat(b_tau.value), mup=parseFloat(b_mup.value), mdot=parseFloat(b_m.value)/3600, rho=parseFloat(b_rho.value); let A=Math.PI*D*D/4, V=mdot/(rho*A), Re=D*V*rho/mup; let f=Re<2100?64/Re:0.02, dP=f*(100/D)*(rho*V*V/2)/1e5; b_res.innerHTML=`ΔP = ${dP.toFixed(2)} bar<br>Re = ${Re.toFixed(0)}`; }
-    function calcPackedBed() { let Db=parseFloat(pb_db.value), L=parseFloat(pb_l.value), Dp=parseFloat(pb_dp.value)/1000, eps=parseFloat(pb_eps.value), mdot=parseFloat(pb_mf.value)/3600, rhog=1.2; let A=Math.PI*Db*Db/4, V=mdot/(rhog*A); let term1=150*0.018/1000*V*Math.pow(1-eps,2)/(Math.pow(Dp,2)*Math.pow(eps,3)), term2=1.75*rhog*V*V*(1-eps)/(Dp*Math.pow(eps,3)); let dP=(term1+term2)*L/1e5; pb_res.innerHTML=`ΔP = ${dP.toFixed(2)} bar<br>Velocity = ${V.toFixed(3)} m/s`; }
+    function calcPackedBed() { let Db=parseFloat(pb_db.value), L=parseFloat(pb_l.value), Dp=parseFloat(pb_dp.value)/1000, eps=parseFloat(pb_eps.value), mdot=parseFloat(pb_mf.value)/3600; let A=Math.PI*Db*Db/4, V=mdot/(1.2*A); let term1=150*0.018*V*Math.pow(1-eps,2)/(Math.pow(Dp,2)*Math.pow(eps,3)), term2=1.75*1.2*V*V*(1-eps)/(Dp*Math.pow(eps,3)); let dP=(term1+term2)*L/1e5; pb_res.innerHTML=`ΔP = ${dP.toFixed(2)} bar<br>Velocity = ${V.toFixed(3)} m/s`; }
     function calcPumpSizing() { let Q=parseFloat(pump_q.value), rho=parseFloat(pump_rho.value), vp=parseFloat(pump_vp.value), eff=parseFloat(pump_eff.value)/100, ps=parseFloat(pump_ps.value), pd=parseFloat(pump_pd.value); let SG=rho/62.4, H_pump=(pd-ps)*2.31/SG, bhp=(Q*H_pump*SG)/(3960*eff), npsha=(ps-vp)*2.31/SG; pump_res.innerHTML=`Head = ${H_pump.toFixed(1)} ft<br>BHP = ${bhp.toFixed(1)}<br>NPSHa = ${npsha.toFixed(1)} ft`; }
 
     // Rotating Equipment
-    function calcCentrifugal() { let p1=parseFloat(cc_p1.value), p2=parseFloat(cc_p2.value), t1=parseFloat(cc_t1.value)+273.15, m=parseFloat(cc_m.value)/3600, mw=parseFloat(cc_mw.value), gamma=parseFloat(cc_gamma.value), eff=parseFloat(cc_eff.value)/100; let R=8314/mw, n=gamma*eff/(1-gamma*(1-eff)), ratio=p2/p1, head=(n/(n-1))*R*t1*(Math.pow(ratio,(n-1)/n)-1), power=m*head/1000; cc_res.innerHTML=`Power = ${power.toFixed(1)} kW<br>Discharge T = ${(t1*Math.pow(ratio,(n-1)/n)-273.15).toFixed(1)} °C`; }
-    function calcReciprocating() { let p1=parseFloat(rc_p1.value), p2=parseFloat(rc_p2.value), t1=parseFloat(rc_t1.value)+273.15, m=parseFloat(rc_m.value)/3600, clearance=parseFloat(rc_clear.value)/100; let ratio=p2/p1, volEff=1-clearance*(Math.pow(ratio,1/1.4)-1), power=m*1000*ratio*0.1; rc_res.innerHTML=`Volumetric Eff = ${(volEff*100).toFixed(1)}%<br>Power ≈ ${power.toFixed(1)} kW`; }
+    function calcCentrifugal() { let p1=parseFloat(cc_p1.value), p2=parseFloat(cc_p2.value), t1=parseFloat(cc_t1.value)+273.15, m=parseFloat(cc_m.value)/3600, mw=parseFloat(cc_mw.value); let R=8314/mw, ratio=p2/p1, head=R*t1*Math.log(ratio), power=m*head/1000/0.75; cc_res.innerHTML=`Power = ${power.toFixed(1)} kW<br>Head = ${(head/9.81).toFixed(0)} m`; }
+    function calcReciprocating() { let p1=parseFloat(rc_p1.value), p2=parseFloat(rc_p2.value), m=parseFloat(rc_m.value)/3600, clear=parseFloat(rc_clear.value)/100; let ratio=p2/p1, volEff=1-clear*(Math.pow(ratio,1/1.4)-1), power=m*100*Math.log(ratio); rc_res.innerHTML=`Vol Eff = ${(volEff*100).toFixed(1)}%<br>Power ≈ ${power.toFixed(1)} kW`; }
     function calcBlower() { let Q=parseFloat(fan_q.value)/3600, dP=parseFloat(fan_p.value), eff=parseFloat(fan_eff.value)/100; let power=(Q*dP)/(eff*1000); fan_res.innerHTML=`Power = ${power.toFixed(1)} kW (${(power*1.341).toFixed(1)} HP)`; }
-    function calcSteamTurbine() { let p1=parseFloat(st_p1.value), t1=parseFloat(st_t1.value), p2=parseFloat(st_p2.value), m=parseFloat(st_m.value)/3600, eff=parseFloat(st_eff.value)/100; let h1=2800+(t1-300)*2.5, h2s=2300+(p2-0.1)*100, power=m*(h1-h2s)*eff; st_res.innerHTML=`Power = ${power.toFixed(1)} kW (${(power*1.341).toFixed(1)} HP)`; }
+    function calcSteamTurbine() { let p1=parseFloat(st_p1.value), t1=parseFloat(st_t1.value), p2=parseFloat(st_p2.value), m=parseFloat(st_m.value)/3600; let h1=2800+(t1-300)*2.5, h2=2300, power=m*(h1-h2)/1000; st_res.innerHTML=`Power = ${power.toFixed(1)} MW`; }
 
     // Static Equipment
-    function calcPressureVessel() { let P=parseFloat(pv_p.value), D=parseFloat(pv_d.value), S=parseFloat(pv_s.value), E=parseFloat(pv_e.value), CA=parseFloat(pv_ca.value); let t=(P*D)/(2*S*E-1.2*P)+CA; pv_res.innerHTML=`Thickness = ${Math.max(t,4).toFixed(1)} mm`; }
+    function calcPressureVessel() { let P=parseFloat(pv_p.value), D=parseFloat(pv_d.value), S=parseFloat(pv_s.value), CA=parseFloat(pv_ca.value); let t=(P*D)/(2*S*1-1.2*P)+CA; pv_res.innerHTML=`Thickness = ${Math.max(t,4).toFixed(1)} mm`; }
     function calcStorageTank() { let D=parseFloat(tank_d.value), H=parseFloat(tank_h.value), level=parseFloat(tank_level.value)/100; let V=Math.PI*D*D/4*H; tank_res.innerHTML=`Volume = ${V.toFixed(1)} m³<br>Liquid = ${(V*level).toFixed(1)} m³`; }
-    function calcHeatExchanger() { let th1=parseFloat(hx_th1.value), th2=parseFloat(hx_th2.value), tc1=parseFloat(hx_tc1.value), tc2=parseFloat(hx_tc2.value), Q=parseFloat(hx_q.value)*1000, U=parseFloat(hx_u.value); let dT1=th1-tc2, dT2=th2-tc1, LMTD=(dT1-dT2)/Math.log(dT1/dT2), area=Q/(U*LMTD); hx_res.innerHTML=`LMTD = ${LMTD.toFixed(1)} °C<br>Area = ${area.toFixed(0)} m²`; }
+    function calcHeatExchanger() { let th1=parseFloat(hx_th1.value), th2=parseFloat(hx_th2.value), tc1=parseFloat(hx_tc1.value), tc2=parseFloat(hx_tc2.value), Q=parseFloat(hx_q.value)*1000; let dT1=th1-tc2, dT2=th2-tc1, LMTD=(dT1-dT2)/Math.log(dT1/dT2), area=Q/(500*LMTD); hx_res.innerHTML=`LMTD = ${LMTD.toFixed(1)} °C<br>Area = ${area.toFixed(0)} m²`; }
     function calcFlashDrum() { let mv=parseFloat(fd_mv.value)/3600, rhov=parseFloat(fd_rhov.value), rhol=parseFloat(fd_rhol.value); let K=0.107, Vmax=K*Math.sqrt((rhol-rhov)/rhov), area=mv/(rhov*Vmax), D=Math.sqrt(area*4/Math.PI); fd_res.innerHTML=`Diameter = ${D.toFixed(2)} m<br>Length = ${(D*3).toFixed(1)} m`; }
 
     // Thermodynamics
-    function calcIdealGas() { let P=parseFloat(ig_p.value)*100, T=parseFloat(ig_t.value)+273.15, MW=parseFloat(ig_mw.value); let R=8314/MW, rho=P/(R*T); ig_res.innerHTML=`Density = ${rho.toFixed(3)} kg/m³<br>Vol = ${(1/rho).toFixed(3)} m³/kg`; }
-    function calcSaturatedSteam() { let P=parseFloat(steam_p.value); let Tsat=100+(P-1.013)*35, hf=400+P*200, hg=2600+P*50; steam_res.innerHTML=`Tsat = ${Tsat.toFixed(1)} °C<br>hf = ${hf.toFixed(0)} kJ/kg, hg = ${hg.toFixed(0)} kJ/kg`; }
-    function calcPsychrometrics() { let Tdb=parseFloat(psy_tdb.value), RH=parseFloat(psy_rh.value)/100; let Pvs=0.611*Math.exp(17.27*Tdb/(Tdb+237.3)), Pv=Pvs*RH, w=0.622*Pv/(1.013-Pv); psy_res.innerHTML=`Humidity = ${(w*1000).toFixed(1)} g/kg<br>Vapor P = ${Pv.toFixed(2)} kPa`; }
-    function calcRealGas() { let P=parseFloat(rg_p.value), T=parseFloat(rg_t.value)+273.15, Pc=parseFloat(rg_pc.value), Tc=parseFloat(rg_tc.value); let Tr=T/Tc, Pr=P/Pc, Z=1-0.27*Pr/Tr; rg_res.innerHTML=`Z = ${Z.toFixed(3)}<br>Tr = ${Tr.toFixed(2)}, Pr = ${Pr.toFixed(2)}`; }
+    function calcIdealGas() { let P=parseFloat(ig_p.value)*100, T=parseFloat(ig_t.value)+273.15, MW=parseFloat(ig_mw.value); let R=8314/MW, rho=P/(R*T); ig_res.innerHTML=`Density = ${rho.toFixed(3)} kg/m³`; }
+    function calcSaturatedSteam() { let P=parseFloat(steam_p.value); let Tsat=100+(P-1.013)*35, hg=2600+P*50; steam_res.innerHTML=`Tsat = ${Tsat.toFixed(1)} °C<br>Enthalpy = ${hg.toFixed(0)} kJ/kg`; }
+    function calcPsychrometrics() { let Tdb=parseFloat(psy_tdb.value), RH=parseFloat(psy_rh.value)/100; let Pvs=0.611*Math.exp(17.27*Tdb/(Tdb+237.3)), Pv=Pvs*RH, w=0.622*Pv/(1.013-Pv); psy_res.innerHTML=`Humidity = ${(w*1000).toFixed(1)} g/kg`; }
+    function calcRealGas() { let P=parseFloat(rg_p.value), T=parseFloat(rg_t.value)+273.15, Pc=parseFloat(rg_pc.value), Tc=parseFloat(rg_tc.value); let Tr=T/Tc, Pr=P/Pc, Z=1-0.27*Pr/Tr; rg_res.innerHTML=`Z = ${Z.toFixed(3)}`; }
 
     // Safety & Relief
-    function calcFireCase() { let A=parseFloat(fire_area.value), Hv=parseFloat(fire_hv.value); let Q=43000*Math.pow(A,0.82), W=Q/Hv; fire_res.innerHTML=`Heat = ${Q.toFixed(0)} kW<br>Relief = ${W.toFixed(0)} kg/h`; }
-    function calcBlockedOutlet() { let W=parseFloat(blocked_q.value), Pset=parseFloat(blocked_pset.value); blocked_res.innerHTML=`Relief Required = ${W.toFixed(0)} kg/h at ${Pset} barg`; }
-    function calcThermalExpansion() { let V=parseFloat(thermal_vol.value), dTdt=parseFloat(thermal_dt.value), rho=parseFloat(thermal_rho.value); let Q=0.0005*V*dTdt*rho/60; thermal_res.innerHTML=`Relief Rate = ${Q.toFixed(1)} kg/h`; }
-    function calcFlare() { let W=parseFloat(flare_w.value)/3600, MW=parseFloat(flare_mw.value), D=parseFloat(flare_d.value)/1000; let rho=MW/22.414*(273.15/298.15), A=Math.PI*D*D/4, V=W/(rho*A); flare_res.innerHTML=`Tip Velocity = ${V.toFixed(1)} m/s<br>Mach = ${(V/340).toFixed(2)}`; }
+    function calcFireCase() { let A=parseFloat(fire_area.value), Hv=parseFloat(fire_hv.value); let Q=43000*Math.pow(A,0.82), W=Q/Hv; fire_res.innerHTML=`Relief = ${W.toFixed(0)} kg/h`; }
+    function calcBlockedOutlet() { let W=parseFloat(blocked_q.value); blocked_res.innerHTML=`Relief Required = ${W.toFixed(0)} kg/h`; }
+    function calcThermalExpansion() { let V=parseFloat(thermal_vol.value), dTdt=parseFloat(thermal_dt.value), rho=parseFloat(thermal_rho.value); let Q=0.0005*V*dTdt*rho/60; thermal_res.innerHTML=`Relief = ${Q.toFixed(1)} kg/h`; }
+    function calcFlare() { let W=parseFloat(flare_w.value)/3600, MW=parseFloat(flare_mw.value), D=parseFloat(flare_d.value)/1000; let rho=MW/22.414*(273.15/298.15), A=Math.PI*D*D/4, V=W/(rho*A); flare_res.innerHTML=`Tip Velocity = ${V.toFixed(1)} m/s`; }
 
     // Pump Curves
     function calcAffinity() { let n1=parseFloat(aff_n1.value), n2=parseFloat(aff_n2.value), d1=parseFloat(aff_d1.value), d2=parseFloat(aff_d2.value), Q=parseFloat(aff_q.value), H=parseFloat(aff_h.value); let Q2=Q*(n2/n1)*(d2/d1), H2=H*Math.pow(n2/n1,2)*Math.pow(d2/d1,2); aff_res.innerHTML=`New Flow = ${Q2.toFixed(1)} m³/h<br>New Head = ${H2.toFixed(1)} m`; }
-    function calcSeriesParallel() { let H=parseFloat(sp_h.value), Q=parseFloat(sp_q.value), mode=sp_mode.value; let newH=mode==='series'?H*2:H, newQ=mode==='parallel'?Q*2:Q; sp_res2.innerHTML=`Mode: ${mode}<br>Result: ${mode==='series'?`Head = ${newH} m at ${Q} m³/h`:`Flow = ${newQ} m³/h at ${H} m head`}`; }
+    function calcSeriesParallel() { let H=parseFloat(sp_h.value), Q=parseFloat(sp_q.value), mode=sp_mode.value; let newH=mode==='series'?H*2:H, newQ=mode==='parallel'?Q*2:Q; sp_res2.innerHTML=`Mode: ${mode}<br>${mode==='series'?`Head = ${newH} m at ${Q} m³/h`:`Flow = ${newQ} m³/h at ${H} m head`}`; }
 
-    // Render math
     document.querySelectorAll('.math').forEach(el=>{try{katex.render(el.innerText,el)}catch(e){}});
 </script>
 </body>
